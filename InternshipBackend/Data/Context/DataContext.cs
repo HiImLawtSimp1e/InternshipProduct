@@ -3,6 +3,7 @@ using Data.Initialization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,5 +40,8 @@ namespace Data.Context
         public DbSet<Category> Categories { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
         public DbSet<ProductVariant> ProductVariants { get; set; }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Information> Information { get; set; }
     }
 }
