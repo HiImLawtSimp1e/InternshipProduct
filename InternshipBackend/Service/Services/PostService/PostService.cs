@@ -156,6 +156,7 @@ namespace Service.Services.PostService
             try
             {
                 _mapper.Map(updatePost, dbPost);
+                dbPost.ModifiedAt = DateTime.Now;
                 await _context.SaveChangesAsync();
 
                 return await GetAdminPosts();

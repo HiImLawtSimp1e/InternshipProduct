@@ -15,6 +15,7 @@ namespace Service.Services.ProductService
     {
         Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsAsync();
         Task<ServiceResponse<List<Product>>> GetAdminProducts();
+        Task<ServiceResponse<Product>> GetAdminSingleProduct(Guid id);
         Task<ServiceResponse<CustomerProductResponseDTO>> GetProductBySlug(string slug);
         Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug);
         Task<ServiceResponse<List<Product>>> CreateProduct(AddProductDTO newProduct);   

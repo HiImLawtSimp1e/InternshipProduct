@@ -69,6 +69,7 @@ namespace Service.Services.ProductService
                     }
                     await _context.SaveChangesAsync();              
                 }
+                dbProduct.ModifiedAt = DateTime.Now;
                 return await GetAdminProducts();
             }
             catch (Exception ex)
@@ -114,6 +115,27 @@ namespace Service.Services.ProductService
                 return new ServiceResponse<List<Product>>
                 {
                     Data = products,
+                    Message = "Successfully!"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ServiceResponse<Product>> GetAdminSingleProduct(Guid id)
+        {
+            try
+            {
+                var product = await _context.Products
+                   .Where(p => !p.Deleted)
+                   .Include(p => p.ProductVariants.Where(pv => !pv.Deleted))
+                   .ThenInclude(pv => pv.ProductType)
+                   .FirstOrDefaultAsync(p => p.Id == id);
+                return new ServiceResponse<Product>
+                {
+                    Data = product,
                     Message = "Successfully!"
                 };
             }

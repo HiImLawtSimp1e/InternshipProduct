@@ -14,6 +14,9 @@ namespace Service.DTOs.ResponseDTOs.CustomerProductDTO
         public string Slug { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
+        public string SeoTitle { get; set; } = string.Empty;
+        public string SeoDescription { get; set; } = string.Empty;
+        public string SeoKeyworks { get; set; } = string.Empty;
         public List<ProductVariantDTO> ProductVariants { get; set; } = new List<ProductVariantDTO>();
     }
 }

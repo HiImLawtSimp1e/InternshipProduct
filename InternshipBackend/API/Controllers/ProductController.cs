@@ -40,6 +40,16 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts(Guid id)
+        {
+            var response = await _service.GetAdminSingleProduct(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpGet("{slug}")]
         public async Task<ActionResult<ServiceResponse<CustomerProductResponseDTO>>> GetProductBySlug(string slug)
         {
