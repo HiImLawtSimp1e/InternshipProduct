@@ -63,10 +63,12 @@ namespace Service.Services.ProductService
                     if (dbProductVariant == null)
                     {
                         var newProductVariant = _mapper.Map<ProductVariant>(variantDto);
+                        newProductVariant.CreatedAt = DateTime.Now;
                     }
                     else
                     {
                         _mapper.Map(variantDto, dbProductVariant);
+                        dbProductVariant.ModifiedAt = DateTime.Now;
                     }
                     await _context.SaveChangesAsync();              
                 }
