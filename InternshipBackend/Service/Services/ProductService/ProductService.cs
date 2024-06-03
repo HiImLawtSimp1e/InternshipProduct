@@ -52,6 +52,7 @@ namespace Service.Services.ProductService
                     Message = "Product not found"
                 };
             }
+            dbProduct.ModifiedAt = DateTime.Now;
             try
             {
                 _mapper.Map(updateProduct, dbProduct);
@@ -69,7 +70,6 @@ namespace Service.Services.ProductService
                     }
                     await _context.SaveChangesAsync();              
                 }
-                dbProduct.ModifiedAt = DateTime.Now;
                 return await GetAdminProducts();
             }
             catch (Exception ex)
