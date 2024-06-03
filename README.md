@@ -11,18 +11,18 @@ You have already installed .NET 6.0 to run this project
     git clone https://github.com/HiImLawtSimp1e/InternshipProduct.git
     ```  
 1.  **Step 2.**
-    change connection string in API/appsettings.json
+    Change connection string in API/appsettings.json
     ```sh
      "ConnectionStrings": {
     "DefaultConnection": "server=localhost\\sqlexpress;database=blazorecommerce;trusted_connection=true"
     },
     ```
-    import database
+     Import database
     ```
     add-migration InitialDb
     ```
     ```
     update-database
     ```
-   Run project with VS2022
+     Run project with VS2022
    
