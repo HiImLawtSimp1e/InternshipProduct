@@ -26,6 +26,7 @@ namespace Service.DTOs.RequestDTOs.ProductDTO
         [StringLength(100, ErrorMessage = "SEO Keywords can't be longer than 100 characters")]
         public string SeoKeyworks { get; set; } = string.Empty;
         public string ImageUrl { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
         public Guid CategoryId { get; set; }
         public List<UpdateProductVariantDTO> ProductVariants { get; set; }
     }

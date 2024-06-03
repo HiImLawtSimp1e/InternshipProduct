@@ -55,7 +55,10 @@ namespace Service.Services.ProductService
             dbProduct.ModifiedAt = DateTime.Now;
             try
             {
+                // Update main product
                 _mapper.Map(updateProduct, dbProduct);
+
+                // Handle product variants
                 foreach (var variantDto in updateProduct.ProductVariants)
                 {
                     var dbProductVariant = dbProduct.ProductVariants
@@ -64,14 +67,20 @@ namespace Service.Services.ProductService
                     {
                         var newProductVariant = _mapper.Map<ProductVariant>(variantDto);
                         newProductVariant.CreatedAt = DateTime.Now;
+                        _context.ProductVariants.Add(newProductVariant);
                     }
                     else
                     {
-                        _mapper.Map(variantDto, dbProductVariant);
+                        dbProductVariant.ProductTypeId = variantDto.ProductTypeId;
+                        dbProductVariant.ProductId = variantDto.ProductId;
+                        dbProductVariant.Price = variantDto.Price;
+                        dbProductVariant.IsActive = variantDto.IsActive;
                         dbProductVariant.ModifiedAt = DateTime.Now;
-                    }
-                    await _context.SaveChangesAsync();              
+                    }         
                 }
+
+                await _context.SaveChangesAsync();
+
                 return await GetAdminProducts();
             }
             catch (Exception ex)
