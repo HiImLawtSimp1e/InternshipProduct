@@ -32,7 +32,7 @@ namespace Data.Context
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("server=localhost; database=Intership_Backend; trusted_connection=true;");
+            optionsBuilder.UseSqlServer("server=localhost; database=Internship_Proj; trusted_connection=true;");
         }
 
         public DbSet<Product> Products { get; set; }
