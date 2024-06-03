@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Service.Services.CategoryService;
+using Service.Services.ContactService;
+using Service.Services.PostService;
 using Service.Services.ProductService;
 using Service.Services.ProductTypeService;
 using System.Text;
@@ -19,6 +21,8 @@ builder.Services.AddDbContext<DataContext>(options =>
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<IProductService,  ProductService>();
 builder.Services.AddScoped<IProductTypeService, ProductTypeService>();
+builder.Services.AddScoped<IPostService,  PostService>();
+builder.Services.AddScoped<IContactService, ContactService>();
 
 
 builder.Services.AddControllers();
