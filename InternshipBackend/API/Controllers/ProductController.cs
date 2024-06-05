@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using Service.DTOs.ResponseDTOs;
 using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
 using Service.Services.ProductService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -30,7 +32,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin")]
+        [HttpGet("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts()
         {
             var response = await _service.GetAdminProducts();
@@ -40,7 +42,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin/{id}")]
+        [HttpGet("admin/{id}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts(Guid id)
         {
             var response = await _service.GetAdminSingleProduct(id);
@@ -70,7 +72,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("admin")]
+        [HttpPost("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> CreateProduct(AddProductDTO newProduct)
         {
             var response = await _service.CreateProduct(newProduct);
@@ -80,7 +82,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPut("admin")]
+        [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> UpdateProduct(UpdateProductDTO product)
         {
             var response = await _service.UpdateProduct(product);
@@ -90,7 +92,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpDelete("admin/{productId}")]
+        [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> SoftDeleteProduct(Guid productId)
         {
             var response = await _service.SoftDeleteProduct(productId);

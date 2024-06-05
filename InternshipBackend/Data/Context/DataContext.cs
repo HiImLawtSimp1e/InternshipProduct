@@ -43,5 +43,7 @@ namespace Data.Context
         public DbSet<Post> Posts { get; set; }
         public DbSet<Contact> Contacts { get; set; }
         public DbSet<Information> Information { get; set; }
+        public DbSet<Account> Accounts { get; set; } 
+        public DbSet<Customer> Customers { get; set; }
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductTypeDTO;
 using Service.Models;
 using Service.Services.ProductTypeService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -28,7 +30,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost]
+        [HttpPost("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<ProductType>>> AddProductType(AddProductTypeDTO productType)
         {
             var response = await _service.CreateProductType(productType);
@@ -38,7 +40,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPut]
+        [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType)
         {
             var response = await _service.UpdateProductType(productType);

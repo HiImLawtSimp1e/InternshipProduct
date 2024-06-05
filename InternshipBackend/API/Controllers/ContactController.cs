@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ContactDTO;
@@ -17,7 +18,7 @@ namespace API.Controllers
         {
             _service = service;
         }
-        [HttpGet("admin")]
+        [HttpGet("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Contact>>>> GetAdminContacts()
         {
             var response = await _service.GetAdminContacts();

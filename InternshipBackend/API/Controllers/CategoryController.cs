@@ -31,7 +31,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin")]
+        [HttpGet("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategories()
         {
             var response = await _service.GetAdminCategories();
@@ -41,7 +41,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("admin")]
+        [HttpPost("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> CreateCategory(AddCategoryDTO category)
         {
             var response = await _service.CreateCategory(category);
@@ -52,7 +52,7 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpPut("admin")]
+        [HttpPut("admin"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(UpdateCategoryDTO category)
         {
             var response = await _service.UpdateCategory(category);
@@ -63,7 +63,7 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpDelete("admin/{categoryId}")]
+        [HttpDelete("admin/{categoryId}"), Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<List<Category>>>> SoftDeleteCategories(Guid categoryId)
         {
             var response = await _service.SoftDeleteCategory(categoryId);
