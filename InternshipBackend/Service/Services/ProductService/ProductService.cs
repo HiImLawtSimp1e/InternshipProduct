@@ -66,7 +66,6 @@ namespace Service.Services.ProductService
                     if (dbProductVariant == null)
                     {
                         var newProductVariant = _mapper.Map<ProductVariant>(variantDto);
-                        newProductVariant.CreatedAt = DateTime.Now;
                         _context.ProductVariants.Add(newProductVariant);
                     }
                     else
@@ -75,7 +74,6 @@ namespace Service.Services.ProductService
                         dbProductVariant.ProductId = variantDto.ProductId;
                         dbProductVariant.Price = variantDto.Price;
                         dbProductVariant.IsActive = variantDto.IsActive;
-                        dbProductVariant.ModifiedAt = DateTime.Now;
                     }         
                 }
 

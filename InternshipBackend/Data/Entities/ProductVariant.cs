@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Data.Entities
 {
-    public class ProductVariant : BaseEntities
+    public class ProductVariant
     {
         [JsonIgnore]
         public Product? Product { get; set; }
