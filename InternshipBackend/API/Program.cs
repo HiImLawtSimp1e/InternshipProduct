@@ -30,7 +30,14 @@ builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IAccountService,  AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 
-
+//Enable CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder => builder.WithOrigins("http://localhost:3000", "https://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -96,6 +103,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors("AllowSpecificOrigin");
+
+app.UseRouting();
 
 app.UseHttpsRedirection();
 
