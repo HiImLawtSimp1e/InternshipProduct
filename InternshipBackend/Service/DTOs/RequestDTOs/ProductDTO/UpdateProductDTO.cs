@@ -9,8 +9,6 @@ namespace Service.DTOs.RequestDTOs.ProductDTO
 {
     public class UpdateProductDTO
     {
-        [Required(ErrorMessage = "Product id is required")]
-        public Guid Id { get; set; }
         [Required(ErrorMessage = "Product title is required"), MinLength(2, ErrorMessage = "Product title must have at least 2 characters")]
         public string Title { get; set; } = string.Empty;
         [Required(ErrorMessage = "Product slug is required"), MinLength(2, ErrorMessage = "Product slug must have at least 2 characters")]

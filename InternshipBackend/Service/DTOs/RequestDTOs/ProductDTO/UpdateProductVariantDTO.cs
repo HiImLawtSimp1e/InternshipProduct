@@ -15,7 +15,7 @@ namespace Service.DTOs.RequestDTOs.ProductDTO
         public Guid ProductTypeId { get; set; }
         [Required(ErrorMessage = "price is required"),Range(1000, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
         public int Price { get; set; }
-        [Range(1000, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
+        [Range(0, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
         public int OriginalPrice { get; set; }
         public bool IsActive { get; set; }
     }

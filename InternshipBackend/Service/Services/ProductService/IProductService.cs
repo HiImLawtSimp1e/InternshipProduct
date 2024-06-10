@@ -19,7 +19,7 @@ namespace Service.Services.ProductService
         Task<ServiceResponse<CustomerProductResponseDTO>> GetProductBySlug(string slug);
         Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug);
         Task<ServiceResponse<List<Product>>> CreateProduct(AddProductDTO newProduct);   
-        Task<ServiceResponse<List<Product>>> UpdateProduct(UpdateProductDTO product);
+        Task<ServiceResponse<bool>> UpdateProduct(Guid id, UpdateProductDTO product);
         Task<ServiceResponse<List<Product>>> SoftDeleteProduct(Guid productId);
         Task<ServiceResponse<ProductSearchResult>> SearchProducts(string searchText, int page);
         Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string seacrchText);

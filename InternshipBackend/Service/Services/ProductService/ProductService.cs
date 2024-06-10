@@ -39,14 +39,14 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<List<Product>>> UpdateProduct(UpdateProductDTO updateProduct)
+        public async Task<ServiceResponse<bool>> UpdateProduct(Guid id, UpdateProductDTO updateProduct)
         {
             var dbProduct = await _context.Products
                                   .Include(p => p.ProductVariants)
-                                  .FirstOrDefaultAsync(p => p.Id == updateProduct.Id);
+                                  .FirstOrDefaultAsync(p => p.Id == id);
             if(dbProduct == null)
             {
-                return new ServiceResponse<List<Product>>
+                return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Product not found"
@@ -73,13 +73,18 @@ namespace Service.Services.ProductService
                         dbProductVariant.ProductTypeId = variantDto.ProductTypeId;
                         dbProductVariant.ProductId = variantDto.ProductId;
                         dbProductVariant.Price = variantDto.Price;
+                        dbProductVariant.OriginalPrice = variantDto.OriginalPrice;
                         dbProductVariant.IsActive = variantDto.IsActive;
                     }         
                 }
 
                 await _context.SaveChangesAsync();
 
-                return await GetAdminProducts();
+                return new ServiceResponse<bool>
+                {
+                    Data = true,
+                    Message = "Updated Product Successfully!"
+                };
             }
             catch (Exception ex)
             {

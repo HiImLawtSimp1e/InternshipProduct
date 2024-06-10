@@ -32,7 +32,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin"), Authorize(Roles = "Admin")]
+        [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts()
         {
             var response = await _service.GetAdminProducts();
@@ -42,7 +42,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin/{id}"), Authorize(Roles = "Admin")]
+        [HttpGet("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts(Guid id)
         {
             var response = await _service.GetAdminSingleProduct(id);
@@ -72,7 +72,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("admin"), Authorize(Roles = "Admin")]
+        [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> CreateProduct(AddProductDTO newProduct)
         {
             var response = await _service.CreateProduct(newProduct);
@@ -82,17 +82,17 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Product>>>> UpdateProduct(UpdateProductDTO product)
+        [HttpPut("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateProduct(Guid id, UpdateProductDTO product)
         {
-            var response = await _service.UpdateProduct(product);
+            var response = await _service.UpdateProduct(id, product);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-        [HttpDelete("admin/{productId}"), Authorize(Roles = "Admin")]
+        [HttpDelete("admin/{productId}")]
         public async Task<ActionResult<ServiceResponse<List<Product>>>> SoftDeleteProduct(Guid productId)
         {
             var response = await _service.SoftDeleteProduct(productId);
