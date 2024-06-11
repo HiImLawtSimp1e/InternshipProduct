@@ -8,9 +8,10 @@ import slugify from "slugify";
 
 interface IProps {
   product: IProduct;
+  categorySelect: ICategorySelect[];
 }
 
-const UpdateProductForm = ({ product }: IProps) => {
+const UpdateProductForm = ({ product, categorySelect }: IProps) => {
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     updateProduct,
@@ -114,6 +115,18 @@ const UpdateProductForm = ({ product }: IProps) => {
         onChange={handleChange}
         readonly
       />
+      <select
+        name="categoryId"
+        value={formData.categoryId}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+      >
+        {categorySelect.map((category: ICategorySelect, index) => (
+          <option key={index} value={category.id}>
+            {category.title}
+          </option>
+        ))}
+      </select>
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => (

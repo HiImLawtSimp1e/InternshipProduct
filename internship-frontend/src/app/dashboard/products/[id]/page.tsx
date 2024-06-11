@@ -1,16 +1,35 @@
 import ProductDetail from "@/components/dashboard/product/product-detail";
 
 const Product = async ({ id }: { id: number }) => {
-  const res = await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
-    method: "GET",
-    next: { tags: ["productDetailAdmin"] },
-  });
+  const productDetailRes = await fetch(
+    `http://localhost:5000/api/Product/admin/${id}`,
+    {
+      method: "GET",
+      next: { tags: ["productDetailAdmin"] },
+    }
+  );
 
-  const responseData: ApiResponse<IProduct> = await res.json();
-  const { data, success, message } = responseData;
-  console.log(data);
+  const categorySelectRes = await fetch(
+    `http://localhost:5000/api/Category/admin`,
+    {
+      method: "GET",
+      next: { tags: ["productDetailAdmin"] },
+    }
+  );
 
-  return <ProductDetail product={data} />;
+  const productDetail: ApiResponse<IProduct> = await productDetailRes.json();
+  const categorySelect: ApiResponse<ICategorySelect[]> =
+    await categorySelectRes.json();
+
+  console.log(productDetail.data);
+  console.log(categorySelect.data);
+
+  return (
+    <ProductDetail
+      product={productDetail.data}
+      categorySelect={categorySelect.data}
+    />
+  );
 };
 
 const ProductDetailPage = ({ params }: { params: { id: number } }) => {

@@ -4,3 +4,8 @@ interface ICategory {
   slug: string;
   image: string;
 }
+
+interface ICategorySelect {
+  id: string;
+  title: string;
+}
