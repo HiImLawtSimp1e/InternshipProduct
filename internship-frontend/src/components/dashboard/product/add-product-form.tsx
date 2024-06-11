@@ -5,7 +5,11 @@ import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
 
-const AddProductForm = () => {
+interface IProps {
+  categorySelect: ICategorySelect[];
+}
+
+const AddProductForm = ({ categorySelect }: IProps) => {
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     addProduct,
@@ -20,6 +24,7 @@ const AddProductForm = () => {
     seoTitle: "",
     seoDescription: "",
     seoKeyworks: "",
+    categoryId: "",
   });
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -90,6 +95,18 @@ const AddProductForm = () => {
         onChange={handleChange}
         required
       />
+      <select
+        name="categoryId"
+        value={formData.categoryId}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+      >
+        {categorySelect.map((category: ICategorySelect, index) => (
+          <option key={index} value={category.id}>
+            {category.title}
+          </option>
+        ))}
+      </select>
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => (

@@ -27,6 +27,7 @@ export const addProduct = async (
   const seoTitle = formData.get("seoTitle") as string;
   const seoDescription = formData.get("seoDescription") as string;
   const seoKeyworks = formData.get("seoKeyworks") as string;
+  const categoryId = formData.get("categoryId") as string;
   const slug = slugify(title, { lower: true });
 
   const [errors, isValid] = validateProduct(
@@ -50,13 +51,13 @@ export const addProduct = async (
     seoDescription,
     seoKeyworks,
     slug,
+    categoryId,
   };
 
   const res = await fetch("http://localhost:5000/api/Product/admin", {
     method: "POST",
     body: JSON.stringify({
       ...productData,
-      categoryId: "2c8eb836-090b-4a18-a869-620d7f527180",
       productVariants: [
         {
           productId: "4f5c260c-0870-4940-a394-b20c56b3fcca",
