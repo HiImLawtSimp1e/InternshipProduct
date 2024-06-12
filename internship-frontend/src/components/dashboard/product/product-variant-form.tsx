@@ -2,12 +2,20 @@ import TagFiled from "@/components/ui/tag";
 import Link from "next/link";
 
 interface IProps {
+  productId: string;
   variants: IProductVariant[];
 }
 
-const ProductVariantForm = ({ variants }: IProps) => {
+const ProductVariantForm = ({ productId, variants }: IProps) => {
   return (
     <>
+      <Link
+        href={{ pathname: `/dashboard/variants/add`, query: { productId } }}
+      >
+        <button className="p-2 float-right bg-purple-600 text-white rounded">
+          Add New
+        </button>
+      </Link>
       <table className="w-full text-left text-gray-400">
         <thead className="bg-gray-700 text-gray-400 uppercase">
           <tr>
@@ -32,11 +40,19 @@ const ProductVariantForm = ({ variants }: IProps) => {
               </td>
               <td className="px-4 py-2">
                 <div className="flex gap-2">
-                  <button className="m-1 px-5 py-2 bg-blue-600 text-white rounded">
-                    Edit
-                  </button>
+                  <Link
+                    href={{
+                      pathname: `/dashboard/variants/${variant.productTypeId}`,
+                      query: { productId },
+                    }}
+                  >
+                    <button className="m-1 px-5 py-2 bg-blue-600 text-white rounded">
+                      Edit
+                    </button>
+                  </Link>
+
                   <form>
-                    <input type="hidden" name="id" value={variant.productId} />
+                    <input type="hidden" name="id" value={productId} />
                     <input
                       type="hidden"
                       name="id"

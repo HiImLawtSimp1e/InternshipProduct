@@ -5,7 +5,6 @@ const Product = async () => {
     `http://localhost:5000/api/Category/admin`,
     {
       method: "GET",
-      next: { tags: ["productDetailAdmin"] },
     }
   );
 

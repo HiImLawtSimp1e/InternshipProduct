@@ -16,12 +16,14 @@ interface IProduct {
 
 interface IProductVariant {
   productId: string;
-  productType: {
-    id: string;
-    name: string;
-  };
+  productType: IProductType;
   productTypeId: string;
   price: number;
   originalPrice: number;
   isActive: boolean;
+}
+
+interface IProductType {
+  id: string;
+  name: string;
 }

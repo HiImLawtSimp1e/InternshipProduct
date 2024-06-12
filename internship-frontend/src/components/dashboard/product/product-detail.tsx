@@ -30,7 +30,10 @@ const ProductDetail = ({ product, categorySelect }: IProps) => {
         </div>
       </div>
       <div className="mt-5">
-        <ProductVariantForm variants={product.productVariants} />
+        <ProductVariantForm
+          productId={product.id}
+          variants={product.productVariants}
+        />
       </div>
     </div>
   );

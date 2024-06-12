@@ -13,7 +13,7 @@ const Product = async ({ id }: { id: number }) => {
     `http://localhost:5000/api/Category/admin`,
     {
       method: "GET",
-      next: { tags: ["productDetailAdmin"] },
+      next: { tags: ["categorySelect"] },
     }
   );
 
