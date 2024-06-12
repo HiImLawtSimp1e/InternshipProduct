@@ -24,21 +24,50 @@ namespace Service.Services.ProductVariantService
         }
         public async Task<ServiceResponse<bool>> AddVariant(Guid productId, AddProductVariantDTO newVariant)
         {
-            var dbVariant = await _context.ProductVariants
-                                          .Where(v => !v.Deleted &&  v.ProductId == productId)
-                                          .FirstOrDefaultAsync(v => v.ProductTypeId == newVariant.ProductTypeId);
-            if(dbVariant != null) {
+            var dbProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted);
+            if (dbProduct == null)
+            {
                 return new ServiceResponse<bool>
                 {
                     Success = false,
-                    Message = "Product Variant has already exist!"
+                    Message = "Product not found"
                 };
             }
+
+            var dbProductType = await _context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == newVariant.ProductTypeId);
+            if (dbProductType == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Product type not found"
+                };
+            }
+
+            var existingVariant = await _context.ProductVariants
+                                        .Where(v => !v.Deleted && v.ProductId == productId)
+                                        .FirstOrDefaultAsync(v => v.ProductTypeId == newVariant.ProductTypeId);
+            if (existingVariant != null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Product Variant already exists!"
+                };
+            }
+
             try
             {
                 var variant = _mapper.Map<ProductVariant>(newVariant);
+                variant.ProductId = productId;
+                variant.IsActive = true;
+
+
                 _context.ProductVariants.Add(variant);
+                dbProduct.ModifiedAt = DateTime.Now;
+
                 await _context.SaveChangesAsync();
+
                 return new ServiceResponse<bool>
                 {
                     Data = true,
@@ -47,8 +76,13 @@ namespace Service.Services.ProductVariantService
             }
             catch (Exception ex)
             {
-                throw ex;
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = $"Error: {ex.Message}"
+                };
             }
+          
         }
 
         public async Task<ServiceResponse<bool>> SoftDeleteVariant(Guid productTypeId, Guid productId)
