@@ -14,6 +14,7 @@ interface ProductFormData {
   seoDescription: string;
   seoKeyworks: string;
   slug: string;
+  isActive?: boolean | null;
   categoryId?: string;
 }
 
@@ -56,33 +57,7 @@ export const addProduct = async (
 
   const res = await fetch("http://localhost:5000/api/Product/admin", {
     method: "POST",
-    body: JSON.stringify({
-      ...productData,
-      productVariants: [
-        {
-          productId: "4f5c260c-0870-4940-a394-b20c56b3fcca",
-          productType: {
-            id: "fbaeaba4-a5bc-487e-b0e5-0967ff543d5d",
-            name: "Blu-ray",
-          },
-          productTypeId: "fbaeaba4-a5bc-487e-b0e5-0967ff543d5d",
-          price: 99000,
-          originalPrice: 0,
-          isActive: true,
-        },
-        {
-          productId: "4f5c260c-0870-4940-a394-b20c56b3fcca",
-          productType: {
-            id: "dfd52a60-8ccf-4ac2-980c-14ddf41e9a18",
-            name: "Stream",
-          },
-          productTypeId: "dfd52a60-8ccf-4ac2-980c-14ddf41e9a18",
-          price: 39000,
-          originalPrice: 0,
-          isActive: true,
-        },
-      ],
-    }),
+    body: JSON.stringify(productData),
     headers: { "Content-Type": "application/json" },
   });
 
@@ -111,6 +86,7 @@ export const updateProduct = async (
   const seoTitle = formData.get("seoTitle") as string;
   const seoDescription = formData.get("seoDescription") as string;
   const seoKeyworks = formData.get("seoKeyworks") as string;
+  const isActive = formData.get("isActive") === "true";
   const categoryId = formData.get("categoryId") as string;
   const slug = slugify(title, { lower: true });
 
@@ -136,37 +112,12 @@ export const updateProduct = async (
     seoKeyworks,
     slug,
     categoryId,
+    isActive,
   };
 
   const res = await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
     method: "PUT",
-    body: JSON.stringify({
-      ...productData,
-      productVariants: [
-        {
-          productId: "4f5c260c-0870-4940-a394-b20c56b3fcca",
-          productType: {
-            id: "fbaeaba4-a5bc-487e-b0e5-0967ff543d5d",
-            name: "Blu-ray",
-          },
-          productTypeId: "fbaeaba4-a5bc-487e-b0e5-0967ff543d5d",
-          price: 99000,
-          originalPrice: 0,
-          isActive: true,
-        },
-        {
-          productId: "4f5c260c-0870-4940-a394-b20c56b3fcca",
-          productType: {
-            id: "dfd52a60-8ccf-4ac2-980c-14ddf41e9a18",
-            name: "Stream",
-          },
-          productTypeId: "dfd52a60-8ccf-4ac2-980c-14ddf41e9a18",
-          price: 39000,
-          originalPrice: 0,
-          isActive: true,
-        },
-      ],
-    }),
+    body: JSON.stringify(productData),
     headers: { "Content-Type": "application/json" },
   });
 

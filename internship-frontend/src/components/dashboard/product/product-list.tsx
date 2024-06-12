@@ -1,5 +1,6 @@
 import { deleteProduct } from "@/action/productAction";
 import Search from "@/components/ui/search";
+import TagFiled from "@/components/ui/tag";
 import {
   formatDate,
   formatPrice,
@@ -30,6 +31,7 @@ const ProductList = ({ products }: IProps) => {
             <th className="px-4 py-2">Slug</th>
             <th className="px-4 py-2">Variant</th>
             <th className="px-4 py-2">Price</th>
+            <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
             <th className="px-4 py-2">Action</th>
@@ -66,6 +68,12 @@ const ProductList = ({ products }: IProps) => {
                     <div key={index}>{formatPrice(variant.price)}</div>
                   )
                 )}
+              </td>
+              <td className="px-4 py-2">
+                <TagFiled
+                  cssClass={product.isActive ? "bg-lime-900" : "bg-red-700"}
+                  context={product.isActive ? "Active" : "Passive"}
+                />
               </td>
               <td className="px-4 py-2">{formatDate(product.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(product.modifiedAt)}</td>

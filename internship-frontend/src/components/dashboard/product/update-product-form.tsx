@@ -2,6 +2,7 @@
 
 import { updateProduct } from "@/action/productAction";
 import InputField from "@/components/ui/input";
+import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
 import slugify from "slugify";
@@ -115,8 +116,15 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
         onChange={handleChange}
         readonly
       />
+      <label
+        htmlFor="categoryId"
+        className="block mb-2 text-sm font-medium text-white"
+      >
+        Category
+      </label>
       <select
         name="categoryId"
+        id="categoryId"
         value={formData.categoryId}
         onChange={handleChange}
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
@@ -127,6 +135,17 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
           </option>
         ))}
       </select>
+      <SelectField
+        label="Is Active"
+        id="isActive"
+        name="isActive"
+        value={formData.isActive.toString()}
+        onChange={handleChange}
+        options={[
+          { label: "Yes", value: "true" },
+          { label: "No", value: "false" },
+        ]}
+      />
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => (

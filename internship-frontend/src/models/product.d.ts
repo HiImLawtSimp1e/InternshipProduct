@@ -7,6 +7,7 @@ interface IProduct {
   seoTitle: string;
   seoDescription: string;
   seoKeyworks: string;
+  isActive: boolean;
   createdAt: string;
   modifiedAt: string;
   categoryId: string;
@@ -22,4 +23,5 @@ interface IProductVariant {
   productTypeId: string;
   price: number;
   originalPrice: number;
+  isActive: boolean;
 }
