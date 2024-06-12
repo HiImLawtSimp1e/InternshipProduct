@@ -56,6 +56,41 @@ namespace Service.Services.ProductTypeService
             }
         }
 
+        public async Task<ServiceResponse<List<ProductType>>> GetProductTypeSelect(Guid productId)
+        {
+            var dbProduct = await _context.Products
+                                    .Include(p => p.ProductVariants)
+                                    .ThenInclude(pv => pv.ProductType)
+                                    .Where(p => !p.Deleted)
+                                    .FirstOrDefaultAsync(p => p.Id == productId);
+
+            if (dbProduct == null)
+            {
+                return new ServiceResponse<List<ProductType>>
+                {
+                    Success = false,
+                    Message = "Product not found"
+                };
+            }
+
+            var allProductTypes = await _context.ProductTypes.ToListAsync();
+
+            var existingProductTypeIds = dbProduct.ProductVariants
+                                                  .Where(pv => !pv.Deleted && pv.IsActive && pv.ProductType != null)
+                                                  .Select(pv => pv.ProductType.Id)
+                                                  .ToList();
+
+            var missingProductTypes = allProductTypes.Where(pt => !existingProductTypeIds
+                                                     .Contains(pt.Id))
+                                                     .ToList();
+
+            return new ServiceResponse<List<ProductType>>
+            {
+                Success = true,
+                Data = missingProductTypes
+            };
+        }
+
         public async Task<ServiceResponse<List<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType)
         {
             var dbProductType = await _context.ProductTypes.FindAsync(productType.Id);

@@ -50,5 +50,15 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("select/{productId}")]
+        public async Task<ActionResult<ServiceResponse<ProductType>>> GetSelectProductTypes(Guid productId)
+        {
+            var response = await _service.GetProductTypeSelect(productId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
     }
 }

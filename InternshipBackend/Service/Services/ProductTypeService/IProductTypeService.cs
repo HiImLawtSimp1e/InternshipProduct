@@ -14,5 +14,6 @@ namespace Service.Services.ProductTypeService
         Task<ServiceResponse<List<ProductType>>> GetProductTypes();
         Task<ServiceResponse<List<ProductType>>> CreateProductType(AddProductTypeDTO productType);
         Task<ServiceResponse<List<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType);
+        Task<ServiceResponse<List<ProductType>>> GetProductTypeSelect(Guid productId);
     }
 }
