@@ -125,7 +125,32 @@ namespace Service.Services.ProductTypeService
                 return new ServiceResponse<List<ProductType>>
                 {
                     Data = productTypes,
-                    Message = "Successfully!!!"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ServiceResponse<ProductType>> GetProductType(Guid productTypeId)
+        {
+            try
+            {
+                var productType = await _context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == productTypeId);
+
+                if(productType == null)
+                {
+                    return new ServiceResponse<ProductType>
+                    {
+                        Success = false,
+                        Message = "Not found"
+                    };
+                }
+
+                return new ServiceResponse<ProductType>
+                {
+                    Data = productType,
                 };
             }
             catch (Exception ex)
@@ -168,5 +193,6 @@ namespace Service.Services.ProductTypeService
                 Data = missingProductTypes
             };
         }
+
     }
 }

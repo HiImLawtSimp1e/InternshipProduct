@@ -30,6 +30,16 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductType(Guid id)
+        {
+            var response = await _service.GetProductType(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> AddProductType(AddProductTypeDTO productType)
         {
