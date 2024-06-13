@@ -10,6 +10,7 @@ import {
   MdOutlineSettings,
   MdHelpCenter,
   MdLogout,
+  MdStorage,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -36,14 +37,19 @@ const Sidebar = () => {
           icon: <MdDashboard />,
         },
         {
-          title: "Users",
-          path: "/dashboard/users",
-          icon: <MdSupervisedUserCircle />,
+          title: "Product Types",
+          path: "/dashboard/product-types",
+          icon: <MdStorage />,
         },
         {
           title: "Products",
           path: "/dashboard/products",
           icon: <MdShoppingBag />,
+        },
+        {
+          title: "Users",
+          path: "/dashboard/users",
+          icon: <MdSupervisedUserCircle />,
         },
         {
           title: "Transactions",

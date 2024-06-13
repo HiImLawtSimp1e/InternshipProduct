@@ -16,7 +16,6 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     initialState
   );
 
-  // Sửa đổi useState để sử dụng kiểu dữ liệu IProduct
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -37,6 +36,7 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     e:
       | React.ChangeEvent<HTMLInputElement>
       | React.ChangeEvent<HTMLSelectElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -55,12 +55,19 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         onChange={handleChange}
         required
       />
-      <InputField
-        label="Description"
+      <label
+        htmlFor="description"
+        className="block mb-2 text-sm font-medium text-white"
+      >
+        Description
+      </label>
+      <textarea
         id="description"
         name="description"
         value={formData.description}
+        rows={10}
         onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         required
       />
       <InputField

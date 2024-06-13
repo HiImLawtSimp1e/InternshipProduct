@@ -8,6 +8,7 @@ import {
 } from "@/lib/format/format";
 import Image from "next/image";
 import Link from "next/link";
+import { MdAdd } from "react-icons/md";
 
 interface IProps {
   products: IProduct[];
@@ -17,16 +18,18 @@ const ProductList = ({ products }: IProps) => {
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
       <div className="flex items-center justify-between mb-5">
-        <Search placeholder="Search for a user..." />
+        <Search placeholder="Search products..." />
         <Link href="/dashboard/products/add">
-          <button className="p-2 bg-purple-600 text-white rounded">
-            Add New
+          <button className="p-2 flex items-center justify-center mb-5 bg-purple-600 text-white rounded">
+            <MdAdd />
+            Add New Product
           </button>
         </Link>
       </div>
       <table className="w-full text-left text-gray-400">
         <thead className="bg-gray-700 text-gray-400 uppercase">
           <tr>
+            <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">Title</th>
             <th className="px-4 py-2">Slug</th>
             <th className="px-4 py-2">Variant</th>
@@ -38,20 +41,10 @@ const ProductList = ({ products }: IProps) => {
           </tr>
         </thead>
         <tbody>
-          {products.map((product: IProduct) => (
+          {products.map((product: IProduct, index) => (
             <tr key={product.id} className="border-b border-gray-700">
-              <td className="px-4 py-2">
-                <div className="flex items-center gap-2">
-                  <Image
-                    src={"/noavatar.png"}
-                    alt=""
-                    width={40}
-                    height={40}
-                    className="rounded-full"
-                  />
-                  {product.title}
-                </div>
-              </td>
+              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2">{product.title}</td>
               <td className="px-4 py-2">{product.slug}</td>
               <td className="px-4 py-2">
                 {product.productVariants.map(
