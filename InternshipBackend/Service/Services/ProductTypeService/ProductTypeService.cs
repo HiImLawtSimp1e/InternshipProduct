@@ -19,7 +19,7 @@ namespace Service.Services.ProductTypeService
         {
             _context = context;
         }
-        public async Task<ServiceResponse<List<ProductType>>> CreateProductType(AddProductTypeDTO newProductType)
+        public async Task<ServiceResponse<bool>> CreateProductType(AddProductTypeDTO newProductType)
         {
             var productType = new ProductType
             {
@@ -30,13 +30,91 @@ namespace Service.Services.ProductTypeService
                 _context.ProductTypes.Add(productType);
                 await _context.SaveChangesAsync();
 
-                return await GetProductTypes();
+                return new ServiceResponse<bool>
+                {
+                    Success = true,
+                    Message = "Product Type created!"
+                };
             }
             catch (Exception ex)
             {
                 throw ex;
             }
 
+        }
+
+        public async Task<ServiceResponse<bool>> UpdateProductType(Guid productTypeId, UpdateProductTypeDTO productType)
+        {
+            var dbProductType = await _context.ProductTypes
+                                              .FirstOrDefaultAsync(pt =>  pt.Id == productTypeId);
+            if (dbProductType == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Product Type not found."
+                };
+            }
+
+            try
+            {
+                dbProductType.Name = productType.Name;
+                dbProductType.ModifiedAt = DateTime.Now;
+                await _context.SaveChangesAsync();
+
+                return new ServiceResponse<bool>
+                {
+                    Success = true,
+                    Message = "Product Type updated!"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ServiceResponse<bool>> DeleteProductType(Guid productTypeId)
+        {
+            var dbProductType = await _context.ProductTypes
+                                              .FirstOrDefaultAsync(pt => pt.Id == productTypeId);
+            if (dbProductType == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Product Type not found."
+                };
+            }
+
+            var dbVariants = await _context.ProductVariants
+                                           .Where(v => v.ProductTypeId == productTypeId)
+                                           .ToListAsync();
+
+            if (dbVariants.Any())
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Cannot delete Product Type because it has associated variants."
+                };
+            }
+
+            try
+            {
+                _context.ProductTypes.Remove(dbProductType);
+                await _context.SaveChangesAsync();
+
+                return new ServiceResponse<bool>
+                {
+                    Success = true,
+                    Message = "Product Type deleted!"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         public async Task<ServiceResponse<List<ProductType>>> GetProductTypes()
@@ -89,32 +167,6 @@ namespace Service.Services.ProductTypeService
                 Success = true,
                 Data = missingProductTypes
             };
-        }
-
-        public async Task<ServiceResponse<List<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType)
-        {
-            var dbProductType = await _context.ProductTypes.FindAsync(productType.Id);
-            if (dbProductType == null)
-            {
-                return new ServiceResponse<List<ProductType>>
-                {
-                    Success = false,
-                    Message = "Product Type not found."
-                };
-            }
-
-            try
-            {
-                dbProductType.Name = productType.Name;
-                dbProductType.ModifiedAt = DateTime.Now;
-                await _context.SaveChangesAsync();
-
-                return await GetProductTypes();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
         }
     }
 }

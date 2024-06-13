@@ -21,7 +21,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<ProductType>>> GetProductTypes()
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes()
         {
             var response = await _service.GetProductTypes();
             if (!response.Success)
@@ -30,8 +30,8 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<ProductType>>> AddProductType(AddProductTypeDTO productType)
+        [HttpPost("admin")]
+        public async Task<ActionResult<ServiceResponse<bool>>> AddProductType(AddProductTypeDTO productType)
         {
             var response = await _service.CreateProductType(productType);
             if (!response.Success)
@@ -40,10 +40,20 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType)
+        [HttpPut("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateProductType(Guid id, UpdateProductTypeDTO productType)
         {
-            var response = await _service.UpdateProductType(productType);
+            var response = await _service.UpdateProductType(id, productType);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpDelete("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProductType(Guid id)
+        {
+            var response = await _service.DeleteProductType(id);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -51,7 +61,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("select/{productId}")]
-        public async Task<ActionResult<ServiceResponse<ProductType>>> GetSelectProductTypes(Guid productId)
+        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetSelectProductTypes(Guid productId)
         {
             var response = await _service.GetProductTypeSelect(productId);
             if (!response.Success)

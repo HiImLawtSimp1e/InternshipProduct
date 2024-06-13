@@ -12,8 +12,9 @@ namespace Service.Services.ProductTypeService
     public interface IProductTypeService
     {
         Task<ServiceResponse<List<ProductType>>> GetProductTypes();
-        Task<ServiceResponse<List<ProductType>>> CreateProductType(AddProductTypeDTO productType);
-        Task<ServiceResponse<List<ProductType>>> UpdateProductType(UpdateProductTypeDTO productType);
+        Task<ServiceResponse<bool>> CreateProductType(AddProductTypeDTO productType);
+        Task<ServiceResponse<bool>> UpdateProductType(Guid productTypeId, UpdateProductTypeDTO productType);
+        Task<ServiceResponse<bool>> DeleteProductType(Guid productTypeId);
         Task<ServiceResponse<List<ProductType>>> GetProductTypeSelect(Guid productId);
     }
 }
