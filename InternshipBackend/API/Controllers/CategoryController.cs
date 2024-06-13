@@ -41,8 +41,18 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<Category>>> GetAdminCategory(Guid id)
+        {
+            var response = await _service.GetAdminCategory(id);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpPost("admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> CreateCategory(AddCategoryDTO category)
+        public async Task<ActionResult<ServiceResponse<bool>>> CreateCategory(AddCategoryDTO category)
         {
             var response = await _service.CreateCategory(category);
             if (!response.Success)
@@ -52,10 +62,10 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpPut("admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> UpdateCategory(UpdateCategoryDTO category)
+        [HttpPut("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateCategory(Guid id,UpdateCategoryDTO category)
         {
-            var response = await _service.UpdateCategory(category);
+            var response = await _service.UpdateCategory(id, category);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -64,7 +74,7 @@ namespace API.Controllers
         }
 
         [HttpDelete("admin/{categoryId}")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> SoftDeleteCategories(Guid categoryId)
+        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteCategories(Guid categoryId)
         {
             var response = await _service.SoftDeleteCategory(categoryId);
             if (!response.Success)

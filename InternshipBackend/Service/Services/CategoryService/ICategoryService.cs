@@ -14,9 +14,10 @@ namespace Service.Services.CategoryService
     {
         Task<ServiceResponse<List<CustomerCategoryResponseDTO>>> GetCategoriesAsync();
         Task<ServiceResponse<List<Category>>> GetAdminCategories();
-        Task<ServiceResponse<List<Category>>> CreateCategory(AddCategoryDTO newCategory);
-        Task<ServiceResponse<List<Category>>> UpdateCategory(UpdateCategoryDTO category);
-        Task<ServiceResponse<List<Category>>> SoftDeleteCategory(Guid categoryId);
+        Task<ServiceResponse<Category>> GetAdminCategory(Guid categoryId);
+        Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory);
+        Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category);
+        Task<ServiceResponse<bool>> SoftDeleteCategory(Guid categoryId);
 
     }
 }

@@ -24,14 +24,17 @@ namespace Service.Services.CategoryService
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<Category>>> CreateCategory(AddCategoryDTO newCategory)
+        public async Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory)
         {
             try
             {
                 var category = _mapper.Map<Category>(newCategory);
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
-                return await GetAdminCategories();
+                return new ServiceResponse<bool>
+                {
+                    Message = "Category Created"
+                };
             }
             catch (Exception ex)
             {
@@ -49,7 +52,24 @@ namespace Service.Services.CategoryService
                 return new ServiceResponse<List<Category>>
                 {
                     Data = categories,
-                    Message = "Successfully!!!"
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
+        public async Task<ServiceResponse<Category>> GetAdminCategory(Guid categoryId)
+        {
+            try
+            {
+                var category = await _context.Categories
+                   .Where(c => !c.Deleted)
+                   .FirstOrDefaultAsync(c => c.Id == categoryId);
+                return new ServiceResponse<Category>
+                {
+                    Data = category
                 };
             }
             catch (Exception ex)
@@ -78,12 +98,12 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<List<Category>>> SoftDeleteCategory(Guid categoryId)
+        public async Task<ServiceResponse<bool>> SoftDeleteCategory(Guid categoryId)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
             if (category == null)
             {
-                return new ServiceResponse<List<Category>>
+                return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Category not found"
@@ -95,7 +115,10 @@ namespace Service.Services.CategoryService
                 category.Deleted = true;
                 await _context.SaveChangesAsync();
 
-                return await GetAdminCategories();
+                return new ServiceResponse<bool>
+                {
+                    Message = "Category Deleted"
+                };
             }
             catch (Exception ex)
             {
@@ -103,12 +126,12 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<List<Category>>> UpdateCategory(UpdateCategoryDTO category)
+        public async Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category)
         {
-            var dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == category.Id);
+            var dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
             if (dbCategory == null)
             {
-                return new ServiceResponse<List<Category>>
+                return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Category not found"
@@ -124,7 +147,10 @@ namespace Service.Services.CategoryService
 
                 await _context.SaveChangesAsync();
 
-                return await GetAdminCategories();
+                return new ServiceResponse<bool>
+                {
+                    Message = "Category Updated"
+                };
             }
             catch (Exception ex)
             {
