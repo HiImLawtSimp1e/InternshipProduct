@@ -21,9 +21,6 @@ const Product = async ({ id }: { id: number }) => {
   const categorySelect: ApiResponse<ICategorySelect[]> =
     await categorySelectRes.json();
 
-  console.log(productDetail.data);
-  console.log(categorySelect.data);
-
   return (
     <ProductDetail
       product={productDetail.data}
