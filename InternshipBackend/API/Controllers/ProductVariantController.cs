@@ -47,8 +47,8 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpDelete("admin/{productTypeId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteVariant(Guid productTypeId, Guid productId)
+        [HttpDelete("admin/{productId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteVariant(Guid productId, [FromQuery] Guid productTypeId)
         {
             var response = await _service.SoftDeleteVariant(productTypeId, productId);
             if (!response.Success)
