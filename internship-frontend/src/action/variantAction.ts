@@ -113,3 +113,21 @@ export const updateVariant = async (
   revalidateTag("selectProductType");
   redirect(`/dashboard/products/${productId}`);
 };
+
+export const deleteVariant = async (formData: FormData) => {
+  const productId = formData.get("productId") as string;
+  const productTypeId = formData.get("productTypeId") as string;
+
+  await fetch(
+    `http://localhost:5000/api/ProductVariant/admin/${productId}?productTypeId=${productTypeId}`,
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+  revalidateTag("getVariant");
+  revalidateTag("productListAdmin");
+  revalidateTag("productDetailAdmin");
+  revalidateTag("selectProductType");
+  redirect(`/dashboard/products/${productId}`);
+};

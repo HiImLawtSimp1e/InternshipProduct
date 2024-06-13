@@ -1,3 +1,4 @@
+import { deleteVariant } from "@/action/variantAction";
 import TagFiled from "@/components/ui/tag";
 import Link from "next/link";
 
@@ -28,7 +29,10 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
         </thead>
         <tbody>
           {variants.map((variant: IProductVariant) => (
-            <tr key={variant.productId} className="border-b border-gray-700">
+            <tr
+              key={variant.productTypeId}
+              className="border-b border-gray-700"
+            >
               <td className="px-4 py-2">{variant.productType.name}</td>
               <td className="px-4 py-2">{variant.price}</td>
               <td className="px-4 py-2">{variant.originalPrice}</td>
@@ -51,11 +55,11 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
                     </button>
                   </Link>
 
-                  <form>
-                    <input type="hidden" name="id" value={productId} />
+                  <form action={deleteVariant}>
+                    <input type="hidden" name="productId" value={productId} />
                     <input
                       type="hidden"
-                      name="id"
+                      name="productTypeId"
                       value={variant.productTypeId}
                     />
                     <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
