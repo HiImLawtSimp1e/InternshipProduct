@@ -2,7 +2,9 @@ interface ICategory {
   id: string;
   title: string;
   slug: string;
-  image: string;
+  isActive: boolean;
+  createdAt: string;
+  modifiedAt: string;
 }
 
 interface ICategorySelect {

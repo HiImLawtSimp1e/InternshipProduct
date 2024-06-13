@@ -11,6 +11,7 @@ import {
   MdHelpCenter,
   MdLogout,
   MdStorage,
+  MdCategory,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -45,6 +46,11 @@ const Sidebar = () => {
           title: "Products",
           path: "/dashboard/products",
           icon: <MdShoppingBag />,
+        },
+        {
+          title: "Category",
+          path: "/dashboard/category",
+          icon: <MdCategory />,
         },
         {
           title: "Users",
