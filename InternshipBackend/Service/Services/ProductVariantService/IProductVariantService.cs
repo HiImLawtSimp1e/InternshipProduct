@@ -14,5 +14,6 @@ namespace Service.Services.ProductVariantService
         Task<ServiceResponse<bool>> AddVariant(Guid productId, AddProductVariantDTO newVariant);
         Task<ServiceResponse<bool>> UpdateVariant(Guid productId, UpdateProductVariantDTO updateVariant);
         Task<ServiceResponse<bool>> SoftDeleteVariant(Guid productTypeId, Guid productId);
+        Task<ServiceResponse<ProductVariant>> GetVartiant(Guid productId, Guid productTypeId);
     }
 }

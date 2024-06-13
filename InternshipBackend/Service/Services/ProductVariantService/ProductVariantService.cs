@@ -85,6 +85,34 @@ namespace Service.Services.ProductVariantService
           
         }
 
+        public async Task<ServiceResponse<ProductVariant>> GetVartiant(Guid productId, Guid productTypeId)
+        {
+            try
+            {
+                var variant = await _context.ProductVariants
+                                     .Where(v => !v.Deleted && v.ProductId == productId)
+                                     .Include(v => v.ProductType)
+                                     .FirstOrDefaultAsync(v => v.ProductTypeId == productTypeId);
+                if (variant == null)
+                {
+                    return new ServiceResponse<ProductVariant>
+                    {
+                        Success = false,
+                        Message = "Variant not found"
+                    };
+                }
+
+                return new ServiceResponse<ProductVariant>
+                {
+                   Data = variant
+                };
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         public async Task<ServiceResponse<bool>> SoftDeleteVariant(Guid productTypeId, Guid productId)
         {
             var variant = await _context.ProductVariants
@@ -133,7 +161,7 @@ namespace Service.Services.ProductVariantService
             }
             try
             {
-                _mapper.Map(updateVariant, dbProduct);    
+                _mapper.Map(updateVariant, dbVariant);    
                 dbProduct.ModifiedAt = DateTime.UtcNow;
 
                 await _context.SaveChangesAsync();
