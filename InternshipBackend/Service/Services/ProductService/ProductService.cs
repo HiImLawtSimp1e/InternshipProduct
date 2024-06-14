@@ -194,7 +194,7 @@ namespace Service.Services.ProductService
         public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page)
         {
             var pageResults = 10f;
-            var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted).Count() / pageResults);
+            var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted && p.IsActive).Count() / pageResults);
             try
             {
                 var products = await _context.Products
