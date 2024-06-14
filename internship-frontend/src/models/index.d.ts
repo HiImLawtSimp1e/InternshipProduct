@@ -4,6 +4,12 @@ interface ApiResponse<T> {
   message: string;
 }
 
+interface PagingParams<T> {
+  result: T;
+  pages: number;
+  currentPage: number;
+}
+
 interface FormState {
   errors: string[];
 }

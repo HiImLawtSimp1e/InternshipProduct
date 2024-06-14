@@ -6,15 +6,20 @@ import {
   formatPrice,
   formatProductType,
 } from "@/lib/format/format";
-import Image from "next/image";
 import Link from "next/link";
 import { MdAdd } from "react-icons/md";
 
 interface IProps {
   products: IProduct[];
+  pages: number;
+  currentPage: number;
 }
 
-const ProductList = ({ products }: IProps) => {
+const ProductList = ({ products, pages, currentPage }: IProps) => {
+  const pageSize = 10;
+  const startIndex = (currentPage - 1) * pageSize;
+  const pageNumbers = Array.from({ length: pages }, (_, i) => i + 1);
+
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
       <div className="flex items-center justify-between mb-5">
@@ -43,7 +48,7 @@ const ProductList = ({ products }: IProps) => {
         <tbody>
           {products.map((product: IProduct, index) => (
             <tr key={product.id} className="border-b border-gray-700">
-              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2">{startIndex + index + 1}</td>
               <td className="px-4 py-2">{product.title}</td>
               <td className="px-4 py-2">{product.slug}</td>
               <td className="px-4 py-2">
@@ -89,6 +94,51 @@ const ProductList = ({ products }: IProps) => {
           ))}
         </tbody>
       </table>
+      <ul className="mt-5 float-right inline-flex -space-x-px text-sm">
+        <li>
+          <button
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-s-lg bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 ${
+              currentPage === 1
+                ? "cursor-not-allowed pointer-events-none opacity-50"
+                : ""
+            }`}
+          >
+            <Link href={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}>
+              Previous
+            </Link>
+          </button>
+        </li>
+        {pageNumbers.map((page) => (
+          <li key={page}>
+            <Link
+              href={
+                currentPage === page ? "#" : `/dashboard/products?page=${page}`
+              }
+            >
+              <button
+                className={`flex items-center justify-center px-3 h-8 leading-tight ${
+                  currentPage === page
+                    ? "border border-gray-700 bg-gray-700 text-white"
+                    : "bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-white"
+                }`}
+              >
+                {page}
+              </button>
+            </Link>
+          </li>
+        ))}
+        <li>
+          <button
+            className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-e-lg bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 ${
+              currentPage === pages
+                ? "cursor-not-allowed pointer-events-none opacity-50"
+                : ""
+            }`}
+          >
+            <Link href={`?page=${currentPage + 1}`}>Next</Link>
+          </button>
+        </li>
+      </ul>
     </div>
   );
 };
