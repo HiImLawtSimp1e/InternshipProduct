@@ -4,6 +4,7 @@ import { updateType } from "@/action/productTypeAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   type: IProductType;
@@ -37,6 +38,11 @@ const UpdateProductTypeForm = ({ type }: IProps) => {
       [name]: value,
     }));
   };
+
+  if (formState.errors.length > 0) {
+    toast.error("Error");
+  }
+
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
       <input type="hidden" value={type.id} name="id" />

@@ -5,6 +5,7 @@ import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import slugify from "slugify";
 
 interface IProps {
@@ -57,6 +58,10 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
       }));
     }
   };
+
+  if (formState.errors.length > 0) {
+    toast.error("Error");
+  }
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">

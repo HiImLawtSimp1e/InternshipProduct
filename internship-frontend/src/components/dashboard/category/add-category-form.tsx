@@ -4,6 +4,7 @@ import { addCategory } from "@/action/categoryAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const AddCategoryForm = () => {
   const initialState: FormState = { errors: [] };
@@ -33,6 +34,10 @@ const AddCategoryForm = () => {
       [name]: value,
     }));
   };
+
+  if (formState.errors.length > 0) {
+    toast.error("Error");
+  }
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">

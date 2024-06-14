@@ -4,18 +4,21 @@ import { addProduct } from "@/action/productAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   categorySelect: ICategorySelect[];
 }
 
 const AddProductForm = ({ categorySelect }: IProps) => {
+  // manage state of form action [useActionState hook]
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     addProduct,
     initialState
   );
 
+  // manage state of form data
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -26,12 +29,14 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     categoryId: "",
   });
 
+  //handle submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
   };
 
+  //handle change
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -44,6 +49,10 @@ const AddProductForm = ({ categorySelect }: IProps) => {
       [name]: value,
     }));
   };
+
+  if (formState.errors.length > 0) {
+    toast.error("Error");
+  }
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
@@ -116,11 +125,13 @@ const AddProductForm = ({ categorySelect }: IProps) => {
       </select>
       {formState.errors.length > 0 && (
         <ul>
-          {formState.errors.map((error, index) => (
-            <li className="text-red-400" key={index}>
-              {error}
-            </li>
-          ))}
+          {formState.errors.map((error, index) => {
+            return (
+              <li className="text-red-400" key={index}>
+                {error}
+              </li>
+            );
+          })}
         </ul>
       )}
       <button

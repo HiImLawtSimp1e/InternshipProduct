@@ -33,6 +33,11 @@ const AddProductTypeForm = () => {
       [name]: value,
     }));
   };
+
+  if (formState.errors.length > 0) {
+    toast.error("Error");
+  }
+
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
       <InputField
