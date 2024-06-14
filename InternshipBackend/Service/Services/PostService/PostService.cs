@@ -24,14 +24,18 @@ namespace Service.Services.PostService
             _context = context;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<List<Post>>> CreatePost(AddPostDTO newPost)
+        public async Task<ServiceResponse<bool>> CreatePost(AddPostDTO newPost)
         {
             var post = _mapper.Map<Post>(newPost);
             try
             {
                 _context.Posts.Add(post);
                 await _context.SaveChangesAsync();
-                return await GetAdminPosts();
+                return new ServiceResponse<bool>
+                {
+                    Data = true,
+                    Message = "Post created successfully!"
+                };
             }
             catch (Exception ex)
             {
@@ -39,17 +43,29 @@ namespace Service.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<List<Post>>> GetAdminPosts()
+        public async Task<ServiceResponse<PagingParams<List<Post>>>> GetAdminPosts(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Posts.Where(p => !p.Deleted).Count() / pageResults);
             try
             {
                 var posts = await _context.Posts
                                    .Where(p => !p.Deleted)
+                                   .OrderByDescending(p => p.ModifiedAt)
+                                   .Skip((page - 1) * (int)pageResults)
+                                   .Take((int)pageResults)
                                    .ToListAsync();
-                return new ServiceResponse<List<Post>>
+
+                var pagingData = new PagingParams<List<Post>>
                 {
-                    Data = posts,
-                    Message = "Successfully!"
+                    Result = posts,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<Post>>>
+                {
+                    Data = pagingData,
                 };
             }
             catch(Exception ex)
@@ -97,18 +113,30 @@ namespace Service.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<List<CustomerPostReponseDTO>>> GetPostsAsync()
+        public async Task<ServiceResponse<PagingParams<List<CustomerPostReponseDTO>>>> GetPostsAsync(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Posts.Where(p => !p.Deleted && p.IsActive).Count() / pageResults);
             try
             {
                 var posts = await _context.Posts
                                    .Where(p => !p.Deleted && p.IsActive)
+                                   .OrderByDescending(p => p.ModifiedAt)
+                                   .Skip((page - 1) * (int)pageResults)
+                                   .Take((int)pageResults)
                                    .ToListAsync();
                 var result = _mapper.Map<List<CustomerPostReponseDTO>>(posts);
-                return new ServiceResponse<List<CustomerPostReponseDTO>>
+
+                var pagingData = new PagingParams<List<CustomerPostReponseDTO>>
                 {
-                    Data = result,
-                    Message = "Successfully!"
+                    Result = result,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<CustomerPostReponseDTO>>>
+                {
+                    Data = pagingData,
                 };
             }
             catch (Exception ex)
@@ -117,12 +145,12 @@ namespace Service.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<List<Post>>> SoftDeletePost(Guid postId)
+        public async Task<ServiceResponse<bool>> SoftDeletePost(Guid postId)
         {
             var post = await _context.Posts.FirstOrDefaultAsync(c => c.Id == postId);
             if (post == null)
             {
-                return new ServiceResponse<List<Post>>
+                return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Post not found"
@@ -134,7 +162,11 @@ namespace Service.Services.PostService
                 post.Deleted = true;
                 await _context.SaveChangesAsync();
 
-                return await GetAdminPosts();
+                return new ServiceResponse<bool>
+                {
+                    Data = true,
+                    Message = "Post updated successfully!"
+                };
             }
             catch (Exception ex)
             {
@@ -142,12 +174,12 @@ namespace Service.Services.PostService
             }
         }
 
-        public async Task<ServiceResponse<List<Post>>> UpdatePost(UpdatePostDTO updatePost)
+        public async Task<ServiceResponse<bool>> UpdatePost(Guid postId, UpdatePostDTO updatePost)
         {
-            var dbPost = await _context.Posts.FirstOrDefaultAsync(c => c.Id == updatePost.Id);
+            var dbPost = await _context.Posts.FirstOrDefaultAsync(c => c.Id == postId);
             if (dbPost == null)
             {
-                return new ServiceResponse<List<Post>>
+                return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Post not found"
@@ -159,7 +191,11 @@ namespace Service.Services.PostService
                 dbPost.ModifiedAt = DateTime.Now;
                 await _context.SaveChangesAsync();
 
-                return await GetAdminPosts();
+                return new ServiceResponse<bool>
+                {
+                    Data = true,
+                    Message = "Post deteted successfully!"
+                };
             }
             catch(Exception ex)
             {

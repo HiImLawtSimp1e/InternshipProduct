@@ -20,18 +20,22 @@ namespace API.Controllers
         {
             _service = service;
         }
-        [HttpGet("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Post>>>> GetAdminPosts()
+        [HttpGet("admin")]
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<Post>>>>> GetAdminPosts([FromQuery] int page)
         {
-            var response = await _service.GetAdminPosts();
+            if(page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetAdminPosts(page);
             if(!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-        [HttpGet("admin/{id}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Post>>>> GetAdminPosts(Guid id)
+        [HttpGet("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<Post>>> GetAdminPost(Guid id)
         {
             var response = await _service.GetAdminSinglePost(id);
             if (!response.Success)
@@ -41,9 +45,13 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CustomerPostReponseDTO>>>> GetPostsAsync()
+        public async Task<ActionResult<ServiceResponse<List<CustomerPostReponseDTO>>>> GetPostsAsync([FromQuery] int page)
         {
-            var response = await _service.GetPostsAsync();
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetPostsAsync(page);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -60,8 +68,8 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPost("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Post>>>> CreatePost(AddPostDTO newPost) 
+        [HttpPost("admin")]
+        public async Task<ActionResult<ServiceResponse<bool>>> CreatePost(AddPostDTO newPost) 
         {
             var response = await _service.CreatePost(newPost);
             if (!response.Success)
@@ -70,18 +78,18 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpPut("admin"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Post>>>> UpdatePost(UpdatePostDTO updatePost)
+        [HttpPut("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdatePost(Guid id,UpdatePostDTO updatePost)
         {
-            var response = await _service.UpdatePost(updatePost);
+            var response = await _service.UpdatePost(id, updatePost);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-        [HttpDelete("admin/{id}"), Authorize(Roles = "Admin")]
-        public async Task<ActionResult<ServiceResponse<List<Post>>>> SoftDeletePost(Guid id)
+        [HttpDelete("admin/{id}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeletePost(Guid id)
         {
             var response = await _service.SoftDeletePost(id);
             if (!response.Success)

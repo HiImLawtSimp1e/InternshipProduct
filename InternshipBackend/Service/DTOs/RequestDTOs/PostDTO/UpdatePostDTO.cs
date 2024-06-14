@@ -10,9 +10,6 @@ namespace Service.DTOs.RequestDTOs.PostDTO
 {
     public class UpdatePostDTO
     {
-        [Required(ErrorMessage = "Post id is required")]
-        public Guid Id { get; set; }
-
         [StringLength(100, ErrorMessage = "Title can't be longer than 100 characters")]
         public string Title { get; set; } = string.Empty;
         [StringLength(100, ErrorMessage = "Title can't be longer than 250 characters")]
@@ -20,11 +17,8 @@ namespace Service.DTOs.RequestDTOs.PostDTO
 
         public string Image { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "Description can't be longer than 500 characters")]
-        public string Description { get; set; } = string.Empty;
-
         [AllowHtml]
-        public string Detail { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         [StringLength(70, ErrorMessage = "SEO Title can't be longer than 70 characters")]
         public string SeoTitle { get; set; } = string.Empty;
@@ -34,5 +28,6 @@ namespace Service.DTOs.RequestDTOs.PostDTO
 
         [StringLength(100, ErrorMessage = "SEO Keywords can't be longer than 100 characters")]
         public string SeoKeyworks { get; set; } = string.Empty;
+        public bool IsActive { get; set; }
     }
 }

@@ -17,11 +17,8 @@ namespace Service.DTOs.RequestDTOs.PostDTO
         public string Slug { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
 
-        [StringLength(500, ErrorMessage = "Description can't be longer than 500 characters")]
-        public string Description { get; set; } = string.Empty;
-
         [AllowHtml]
-        public string Detail { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
 
         [StringLength(70, ErrorMessage = "SEO Title can't be longer than 70 characters")]
         public string SeoTitle { get; set; } = string.Empty;
