@@ -1,19 +1,35 @@
 import CategoryList from "@/components/dashboard/category/category-list";
 
-const Categories = async () => {
-  const res = await fetch(`http://localhost:5000/api/Category/admin`, {
+const Categories = async ({ params }: { params: { page?: number } }) => {
+  const { page } = params;
+  let url = "";
+  if (page == null || page <= 0) {
+    url = "http://localhost:5000/api/Category/admin";
+  } else {
+    url = `http://localhost:5000/api/Category/admin?page=${page}`;
+  }
+  const res = await fetch(url, {
     method: "GET",
     next: { tags: ["categoryListAdmin"] },
   });
 
-  const responseData: ApiResponse<ICategory[]> = await res.json();
+  const responseData: ApiResponse<PagingParams<ICategory[]>> = await res.json();
   const { data, success, message } = responseData;
+  console.log(responseData);
+  const { result, pages, currentPage } = data;
 
-  return <CategoryList categories={data} />;
+  return (
+    <CategoryList categories={result} pages={pages} currentPage={currentPage} />
+  );
 };
 
-const ProductTypesPage = () => {
-  return <Categories />;
+const CategoiesPage = ({
+  searchParams,
+}: {
+  searchParams: { page?: number };
+}) => {
+  const { page } = searchParams;
+  return <Categories params={{ page: page || undefined }} />;
 };
 
-export default ProductTypesPage;
+export default CategoiesPage;

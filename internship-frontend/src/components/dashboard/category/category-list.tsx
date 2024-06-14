@@ -1,4 +1,5 @@
 import { deleteCategory } from "@/action/categoryAction";
+import Pagination from "@/components/ui/pagination";
 import TagFiled from "@/components/ui/tag";
 import { formatDate } from "@/lib/format/format";
 import Link from "next/link";
@@ -6,9 +7,13 @@ import { MdAdd } from "react-icons/md";
 
 interface IProps {
   categories: ICategory[];
+  pages: number;
+  currentPage: number;
 }
 
-const CategoryList = ({ categories }: IProps) => {
+const CategoryList = ({ categories, pages, currentPage }: IProps) => {
+  const pageSize = 10;
+  const startIndex = (currentPage - 1) * pageSize;
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
       <div className="flex items-center justify-end mb-5">
@@ -64,6 +69,7 @@ const CategoryList = ({ categories }: IProps) => {
           ))}
         </tbody>
       </table>
+      <Pagination pages={pages} currentPage={currentPage} pageSize={pageSize} />
     </div>
   );
 };

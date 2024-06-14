@@ -2,12 +2,17 @@ import { MdAdd } from "react-icons/md";
 import { formatDate } from "@/lib/format/format";
 import Link from "next/link";
 import { deleteType } from "@/action/productTypeAction";
+import Pagination from "@/components/ui/pagination";
 
 interface IProps {
   productTypes: IProductType[];
+  pages: number;
+  currentPage: number;
 }
 
-const ProductTypeList = ({ productTypes }: IProps) => {
+const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
+  const pageSize = 10;
+  const startIndex = (currentPage - 1) * pageSize;
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
       <div className="flex items-center justify-end mb-5">
@@ -54,6 +59,7 @@ const ProductTypeList = ({ productTypes }: IProps) => {
           ))}
         </tbody>
       </table>
+      <Pagination pages={pages} currentPage={currentPage} pageSize={pageSize} />
     </div>
   );
 };
