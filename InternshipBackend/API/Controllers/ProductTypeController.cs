@@ -21,9 +21,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<ProductType>>>> GetProductTypes()
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<ProductType>>>>> GetProductTypes([FromQuery] int page)
         {
-            var response = await _service.GetProductTypes();
+            if(page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetProductTypes(page);
             if (!response.Success)
             {
                 return BadRequest(response);

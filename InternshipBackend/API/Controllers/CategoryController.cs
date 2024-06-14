@@ -22,9 +22,13 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CustomerCategoryResponseDTO>>>> GetCategoriesAsync()
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>>> GetCategoriesAsync([FromQuery] int page)
         {
-            var response = await _service.GetCategoriesAsync();
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetCategoriesAsync(page);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -32,9 +36,13 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("admin")]
-        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetAdminCategories()
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<Category>>>>> GetAdminCategories([FromQuery] int page)
         {
-            var response = await _service.GetAdminCategories();
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetAdminCategories(page);
             if (!response.Success)
             {
                 return BadRequest(response);

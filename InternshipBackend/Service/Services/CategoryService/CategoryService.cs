@@ -42,16 +42,29 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<List<Category>>> GetAdminCategories()
+        public async Task<ServiceResponse<PagingParams<List<Category>>>> GetAdminCategories(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Categories.Where(p => !p.Deleted).Count() / pageResults);
             try
             {
                 var categories = await _context.Categories
                    .Where(c => !c.Deleted)
+                   .OrderByDescending(p => p.ModifiedAt)
+                   .Skip((page - 1) * (int)pageResults)
+                   .Take((int)pageResults)
                    .ToListAsync();
-                return new ServiceResponse<List<Category>>
+
+                var pagingData = new PagingParams<List<Category>>
                 {
-                    Data = categories,
+                    Result = categories,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<Category>>>
+                {
+                    Data = pagingData,
                 };
             }
             catch (Exception ex)
@@ -78,17 +91,31 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<List<CustomerCategoryResponseDTO>>> GetCategoriesAsync()
+        public async Task<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>> GetCategoriesAsync(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Categories.Where(p => !p.Deleted && p.IsActive).Count() / pageResults);
             try
             {
                 var categories = await _context.Categories
                    .Where(c => !c.Deleted && c.IsActive)
+                   .OrderByDescending(p => p.ModifiedAt)
+                   .Skip((page - 1) * (int)pageResults)
+                   .Take((int)pageResults)
                    .ToListAsync();
+
                 var result = categories.Select(category => _mapper.Map<CustomerCategoryResponseDTO>(category)).ToList();
-                return new ServiceResponse<List<CustomerCategoryResponseDTO>>
+
+                var pagingData = new PagingParams<List<CustomerCategoryResponseDTO>>
                 {
-                    Data = result,
+                    Result = result,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>
+                {
+                    Data = pagingData,
                     Message = "Successfully!!!"
                 };
             }

@@ -117,14 +117,28 @@ namespace Service.Services.ProductTypeService
             }
         }
 
-        public async Task<ServiceResponse<List<ProductType>>> GetProductTypes()
+        public async Task<ServiceResponse<PagingParams<List<ProductType>>>> GetProductTypes(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.ProductTypes.Where(p => !p.Deleted).Count() / pageResults);
             try
             {
-                var productTypes = await _context.ProductTypes.ToListAsync();
-                return new ServiceResponse<List<ProductType>>
+
+                var productTypes = await _context.ProductTypes
+                                              .OrderByDescending(p => p.ModifiedAt)
+                                              .Skip((page - 1) * (int)pageResults)
+                                              .Take((int)pageResults)
+                                              .ToListAsync();
+                var pagingData = new PagingParams<List<ProductType>>
                 {
-                    Data = productTypes,
+                    Result = productTypes,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<ProductType>>>
+                {
+                    Data = pagingData,
                 };
             }
             catch (Exception ex)

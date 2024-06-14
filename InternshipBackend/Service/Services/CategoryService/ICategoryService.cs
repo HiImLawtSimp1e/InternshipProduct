@@ -12,8 +12,8 @@ namespace Service.Services.CategoryService
 {
     public interface ICategoryService
     {
-        Task<ServiceResponse<List<CustomerCategoryResponseDTO>>> GetCategoriesAsync();
-        Task<ServiceResponse<List<Category>>> GetAdminCategories();
+        Task<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>> GetCategoriesAsync(int page);
+        Task<ServiceResponse<PagingParams<List<Category>>>> GetAdminCategories(int page);
         Task<ServiceResponse<Category>> GetAdminCategory(Guid categoryId);
         Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory);
         Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category);
