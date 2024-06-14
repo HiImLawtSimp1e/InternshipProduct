@@ -1,32 +1,39 @@
 "use client";
 
-import { updateProduct } from "@/action/productAction";
+import { addPost, updatePost } from "@/action/postAction";
+import MyEditor from "@/components/ui/editor";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import React, { useState } from "react";
 import slugify from "slugify";
 
 interface IProps {
-  product: IProduct;
-  categorySelect: ICategorySelect[];
+  post: IPost;
 }
 
-const UpdateProductForm = ({ product, categorySelect }: IProps) => {
+const UpdatePostForm = ({ post }: IProps) => {
+  const [content, setContent] = useState<string>(post.content);
+
+  // manage state of form action [useActionState hook]
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
-    updateProduct,
+    updatePost,
     initialState
   );
-  const [formData, setFormData] = useState<IProduct>(product);
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  // manage state of form data
+  const [formData, setFormData] = useState<IPost>(post);
+
+  //handle submit
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    formData.set("content", content);
     formAction(formData);
   };
 
+  //handle change
   const handleChange = (
     e:
       | React.ChangeEvent<HTMLInputElement>
@@ -59,13 +66,9 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
     }
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
-
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
-      <input type="hidden" name="id" value={product.id} />
+      <input type="hidden" name="id" value={post.id} />
       <InputField
         label="Title"
         id="title"
@@ -74,28 +77,13 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
         onChange={handleChange}
         required
       />
-      <label
-        htmlFor="description"
-        className="block mb-2 text-sm font-medium text-white"
-      >
-        Description
-      </label>
-      <textarea
-        id="description"
-        name="description"
-        value={formData.description}
-        rows={10}
-        onChange={handleChange}
-        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
-        required
-      />
       <InputField
-        label="Image URL"
-        id="imageUrl"
-        name="imageUrl"
-        value={formData.imageUrl}
+        label="Slug"
+        id="slug"
+        name="slug"
+        value={formData.slug}
         onChange={handleChange}
-        required
+        readonly
       />
       <InputField
         label="SEO Title"
@@ -121,33 +109,15 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
         onChange={handleChange}
         required
       />
-      <InputField
-        label="Slug"
-        id="slug"
-        name="slug"
-        value={formData.slug}
-        onChange={handleChange}
-        readonly
-      />
-      <label
-        htmlFor="categoryId"
-        className="block mb-2 text-sm font-medium text-white"
-      >
-        Category
-      </label>
-      <select
-        name="categoryId"
-        id="categoryId"
-        value={formData.categoryId}
-        onChange={handleChange}
-        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
-      >
-        {categorySelect?.map((category: ICategorySelect, index) => (
-          <option key={index} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
+      <div>
+        <label className="block mb-2 text-sm font-medium text-white">
+          Detail
+        </label>
+        <MyEditor
+          value={content}
+          onEditorChange={(newContent) => setContent(newContent)}
+        />
+      </div>
       <SelectField
         label="Is Active"
         id="isActive"
@@ -159,15 +129,6 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
           { label: "No", value: "false" },
         ]}
       />
-      {formState.errors.length > 0 && (
-        <ul>
-          {formState.errors.map((error, index) => (
-            <li className="text-red-400" key={index}>
-              {error}
-            </li>
-          ))}
-        </ul>
-      )}
       <button
         type="submit"
         className="float-right mt-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
@@ -177,4 +138,5 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
     </form>
   );
 };
-export default UpdateProductForm;
+
+export default UpdatePostForm;

@@ -12,6 +12,7 @@ import {
   MdLogout,
   MdStorage,
   MdCategory,
+  MdOutlinePostAdd,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -56,6 +57,11 @@ const Sidebar = () => {
           title: "Users",
           path: "/dashboard/users",
           icon: <MdSupervisedUserCircle />,
+        },
+        {
+          title: "Posts",
+          path: "/dashboard/posts",
+          icon: <MdOutlinePostAdd />,
         },
         {
           title: "Transactions",

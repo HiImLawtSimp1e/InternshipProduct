@@ -4,6 +4,7 @@ import { addType } from "@/action/productTypeAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 const AddProductTypeForm = () => {
   const initialState: FormState = { errors: [] };

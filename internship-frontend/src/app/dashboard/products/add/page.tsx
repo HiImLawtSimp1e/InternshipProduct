@@ -11,7 +11,7 @@ const Product = async () => {
   const categorySelect: ApiResponse<ICategorySelect[]> =
     await categorySelectRes.json();
 
-  console.log(categorySelect.data);
+   console.log(categorySelect.data);
 
   return <AddProductForm categorySelect={categorySelect.data} />;
 };
