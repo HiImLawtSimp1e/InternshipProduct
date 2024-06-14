@@ -1,6 +1,6 @@
 ﻿using Data.Entities;
 using Service.DTOs.RequestDTOs.CategoryDTO;
-using Service.DTOs.ResponseDTOs;
+using Service.DTOs.ResponseDTOs.CustomerCategoryDTO;
 using Service.Models;
 using System;
 using System.Collections.Generic;

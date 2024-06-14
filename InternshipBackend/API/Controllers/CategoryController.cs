@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.CategoryDTO;
-using Service.DTOs.ResponseDTOs;
+using Service.DTOs.ResponseDTOs.CustomerCategoryDTO;
 using Service.Models;
 using Service.Services.CategoryService;
 using System.Data;

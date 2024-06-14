@@ -104,18 +104,32 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<List<Product>>> GetAdminProducts()
+        public async Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted).Count() / pageResults);
+
             try
             {
                 var products = await _context.Products
                    .Where(p => !p.Deleted)
+                   .OrderByDescending(p => p.ModifiedAt)
+                   .Skip((page - 1) * (int)pageResults)
+                   .Take((int)pageResults)                  
                    .Include(p => p.ProductVariants.Where(pv => !pv.Deleted))
                    .ThenInclude(pv => pv.ProductType)
                    .ToListAsync();
-                return new ServiceResponse<List<Product>>
+
+                var pagingData = new PagingParams<List<Product>>
                 {
-                    Data = products,
+                    Result = products,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<Product>>>
+                {
+                    Data = pagingData,
                     Message = "Successfully!"
                 };
             }
@@ -177,19 +191,33 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsAsync()
+        public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page)
         {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted).Count() / pageResults);
             try
             {
                 var products = await _context.Products
                    .Where(p => !p.Deleted && p.IsActive)
+                   .OrderByDescending(p => p.ModifiedAt)
+                   .Skip((page - 1) * (int)pageResults)
+                   .Take((int)pageResults)
                    .Include(p => p.ProductVariants.Where(pv => !pv.Deleted && pv.IsActive))
                    .ThenInclude(pv => pv.ProductType)
                    .ToListAsync();
+
                 var result = _mapper.Map<List<CustomerProductResponseDTO>>(products);
-                return new ServiceResponse<List<CustomerProductResponseDTO>>
+
+                var pagingData = new PagingParams<List<CustomerProductResponseDTO>>
                 {
-                    Data = result,
+                    Result = result,
+                    CurrentPage = page,
+                    Pages = (int)pageCount
+                };
+
+                return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
+                {
+                    Data = pagingData,
                     Message = "Successfully!"
                 };
             }

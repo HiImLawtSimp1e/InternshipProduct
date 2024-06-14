@@ -23,9 +23,13 @@ namespace API.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CustomerProductResponseDTO>>>> GetProductsAsync()
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>>> GetProductsAsync([FromQuery] int page)
         {
-            var response = await _service.GetProductsAsync();
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetProductsAsync(page);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -33,9 +37,13 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("admin")]
-        public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts()
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<Product>>>>> GetAdminProducts([FromQuery] int page)
         {
-            var response = await _service.GetAdminProducts();
+            if(page == null || page <= 0) 
+            {
+                page = 1;
+            }
+            var response = await _service.GetAdminProducts(page);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -43,7 +51,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("admin/{id}")]
-        public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProducts(Guid id)
+        public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProduct(Guid id)
         {
             var response = await _service.GetAdminSingleProduct(id);
             if (!response.Success)

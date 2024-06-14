@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Data.Entities;
 using Service.DTOs.RequestDTOs.CategoryDTO;
-using Service.DTOs.ResponseDTOs;
+using Service.DTOs.ResponseDTOs.CustomerCategoryDTO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
