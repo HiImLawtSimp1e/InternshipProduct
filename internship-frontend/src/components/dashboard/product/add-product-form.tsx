@@ -3,7 +3,8 @@
 import { addProduct } from "@/action/productAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface IProps {
@@ -11,6 +12,8 @@ interface IProps {
 }
 
 const AddProductForm = ({ categorySelect }: IProps) => {
+  const router = useRouter();
+
   // manage state of form action [useActionState hook]
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
@@ -29,11 +32,14 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     categoryId: "",
   });
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   //handle submit
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   //handle change
@@ -50,9 +56,16 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     }));
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Create product failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Created product successfully!");
+      router.push("/dashboard/products");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
@@ -117,7 +130,7 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         onChange={handleChange}
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
       >
-        {categorySelect.map((category: ICategorySelect, index) => (
+        {categorySelect?.map((category: ICategorySelect, index) => (
           <option key={index} value={category.id}>
             {category.title}
           </option>
