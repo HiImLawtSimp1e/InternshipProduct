@@ -1,7 +1,13 @@
+"use client";
+
 import { deleteVariant } from "@/action/variantAction";
 import TagFiled from "@/components/ui/tag";
 import Link from "next/link";
 import { MdAdd } from "react-icons/md";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useCustomActionState } from "@/lib/custom/customHook";
+import { toast } from "react-toastify";
 
 interface IProps {
   productId: string;
@@ -9,6 +15,38 @@ interface IProps {
 }
 
 const ProductVariantForm = ({ productId, variants }: IProps) => {
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    deleteVariant,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (
+      !window.confirm("Are you sure you want to delete this product variant?")
+    ) {
+      return;
+    }
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Deleted product failed!");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Deleted product successfully!");
+      router.push(`/dashboard/products/${productId}`);
+    }
+  }, [formState, toastDisplayed]);
   return (
     <>
       <div className="flex items-center justify-end mt-10">
@@ -61,7 +99,7 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
                     </button>
                   </Link>
 
-                  <form action={deleteVariant}>
+                  <form onSubmit={handleSubmit}>
                     <input type="hidden" name="productId" value={productId} />
                     <input
                       type="hidden"

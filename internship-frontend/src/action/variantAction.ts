@@ -129,39 +129,84 @@ export const updateVariant = async (
     isActive,
   };
 
-  console.log(variantData);
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/ProductVariant/admin/${productId}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(variantData),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
 
-  const res = await fetch(
-    `http://localhost:5000/api/ProductVariant/admin/${productId}`,
-    {
-      method: "PUT",
-      body: JSON.stringify(variantData),
-      headers: { "Content-Type": "application/json" },
+    if (!res.ok) {
+      // If the response is not OK, parse the error response
+      const errorResponse = await res.json();
+      const { errors } = errorResponse;
+      // Create an array to hold error messages
+      let errorMessages: string[] = [];
+      // Check if there are specific validation errors and add them to the error messages
+      if (errors) {
+        for (const key in errors) {
+          if (errors.hasOwnProperty(key)) {
+            errorMessages = errorMessages.concat(errors[key]);
+          }
+        }
+      }
+      // Return the updated state with errors
+      return { errors: errorMessages };
     }
-  );
 
-  // If the response is OK, revalidate the path and redirect
-  revalidateTag("getVariant");
-  revalidateTag("productListAdmin");
-  revalidateTag("productDetailAdmin");
-  revalidateTag("selectProductType");
-  redirect(`/dashboard/products/${productId}`);
+    // If the response is OK, parse the response data
+    const responseData: ApiResponse<string> = await res.json();
+    console.log(responseData);
+    const { success, message } = responseData;
+
+    if (success) {
+      // If the response is success, revalidate the path and redirect
+      revalidateTag("getVariant");
+      revalidateTag("productListAdmin");
+      revalidateTag("productDetailAdmin");
+      revalidateTag("selectProductType");
+      revalidateTag("productDetailAdmin");
+      return { success: true, errors: [] };
+    } else {
+      return { errors: [message] };
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error("Unexpected error:", error);
+    return { errors: ["An unexpected error occurred. Please try again."] };
+  }
 };
 
-export const deleteVariant = async (formData: FormData) => {
+export const deleteVariant = async (
+  prevState: FormState,
+  formData: FormData
+) => {
   const productId = formData.get("productId") as string;
   const productTypeId = formData.get("productTypeId") as string;
 
-  await fetch(
+  const res = await fetch(
     `http://localhost:5000/api/ProductVariant/admin/${productId}?productTypeId=${productTypeId}`,
     {
       method: "DELETE",
       headers: { "Content-Type": "application/json" },
     }
   );
-  revalidateTag("getVariant");
-  revalidateTag("productListAdmin");
-  revalidateTag("productDetailAdmin");
-  revalidateTag("selectProductType");
-  redirect(`/dashboard/products/${productId}`);
+
+  const responseData: ApiResponse<string> = await res.json();
+  console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidateTag("getVariant");
+    revalidateTag("productListAdmin");
+    revalidateTag("productDetailAdmin");
+    revalidateTag("selectProductType");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };

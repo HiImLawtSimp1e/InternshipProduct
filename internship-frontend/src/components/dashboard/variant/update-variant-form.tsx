@@ -4,7 +4,8 @@ import { updateVariant } from "@/action/variantAction";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface IProps {
@@ -12,6 +13,8 @@ interface IProps {
 }
 
 const UpdateVariantForm = ({ variant }: IProps) => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     updateVariant,
@@ -20,10 +23,13 @@ const UpdateVariantForm = ({ variant }: IProps) => {
 
   const [formData, setFormData] = useState<IProductVariant>(variant);
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
@@ -50,9 +56,16 @@ const UpdateVariantForm = ({ variant }: IProps) => {
     }
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Update product variant failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Updated product variant successfully!");
+      router.push(`/dashboard/products/${variant.productId}`);
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
