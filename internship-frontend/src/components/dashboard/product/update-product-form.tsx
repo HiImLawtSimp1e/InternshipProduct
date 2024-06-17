@@ -4,7 +4,8 @@ import { updateProduct } from "@/action/productAction";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 
@@ -14,6 +15,8 @@ interface IProps {
 }
 
 const UpdateProductForm = ({ product, categorySelect }: IProps) => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     updateProduct,
@@ -21,10 +24,13 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
   );
   const [formData, setFormData] = useState<IProduct>(product);
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
@@ -34,34 +40,29 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
       | React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
 
-    // check if InputField
-    if (e.target instanceof HTMLInputElement) {
+    if (e.target instanceof HTMLInputElement && name === "title") {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        [name]: value,
-      }));
-
-      if (name === "title") {
-        setFormData((prevFormData) => ({
-          ...prevFormData,
-          slug: slugify(value, { lower: true }),
-        }));
-      }
-    }
-
-    // check if SelectField
-    if (e.target instanceof HTMLSelectElement) {
-      setFormData((prevFormData) => ({
-        ...prevFormData,
-        [name]: value,
+        slug: slugify(value, { lower: true }),
       }));
     }
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Update product failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Updated product successfully!");
+      router.push("/dashboard/products");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
@@ -177,4 +178,5 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
     </form>
   );
 };
+
 export default UpdateProductForm;

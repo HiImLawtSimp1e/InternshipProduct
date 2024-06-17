@@ -10,7 +10,7 @@ const Product = async ({ id }: { id: number }) => {
   );
 
   const categorySelectRes = await fetch(
-    `http://localhost:5000/api/Category/admin`,
+    `http://localhost:5000/api/Category/select`,
     {
       method: "GET",
       next: { tags: ["categorySelect"] },
