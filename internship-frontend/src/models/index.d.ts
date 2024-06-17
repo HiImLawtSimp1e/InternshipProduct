@@ -12,4 +12,5 @@ interface PagingParams<T> {
 
 interface FormState {
   errors: string[];
+  success?: boolean;
 }

@@ -3,10 +3,13 @@
 import { addType } from "@/action/productTypeAction";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 const AddProductTypeForm = () => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     addType,
@@ -17,10 +20,13 @@ const AddProductTypeForm = () => {
     name: "",
   });
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
@@ -35,9 +41,16 @@ const AddProductTypeForm = () => {
     }));
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Create product type failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Created product type successfully!");
+      router.push("/dashboard/product-types");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
