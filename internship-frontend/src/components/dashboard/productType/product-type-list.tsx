@@ -1,8 +1,14 @@
+"use client";
+
 import { MdAdd } from "react-icons/md";
 import { formatDate } from "@/lib/format/format";
 import Link from "next/link";
 import { deleteType } from "@/action/productTypeAction";
 import Pagination from "@/components/ui/pagination";
+import { useRouter } from "next/navigation";
+import { useCustomActionState } from "@/lib/custom/customHook";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   productTypes: IProductType[];
@@ -11,8 +17,39 @@ interface IProps {
 }
 
 const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
+  //using for pagination
   const pageSize = 10;
   const startIndex = (currentPage - 1) * pageSize;
+
+  //using for delete action
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    deleteType,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Deleted product type successfully!");
+      router.push("/dashboard/product-types");
+    }
+  }, [formState, toastDisplayed]);
+
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
       <div className="flex items-center justify-end mb-5">
@@ -47,7 +84,7 @@ const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
                       View
                     </button>
                   </Link>
-                  <form action={deleteType}>
+                  <form onSubmit={handleSubmit}>
                     <input type="hidden" name="id" value={type.id} />
                     <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
                       Delete

@@ -43,11 +43,10 @@ export const addType = async (
     const responseData: ApiResponse<string> = await res.json();
     const { success, message } = responseData;
 
-    // If the response is OK and success is true, revalidate the path and redirect
-    revalidateTag("selectProductType");
-    revalidateTag("productTypeList");
-
     if (success) {
+      // If the response is success and success is true, revalidate the path and redirect
+      revalidateTag("selectProductType");
+      revalidateTag("productTypeList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -104,11 +103,10 @@ export const updateType = async (
     console.log(responseData);
     const { success, message } = responseData;
 
-    // If the response is OK, revalidate the path and redirect
-    revalidateTag("selectProductType");
-    revalidateTag("productTypeList");
-
     if (success) {
+      // If the response is success, revalidate the path and redirect
+      revalidateTag("selectProductType");
+      revalidateTag("productTypeList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -120,7 +118,10 @@ export const updateType = async (
   }
 };
 
-export const deleteType = async (formData: FormData) => {
+export const deleteType = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
 
   const res = await fetch(`http://localhost:5000/api/ProductType/admin/${id}`, {
@@ -130,13 +131,14 @@ export const deleteType = async (formData: FormData) => {
 
   const responseData: ApiResponse<string> = await res.json();
   console.log(responseData);
-  const { data, success, message } = responseData;
+  const { success, message } = responseData;
 
-  if (!success) {
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidateTag("selectProductType");
+    revalidateTag("productTypeList");
+    return { success: true, errors: [] };
+  } else {
     return { errors: [message] };
   }
-
-  revalidateTag("selectProductType");
-  revalidateTag("productTypeList");
-  redirect(`/dashboard/product-types`);
 };
