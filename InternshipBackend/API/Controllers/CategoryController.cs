@@ -59,6 +59,16 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [HttpGet("select")]
+        public async Task<ActionResult<ServiceResponse<List<Category>>>> GetCategoriesSelect()
+        {
+            var response = await _service.GetCategoriesSelect();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateCategory(AddCategoryDTO category)
         {

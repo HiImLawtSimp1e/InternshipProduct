@@ -18,6 +18,7 @@ namespace Service.Services.CategoryService
         Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory);
         Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category);
         Task<ServiceResponse<bool>> SoftDeleteCategory(Guid categoryId);
+        Task<ServiceResponse<List<CategorySelectResponseDTO>>> GetCategoriesSelect();
 
     }
 }

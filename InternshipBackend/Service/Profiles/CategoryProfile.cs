@@ -16,6 +16,7 @@ namespace Service.Profiles
         public CategoryProfile()
         {
             CreateMap<Category, CustomerCategoryResponseDTO>();
+            CreateMap<Category, CategorySelectResponseDTO>();
             CreateMap<AddCategoryDTO, Category>();
         }
     }

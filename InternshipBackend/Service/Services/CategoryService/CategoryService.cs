@@ -4,6 +4,7 @@ using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.CategoryDTO;
 using Service.DTOs.ResponseDTOs.CustomerCategoryDTO;
+using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
 using System;
 using System.Collections.Generic;
@@ -183,6 +184,16 @@ namespace Service.Services.CategoryService
             {
                 throw ex;
             }
+        }
+
+        public async Task<ServiceResponse<List<CategorySelectResponseDTO>>> GetCategoriesSelect()
+        {
+            var categories = await _context.Categories
+                                    .Where(c => !c.Deleted)
+                                    .ToListAsync();
+            var result = _mapper.Map<List<CategorySelectResponseDTO>>(categories);
+
+            return new ServiceResponse<List<CategorySelectResponseDTO>> { Data = result };
         }
     }
 }
