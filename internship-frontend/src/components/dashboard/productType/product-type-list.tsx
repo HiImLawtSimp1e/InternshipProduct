@@ -51,7 +51,7 @@ const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
   }, [formState, toastDisplayed]);
 
   return (
-    <div className="bg-gray-800 p-5 rounded-lg mt-5">
+    <div>
       <div className="flex items-center justify-end mb-5">
         <Link href="/dashboard/product-types/add">
           <button className="p-2 flex items-center justify-center mb-5 bg-purple-600 text-white rounded">
@@ -73,7 +73,7 @@ const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
         <tbody>
           {productTypes.map((type: IProductType, index) => (
             <tr key={type.id} className="border-b border-gray-700">
-              <td className="px-4 py-2">{index + 1}</td>
+              <td className="px-4 py-2">{startIndex + index + 1}</td>
               <td className="px-4 py-2">{type.name}</td>
               <td className="px-4 py-2">{formatDate(type.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(type.modifiedAt)}</td>

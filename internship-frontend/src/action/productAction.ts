@@ -186,13 +186,26 @@ export const updateProduct = async (
   }
 };
 
-export const deleteProduct = async (formData: FormData) => {
+export const deleteProduct = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const id = formData.get("id") as number | null;
 
-  await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
+  const res = await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });
-  revalidatePath("/dashboard/products");
-  redirect("/dashboard/products");
+
+  const responseData: ApiResponse<string> = await res.json();
+  console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidatePath("/dashboard/products");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };
