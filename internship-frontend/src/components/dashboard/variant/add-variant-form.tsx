@@ -4,7 +4,8 @@ import { addVariant } from "@/action/variantAction";
 // Import necessary modules and interfaces
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface IProps {
@@ -13,11 +14,15 @@ interface IProps {
 }
 
 const AddVariantForm = ({ productId, typeSelect }: IProps) => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     addVariant,
     initialState
   );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
 
   const [formData, setFormData] = useState({
     productTypeId: "",
@@ -29,6 +34,7 @@ const AddVariantForm = ({ productId, typeSelect }: IProps) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
@@ -43,9 +49,16 @@ const AddVariantForm = ({ productId, typeSelect }: IProps) => {
     }));
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Create product variant failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Created product variant successfully!");
+      router.push(`/dashboard/products/${productId}`);
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
