@@ -24,6 +24,7 @@ namespace Service.Services.ProductVariantService
         }
         public async Task<ServiceResponse<bool>> AddVariant(Guid productId, AddProductVariantDTO newVariant)
         {
+            //check product exist
             var dbProduct = await _context.Products.FirstOrDefaultAsync(p => p.Id == productId && !p.Deleted);
             if (dbProduct == null)
             {
@@ -34,6 +35,7 @@ namespace Service.Services.ProductVariantService
                 };
             }
 
+            //check product type exist
             var dbProductType = await _context.ProductTypes.FirstOrDefaultAsync(pt => pt.Id == newVariant.ProductTypeId);
             if (dbProductType == null)
             {
@@ -44,15 +46,33 @@ namespace Service.Services.ProductVariantService
                 };
             }
 
+            //check variant exist
             var existingVariant = await _context.ProductVariants
-                                        .Where(v => !v.Deleted && v.ProductId == productId)
+                                        .Where(v => v.ProductId == productId)
                                         .FirstOrDefaultAsync(v => v.ProductTypeId == newVariant.ProductTypeId);
-            if (existingVariant != null)
+
+            //if variant exist, deny create variant
+            if (existingVariant != null && !existingVariant.Deleted)
             {
                 return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Product Variant already exists!"
+                };
+            }
+
+            //if variant has deleted, restore variant
+            if(existingVariant != null && existingVariant.Deleted)
+            {
+                existingVariant.Deleted = false;
+                existingVariant.Price = newVariant.Price;
+                existingVariant.OriginalPrice = newVariant.OriginalPrice;
+
+                await _context.SaveChangesAsync();
+                return new ServiceResponse<bool>
+                {
+                    Data = true,
+                    Message = "Created Product Variant Successfully!"
                 };
             }
 
