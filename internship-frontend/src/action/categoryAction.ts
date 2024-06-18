@@ -117,7 +117,10 @@ export const updateCategory = async (
   }
 };
 
-export const deleteCategory = async (formData: FormData) => {
+export const deleteCategory = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
 
   const res = await fetch(`http://localhost:5000/api/Category/admin/${id}`, {
@@ -127,13 +130,14 @@ export const deleteCategory = async (formData: FormData) => {
 
   const responseData: ApiResponse<string> = await res.json();
   console.log(responseData);
-  const { data, success, message } = responseData;
+  const { success, message } = responseData;
 
-  if (!success) {
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidateTag("categoryListAdmin");
+    revalidateTag("categorySelect");
+    return { success: true, errors: [] };
+  } else {
     return { errors: [message] };
   }
-
-  revalidateTag("categoryListAdmin");
-  revalidateTag("categorySelect");
-  redirect(`/dashboard/category`);
 };
