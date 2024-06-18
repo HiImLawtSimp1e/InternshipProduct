@@ -4,7 +4,8 @@ import { updateCategory } from "@/action/categoryAction";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import slugify from "slugify";
 
@@ -13,6 +14,8 @@ interface IProps {
 }
 
 const UpdateCategoryForm = ({ category }: IProps) => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     updateCategory,
@@ -21,10 +24,13 @@ const UpdateCategoryForm = ({ category }: IProps) => {
 
   const [formData, setFormData] = useState<ICategory>(category);
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
@@ -59,9 +65,16 @@ const UpdateCategoryForm = ({ category }: IProps) => {
     }
   };
 
-  if (formState.errors.length > 0) {
-    toast.error("Error");
-  }
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Update category failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Updated category successfully!");
+      router.push("/dashboard/category");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
