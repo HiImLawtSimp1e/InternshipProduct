@@ -127,25 +127,50 @@ export const updatePost = async (
     isActive,
   };
 
-  const res = await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
-    method: "PUT",
-    body: JSON.stringify(postData),
-    headers: { "Content-Type": "application/json" },
-  });
+  try {
+    const res = await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
+      method: "PUT",
+      body: JSON.stringify(postData),
+      headers: { "Content-Type": "application/json" },
+    });
 
-  const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
-  const { data, success, message } = responseData;
+    if (!res.ok) {
+      // If the response is not OK, parse the error response
+      const errorResponse = await res.json();
+      const { errors } = errorResponse;
 
-  console.log(data);
+      // Create an array to hold error messages
+      let errorMessages: string[] = [];
 
-  if (!success) {
-    console.log(message);
+      // Check if there are specific validation errors and add them to the error messages
+      if (errors) {
+        for (const key in errors) {
+          if (errors.hasOwnProperty(key)) {
+            errorMessages = errorMessages.concat(errors[key]);
+          }
+        }
+      }
+      // Return the updated state with errors
+      return { errors: errorMessages };
+    }
+
+    const responseData: ApiResponse<string> = await res.json();
+    console.log(responseData);
+    const { success, message } = responseData;
+
+    if (success) {
+      // If the response is success, revalidate the path and redirect
+      revalidatePath("/dashboard/posts");
+      revalidateTag("postDetail");
+      return { success: true, errors: [] };
+    } else {
+      return { errors: [message] };
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error("Unexpected error:", error);
+    return { errors: ["An unexpected error occurred. Please try again."] };
   }
-
-  revalidatePath("/dashboard/posts");
-  revalidateTag("postDetail");
-  redirect("/dashboard/posts");
 };
 
 export const deletePost = async (formData: FormData) => {

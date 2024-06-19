@@ -1,11 +1,13 @@
 "use client";
 
-import { addPost, updatePost } from "@/action/postAction";
+import { updatePost } from "@/action/postAction";
 import TinyMCEEditorField from "@/components/ui/editor";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import slugify from "slugify";
 
 interface IProps {
@@ -13,6 +15,8 @@ interface IProps {
 }
 
 const UpdatePostForm = ({ post }: IProps) => {
+  const router = useRouter();
+
   const [content, setContent] = useState<string>(post.content);
 
   // manage state of form action [useActionState hook]
@@ -25,12 +29,15 @@ const UpdatePostForm = ({ post }: IProps) => {
   // manage state of form data
   const [formData, setFormData] = useState<IPost>(post);
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   //handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.set("content", content);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   //handle change
@@ -65,6 +72,17 @@ const UpdatePostForm = ({ post }: IProps) => {
       }));
     }
   };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Update post failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Updated post successfully!");
+      router.push("/dashboard/posts");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
@@ -129,6 +147,17 @@ const UpdatePostForm = ({ post }: IProps) => {
           { label: "No", value: "false" },
         ]}
       />
+      {formState.errors.length > 0 && (
+        <ul>
+          {formState.errors.map((error, index) => {
+            return (
+              <li className="text-red-400" key={index}>
+                {error}
+              </li>
+            );
+          })}
+        </ul>
+      )}
       <button
         type="submit"
         className="float-right mt-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
