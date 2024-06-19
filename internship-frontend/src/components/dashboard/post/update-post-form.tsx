@@ -1,7 +1,7 @@
 "use client";
 
 import { addPost, updatePost } from "@/action/postAction";
-import MyEditor from "@/components/ui/editor";
+import TinyMCEEditorField from "@/components/ui/editor";
 import InputField from "@/components/ui/input";
 import SelectField from "@/components/ui/select";
 import { useCustomActionState } from "@/lib/custom/customHook";
@@ -111,9 +111,9 @@ const UpdatePostForm = ({ post }: IProps) => {
       />
       <div>
         <label className="block mb-2 text-sm font-medium text-white">
-          Detail
+          Content
         </label>
-        <MyEditor
+        <TinyMCEEditorField
           value={content}
           onEditorChange={(newContent) => setContent(newContent)}
         />

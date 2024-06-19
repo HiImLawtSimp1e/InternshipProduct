@@ -1,12 +1,16 @@
 "use client";
 
 import { addPost } from "@/action/postAction";
-import MyEditor from "@/components/ui/editor";
+import TinyMCEEditorField from "@/components/ui/editor";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const CreatePost: React.FC = () => {
+  const router = useRouter();
+
   const [content, setContent] = useState<string>("");
 
   // manage state of form action [useActionState hook]
@@ -25,12 +29,15 @@ const CreatePost: React.FC = () => {
     content: "",
   });
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   //handle submit
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     formData.set("content", content);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   //handle change
@@ -46,6 +53,17 @@ const CreatePost: React.FC = () => {
       [name]: value,
     }));
   };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Create post failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Created post successfully!");
+      router.push("/dashboard/posts");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
@@ -83,13 +101,24 @@ const CreatePost: React.FC = () => {
       />
       <div>
         <label className="block mb-2 text-sm font-medium text-white">
-          Detail
+          Content
         </label>
-        <MyEditor
+        <TinyMCEEditorField
           value={content}
           onEditorChange={(newContent) => setContent(newContent)}
         />
       </div>
+      {formState.errors.length > 0 && (
+        <ul>
+          {formState.errors.map((error, index) => {
+            return (
+              <li className="text-red-400" key={index}>
+                {error}
+              </li>
+            );
+          })}
+        </ul>
+      )}
       <button
         type="submit"
         className="float-right mt-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"

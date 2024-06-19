@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Editor as TinyMCEEditor } from "@tinymce/tinymce-react";
+import { Editor } from "@tinymce/tinymce-react";
 
 interface MyEditorProps {
   value: string;
   onEditorChange: (content: string) => void;
 }
 
-const MyEditor: React.FC<MyEditorProps> = ({ value, onEditorChange }) => {
+const TinyMCEEditorField: React.FC<MyEditorProps> = ({
+  value,
+  onEditorChange,
+}) => {
   const [isEditorReady, setIsEditorReady] = useState(false);
 
   useEffect(() => {
@@ -22,7 +25,7 @@ const MyEditor: React.FC<MyEditorProps> = ({ value, onEditorChange }) => {
   }
 
   return (
-    <TinyMCEEditor
+    <Editor
       apiKey={process.env.NEXT_PUBLIC_TINYMCE_API_KEY} // replace your tinyMCE API key
       value={value}
       init={{
@@ -45,4 +48,4 @@ const MyEditor: React.FC<MyEditorProps> = ({ value, onEditorChange }) => {
   );
 };
 
-export default MyEditor;
+export default TinyMCEEditorField;
