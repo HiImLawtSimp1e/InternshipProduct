@@ -13,8 +13,8 @@ namespace Service.Services.ProductService
 {
     public interface IProductService
     {
-        Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page);
-        Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page);
+        Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page, double pageResults);
+        Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page, double pageResults);
         Task<ServiceResponse<Product>> GetAdminSingleProduct(Guid id);
         Task<ServiceResponse<CustomerProductResponseDTO>> GetProductBySlug(string slug);
         Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug);

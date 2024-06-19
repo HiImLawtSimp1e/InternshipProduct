@@ -23,13 +23,17 @@ namespace API.Controllers
             _service = service;
         }
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>>> GetProductsAsync([FromQuery] int page)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>>> GetProductsAsync([FromQuery] int page, [FromQuery] double pageResults)
         {
             if (page == null || page <= 0)
             {
                 page = 1;
             }
-            var response = await _service.GetProductsAsync(page);
+            if(pageResults == null || pageResults <= 0)
+            {
+                pageResults = 8f;
+            }
+            var response = await _service.GetProductsAsync(page, pageResults);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -37,13 +41,17 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("admin")]
-        public async Task<ActionResult<ServiceResponse<PagingParams<List<Product>>>>> GetAdminProducts([FromQuery] int page)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<Product>>>>> GetAdminProducts([FromQuery] int page, [FromQuery] double pageResults)
         {
             if(page == null || page <= 0) 
             {
                 page = 1;
             }
-            var response = await _service.GetAdminProducts(page);
+            if(pageResults == null || pageResults <= 0)
+            {
+                pageResults = 10f;
+            }
+            var response = await _service.GetAdminProducts(page, pageResults);
             if (!response.Success)
             {
                 return BadRequest(response);

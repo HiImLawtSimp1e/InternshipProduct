@@ -104,9 +104,8 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page)
+        public async Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page,double pageResults)
         {
-            var pageResults = 10f;
             var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted).Count() / pageResults);
 
             try
@@ -124,7 +123,8 @@ namespace Service.Services.ProductService
                 {
                     Result = products,
                     CurrentPage = page,
-                    Pages = (int)pageCount
+                    Pages = (int)pageCount,
+                    PageResults = (int)pageResults
                 };
 
                 return new ServiceResponse<PagingParams<List<Product>>>
@@ -191,9 +191,8 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page)
+        public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsAsync(int page, double pageResults)
         {
-            var pageResults = 10f;
             var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted && p.IsActive).Count() / pageResults);
             try
             {
@@ -212,7 +211,8 @@ namespace Service.Services.ProductService
                 {
                     Result = result,
                     CurrentPage = page,
-                    Pages = (int)pageCount
+                    Pages = (int)pageCount,
+                    PageResults = (int)pageResults
                 };
 
                 return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
