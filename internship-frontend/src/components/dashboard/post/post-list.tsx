@@ -1,10 +1,16 @@
+"use client";
+
 import { deletePost } from "@/action/postAction";
 import Pagination from "@/components/ui/pagination";
 import Search from "@/components/ui/search";
 import TagFiled from "@/components/ui/tag";
+import { useCustomActionState } from "@/lib/custom/customHook";
 import { formatDate } from "@/lib/format/format";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { MdAdd } from "react-icons/md";
+import { toast } from "react-toastify";
 
 interface IProps {
   posts: IPost[];
@@ -13,8 +19,38 @@ interface IProps {
 }
 
 const PostList = ({ posts, pages, currentPage }: IProps) => {
+  //using for pagination
   const pageSize = 10;
   const startIndex = (currentPage - 1) * pageSize;
+
+  //using for delete action
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    deletePost,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Deleted post failed!");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Deleted post successfully!");
+      router.push("/dashboard/posts");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <div className="bg-gray-800 p-5 rounded-lg mt-5">
@@ -60,7 +96,7 @@ const PostList = ({ posts, pages, currentPage }: IProps) => {
                       View
                     </button>
                   </Link>
-                  <form action={deletePost}>
+                  <form onSubmit={handleSubmit}>
                     <input type="hidden" name="id" value={post.id} />
                     <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
                       Delete

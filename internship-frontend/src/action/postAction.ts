@@ -173,13 +173,26 @@ export const updatePost = async (
   }
 };
 
-export const deletePost = async (formData: FormData) => {
+export const deletePost = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const id = formData.get("id") as number | null;
 
-  await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
+  const res = await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });
-  revalidatePath("/dashboard/posts");
-  redirect("/dashboard/posts");
+
+  const responseData: ApiResponse<string> = await res.json();
+  console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidatePath("/dashboard/posts");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };
