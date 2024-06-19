@@ -194,7 +194,7 @@ namespace Service.Services.PostService
                 return new ServiceResponse<bool>
                 {
                     Data = true,
-                    Message = "Post deteted successfully!"
+                    Message = "Post updated successfully!"
                 };
             }
             catch(Exception ex)
