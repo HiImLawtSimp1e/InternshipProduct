@@ -36,6 +36,9 @@ const PostList = ({ posts, pages, currentPage }: IProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!window.confirm("Are you sure you want to delete this post?")) {
+      return;
+    }
     const formData = new FormData(event.currentTarget);
     formAction(formData);
     setToastDisplayed(false); // Reset toastDisplayed when submitting
