@@ -1,13 +1,16 @@
 import UserList from "@/components/dashboard/user/user-list";
 
 const Users = async () => {
-  const res = await fetch(`http://localhost:8000/users`, {
+  const res = await fetch(`http://localhost:5000/api/Account/admin`, {
     method: "GET",
   });
 
-  const users = await res.json();
+  const responseData: ApiResponse<PagingParams<IUser[]>> = await res.json();
+  const { data, success, message } = responseData;
+  console.log(responseData);
+  const { result, pages, currentPage } = data;
 
-  return <UserList users={users} />;
+  return <UserList users={result} pages={pages} currentPage={currentPage} />;
 };
 
 const UsersPage = async () => {
