@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Data.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,7 @@ namespace Service.DTOs.ResponseDTOs.AccountDTO
 
         public string AccountName { get; set; } = string.Empty;
         public bool IsActive { get; set; }
+        public Role Role { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime ModifiedAt { get; set; }
     }
