@@ -21,6 +21,7 @@ namespace Service.Services.AccountService
         #region ManageAccountService
         Task<ServiceResponse<PagingParams<List<AccountListResponseDTO>>>> GetAdminAccounts(int page);
         Task<ServiceResponse<AccountResponseDTO>> GetAdminSingleAccount(Guid accountId);
+        Task<ServiceResponse<List<Role>>> GetAdminRoles();
         Task<ServiceResponse<bool>> CreateAccount(CreateAccountDTO newAccount);
         Task<ServiceResponse<bool>> UpdateAccount(Guid accountId, UpdateInfoAccountDTO updateInfoAccount);
         Task<ServiceResponse<bool>> SoftDeleteAccount(Guid accountId);

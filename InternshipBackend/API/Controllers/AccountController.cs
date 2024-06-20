@@ -62,6 +62,16 @@ namespace API.Controllers
             }
             return Ok(res);
         }
+        [HttpGet("admin/role")]
+        public async Task<ActionResult<ServiceResponse<List<Role>>>> GetAdminRoles()
+        {
+            var res = await _service.GetAdminRoles();
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+            return Ok(res);
+        }
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateAccount(CreateAccountDTO newAccount)
         {

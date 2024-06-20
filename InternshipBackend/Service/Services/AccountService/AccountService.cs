@@ -105,6 +105,16 @@ namespace Service.Services.AccountService
             };
         }
 
+        public async Task<ServiceResponse<List<Role>>> GetAdminRoles()
+        {
+            var roles = await _context.Roles
+                                    .ToListAsync();
+            return new ServiceResponse<List<Role>>()
+            {
+                Data = roles
+            };
+        }
+
         public async Task<ServiceResponse<bool>> CreateAccount(CreateAccountDTO newAccount)
         {
             try
