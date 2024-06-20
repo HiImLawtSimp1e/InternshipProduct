@@ -20,6 +20,7 @@ namespace Data.Entities
         public Role Role { get; set; }
         [JsonIgnore]
         public Customer? Customer { get; set; }
+        [JsonIgnore]
         public Employee? Employee { get; set; }
     }
 }

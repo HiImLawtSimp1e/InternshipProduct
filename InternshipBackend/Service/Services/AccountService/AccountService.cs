@@ -1,9 +1,11 @@
-﻿using Data.Context;
+﻿using AutoMapper;
+using Data.Context;
 using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Service.DTOs.RequestDTOs.AccountDTO;
+using Service.DTOs.ResponseDTOs.AccountDTO;
 using Service.Models;
 using System;
 using System.Collections.Generic;
@@ -21,14 +23,16 @@ namespace Service.Services.AccountService
     public class AccountService : IAccountService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
 
-        public AccountService(DataContext context)
+        public AccountService(DataContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         #region ManageAcountService
-        public async Task<ServiceResponse<PagingParams<List<Account>>>> GetAdminAccounts(int page)
+        public async Task<ServiceResponse<PagingParams<List<AccountListResponseDTO>>>> GetAdminAccounts(int page)
         {
             var pageResults = 10f;
             var pageCount = Math.Ceiling(_context.Accounts.Where(p => !p.Deleted).Count() / pageResults);
@@ -36,20 +40,23 @@ namespace Service.Services.AccountService
             try
             {
                 var accounts = await _context.Accounts
-                   .Where(c => !c.Deleted)
-                   .OrderByDescending(p => p.ModifiedAt)
+                   .Where(a => !a.Deleted)
+                   .OrderByDescending(a => a.ModifiedAt)
                    .Skip((page - 1) * (int)pageResults)
                    .Take((int)pageResults)
+                   .Include(a => a.Role)
                    .ToListAsync();
 
-                var pagingData = new PagingParams<List<Account>>
+                var result = _mapper.Map<List<AccountListResponseDTO>>(accounts);
+
+                var pagingData = new PagingParams<List<AccountListResponseDTO>>
                 {
-                    Result = accounts,
+                    Result = result,
                     CurrentPage = page,
                     Pages = (int)pageCount
                 };
 
-                return new ServiceResponse<PagingParams<List<Account>>>
+                return new ServiceResponse<PagingParams<List<AccountListResponseDTO>>>
                 {
                     Data = pagingData,
                 };
@@ -60,7 +67,7 @@ namespace Service.Services.AccountService
             }
         }
 
-        public async Task<ServiceResponse<Account>> GetAdminSingleAccount(Guid accountId)
+        public async Task<ServiceResponse<AccountResponseDTO>> GetAdminSingleAccount(Guid accountId)
         {
             var account = await _context.Accounts
                                       .Where(a => !a.Deleted)
@@ -69,41 +76,32 @@ namespace Service.Services.AccountService
 
             if (account == null)
             {
-                return new ServiceResponse<Account>
+                return new ServiceResponse<AccountResponseDTO>
                 {
                     Success = false,
                     Message = "Cannot find account"
                 };
             }
 
+            var result = _mapper.Map<AccountResponseDTO>(account); // Mapping Account Entity => result(DTO)
+
             if (account.Role.RoleName == "Customer")
             {
-                var customerAccount = await _context.Accounts
-                                    .Where(a => !a.Deleted)
-                                    .Include(a => a.Role)
-                                    .Include(a => a.Customer)
-                                    .FirstOrDefaultAsync(a => a.Id == accountId);
-                return new ServiceResponse<Account>
-                {
-                    Data = customerAccount
-                };
+                var customer = await _context.Customers
+                                           .FirstOrDefaultAsync(c => c.AccountId == accountId);
+
+                _mapper.Map(customer, result); // Mapping Customer Entity => result(DTO)
             }
             if (account.Role.RoleName == "Admin" || account.Role.RoleName == "Employee")
             {
-                var employeeAccount = await _context.Accounts
-                                     .Where(a => !a.Deleted)
-                                     .Include(a => a.Role)
-                                     .Include(a => a.Employee)
-                                     .FirstOrDefaultAsync(a => a.Id == accountId);
-                return new ServiceResponse<Account>
-                {
-                    Data = employeeAccount
-                };
+                var employee = await _context.Employees
+                                            .FirstOrDefaultAsync(c => c.AccountId == accountId);
+                _mapper.Map(employee, result); // Mapping Empolyeer Entity => result(DTO)
             }
-            return new ServiceResponse<Account>
+
+            return new ServiceResponse<AccountResponseDTO>
             {
-                Success = false,
-                Message = "Something error!!!"
+                Data = result
             };
         }
 

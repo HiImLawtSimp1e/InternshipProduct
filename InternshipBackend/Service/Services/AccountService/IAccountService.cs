@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Service.DTOs.RequestDTOs.AccountDTO;
+using Service.DTOs.ResponseDTOs.AccountDTO;
 using Service.Models;
 using System;
 using System.Collections.Generic;
@@ -18,8 +19,8 @@ namespace Service.Services.AccountService
         #endregion IAuthService
 
         #region ManageAccountService
-        Task<ServiceResponse<PagingParams<List<Account>>>> GetAdminAccounts(int page);
-        Task<ServiceResponse<Account>> GetAdminSingleAccount(Guid accountId);
+        Task<ServiceResponse<PagingParams<List<AccountListResponseDTO>>>> GetAdminAccounts(int page);
+        Task<ServiceResponse<AccountResponseDTO>> GetAdminSingleAccount(Guid accountId);
         Task<ServiceResponse<bool>> CreateAccount(CreateAccountDTO newAccount);
         Task<ServiceResponse<bool>> UpdateAccount(Guid accountId, UpdateInfoAccountDTO updateInfoAccount);
         Task<ServiceResponse<bool>> SoftDeleteAccount(Guid accountId);
