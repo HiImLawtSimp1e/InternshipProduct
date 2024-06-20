@@ -12,7 +12,7 @@ const UserDetail = ({ user }: IProps) => {
         <div className="w-full h-72 relative rounded-lg overflow-hidden mb-4">
           <Image src={"/noavatar.png"} alt="" layout="fill" objectFit="cover" />
         </div>
-        <div>{user.username}</div>
+        <div>{user.accountName}</div>
       </div>
       <div className="basis-3/4 bg-gray-700 p-4 rounded-lg">
         <UpdateUserForm user={user} />

@@ -157,13 +157,23 @@ export const updateUser = async (prevState: FormState, formData: FormData) => {
   }
 };
 
-export const deleteUser = async (formData: FormData) => {
-  const id = formData.get("id") as number | null;
+export const deleteUser = async (prevState: FormState, formData: FormData) => {
+  const id = formData.get("id") as string;
 
-  await fetch(`http://localhost:8000/users/${id}`, {
+  const res = await fetch(`http://localhost:5000/api/Account/admin/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
   });
-  revalidatePath("/dashboard/users");
-  redirect("/dashboard/users");
+
+  const responseData: ApiResponse<string> = await res.json();
+  console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidatePath("/dashboard/users");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };
