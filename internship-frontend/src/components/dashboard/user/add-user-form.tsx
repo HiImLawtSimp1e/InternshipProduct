@@ -1,12 +1,19 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import InputField from "@/components/ui/input";
-import SelectField from "@/components/ui/select";
 import { createUser } from "@/action/userAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
-const AddUserForm = () => {
+interface IProps {
+  roleSelect: IRole[];
+}
+
+const AddUserForm = ({ roleSelect }: IProps) => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     createUser,
@@ -14,25 +21,28 @@ const AddUserForm = () => {
   );
 
   const [formData, setFormData] = useState({
-    username: "",
-    email: "",
+    accountName: "",
     password: "",
+    fullName: "",
+    email: "",
     phone: "",
     address: "",
-    isAdmin: "false",
-    isActive: "true",
+    roleId: "",
   });
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prevFormData) => ({
@@ -41,18 +51,29 @@ const AddUserForm = () => {
     }));
   };
 
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error("Create user failed");
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Created user successfully!");
+      router.push("/dashboard/users");
+    }
+  }, [formState, toastDisplayed]);
+
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
       <InputField
         label="Username"
-        id="username"
-        name="username"
-        value={formData.username}
+        id="accountName"
+        name="accountName"
+        value={formData.accountName}
         onChange={handleChange}
         required
       />
       <InputField
-        label="Your email"
+        label="Email"
         id="email"
         name="email"
         type="email"
@@ -61,11 +82,19 @@ const AddUserForm = () => {
         required
       />
       <InputField
-        label="Your password"
+        label="Password"
         id="password"
         name="password"
         type="password"
         value={formData.password}
+        onChange={handleChange}
+        required
+      />
+      <InputField
+        label="Full Name"
+        id="fullName"
+        name="fullName"
+        value={formData.fullName}
         onChange={handleChange}
         required
       />
@@ -85,30 +114,19 @@ const AddUserForm = () => {
         onChange={handleChange}
         required
       />
-
-      <SelectField
-        label="Is Admin"
-        id="isAdmin"
-        name="isAdmin"
-        value={formData.isAdmin}
+      <label className="block mb-2 text-sm font-medium text-white">Role</label>
+      <select
+        name="roleId"
+        value={formData.roleId}
         onChange={handleChange}
-        options={[
-          { label: "Yes", value: "true" },
-          { label: "No", value: "false" },
-        ]}
-      />
-
-      <SelectField
-        label="Is Active"
-        id="isActive"
-        name="isActive"
-        value={formData.isActive}
-        onChange={handleChange}
-        options={[
-          { label: "Yes", value: "true" },
-          { label: "No", value: "false" },
-        ]}
-      />
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+      >
+        {roleSelect?.map((role: IRole, index) => (
+          <option key={index} value={role.id}>
+            {role.roleName}
+          </option>
+        ))}
+      </select>
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => (

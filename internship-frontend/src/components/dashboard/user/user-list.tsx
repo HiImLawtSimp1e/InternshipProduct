@@ -5,6 +5,7 @@ import TagFiled from "@/components/ui/tag";
 import { formatDate } from "@/lib/format/format";
 import Image from "next/image";
 import Link from "next/link";
+import { MdAdd } from "react-icons/md";
 
 interface IProps {
   users: IUser[];
@@ -22,8 +23,9 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
       <div className="flex items-center justify-between mb-5">
         <Search placeholder="Search for a user..." />
         <Link href="/dashboard/users/add">
-          <button className="p-2 bg-purple-600 text-white rounded">
-            Add New
+          <button className="p-2 flex items-center justify-center mb-5 bg-purple-600 text-white rounded">
+            <MdAdd />
+            Add New User
           </button>
         </Link>
       </div>
@@ -32,7 +34,6 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
           <tr>
             <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">Account name</th>
-            <th className="px-4 py-2">Email</th>
             <th className="px-4 py-2">Role</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Created At</th>
@@ -56,7 +57,6 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
                   {user.accountName}
                 </div>
               </td>
-              <td className="px-4 py-2">{user.email}</td>
               <td className="px-4 py-2">
                 <TagFiled
                   cssClass={
