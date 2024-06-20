@@ -226,24 +226,26 @@ namespace Service.Services.AccountService
 
                 if (dbAccount.Role.RoleName == "Customer")
                 {
-                    return new ServiceResponse<bool>
-                    {
-                        Success = false,
-                        Message = "Cannot update customer account by admin!!"
-                    };
+                   var dbCustomer = await _context.Customers
+                                                 .FirstOrDefaultAsync(e => e.AccountId == accountId);
+                    // set employee's information
+                    dbCustomer.FullName = updateInfoAccount.FullName;
+                    dbCustomer.Email = updateInfoAccount.Email;
+                    dbCustomer.Phone = updateInfoAccount.Phone;
+                    dbCustomer.Address = updateInfoAccount.Address;
+
+                    dbAccount.IsActive = updateInfoAccount.IsActive;
                 }
                 else if (dbAccount.Role.RoleName == "Admin" || dbAccount.Role.RoleName == "Employee")
                 {
+                    var dbEmployee = await _context.Employees
+                                                  .FirstOrDefaultAsync(e => e.AccountId == accountId);
                     // set employee's information
-                    var employee = new Employee
-                    {
-                        FullName = updateInfoAccount.FullName,
-                        Email = updateInfoAccount.Email,
-                        Phone = updateInfoAccount.Phone,
-                        Address = updateInfoAccount.Address,
-                    };
+                    dbEmployee.FullName = updateInfoAccount.FullName;
+                    dbEmployee.Email = updateInfoAccount.Email;
+                    dbEmployee.Phone = updateInfoAccount.Phone;
+                    dbEmployee.Address = updateInfoAccount.Address;
 
-                    dbAccount.Employee = employee;
                     dbAccount.IsActive = updateInfoAccount.IsActive;
                 }
                 else
