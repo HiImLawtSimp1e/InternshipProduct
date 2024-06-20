@@ -62,6 +62,8 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
                   cssClass={
                     user.role.roleName === "Admin"
                       ? "bg-slate-700"
+                      : user.role.roleName === "Customer"
+                      ? "bg-blue-700"
                       : "bg-violet-700"
                   }
                   context={user.role.roleName}
