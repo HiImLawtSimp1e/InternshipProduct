@@ -68,8 +68,7 @@ export const validateUpdateUser = (
   fullName: string,
   email: string,
   phone: string,
-  address: string,
-  isActive: boolean
+  address: string
 ): [string[], boolean] => {
   let errors: string[] = [];
 
@@ -102,8 +101,6 @@ export const validateUpdateUser = (
     const addressLengthError = validateLength(address, "Address", 6, 250);
     if (addressLengthError) errors.push(addressLengthError);
   }
-
-  // isActive validation (no specific validation needed)
 
   return [errors, errors.length === 0];
 };

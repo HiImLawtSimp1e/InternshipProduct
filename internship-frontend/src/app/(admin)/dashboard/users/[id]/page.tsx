@@ -1,19 +1,17 @@
 import UserDetail from "@/components/dashboard/user/user-detail";
 
-const User = async ({ id }: { id: number }) => {
-  const res = await fetch(`http://localhost:8000/users/${id}`, {
+const User = async ({ id }: { id: string }) => {
+  const res = await fetch(`http://localhost:5000/api/Account/admin/${id}`, {
     method: "GET",
     next: { tags: ["userDetail"] },
   });
 
-  const data = await res.json();
-  const user = { ...data };
-  console.log(user);
+  const user: ApiResponse<IUser> = await res.json();
 
-  return <UserDetail user={user} />;
+  return <UserDetail user={user.data} />;
 };
 
-const UserDetailPage = ({ params }: { params: { id: number } }) => {
+const UserDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   return (
     <>
