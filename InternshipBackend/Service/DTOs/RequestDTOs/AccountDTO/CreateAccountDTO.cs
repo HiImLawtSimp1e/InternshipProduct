@@ -9,7 +9,7 @@ namespace Service.DTOs.RequestDTOs.AccountDTO
 {
     public class CreateAccountDTO
     {
-        [Required(ErrorMessage = "Account name is required")]
+        [Required(ErrorMessage = "Account name is required"), StringLength(100, MinimumLength = 6, ErrorMessage = "Account name have to shorter than 100 characters & minimum characters is 6")]
         public string AccountName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Password is required"), StringLength(100, MinimumLength = 6, ErrorMessage = "Password have to shorter than 100 characters & minimum characters is 6")]
         public string Password { get; set; } = string.Empty;
