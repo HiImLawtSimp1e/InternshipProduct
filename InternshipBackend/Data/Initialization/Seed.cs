@@ -12,6 +12,23 @@ namespace Data.Initialization
     {
         public static void SeedingData(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Role>().HasData(
+                new Role
+                {
+                    Id = new Guid("80a02536-2e92-466f-914f-8f1c61d01fd5"),
+                    RoleName = "Admin"
+                },
+                new Role
+                {
+                    Id = new Guid("9ebee0d5-323a-4052-af12-827a9e856639"),
+                    RoleName = "Customer"
+                },
+                new Role
+                {
+                    Id = new Guid("5b3a05b0-c011-4593-abd1-cb2e486f8e43"),
+                    RoleName = "Employee"
+                }
+                );
             modelBuilder.Entity<ProductType>().HasData(
                new ProductType
                {

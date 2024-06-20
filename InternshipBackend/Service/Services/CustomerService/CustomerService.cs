@@ -26,7 +26,7 @@ namespace Service.Services.CustomerService
             _httpContextAccessor = httpContextAccessor;
             _mapper = mapper;
         }
-        public async Task<ServiceResponse<Customer>> AddOrUpdateInfoCustomer(CustomerDTO customerDTO)
+        public async Task<ServiceResponse<Customer>> AddOrUpdateInfoCustomer(UpdateCustomerDTO customerDTO)
         {
             var nameIdentifier = GetNameIdentifier();
             if (nameIdentifier == null)

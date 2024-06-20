@@ -28,6 +28,10 @@ namespace Data.Context
             base.OnModelCreating(builder);
             builder.Entity<ProductVariant>()
              .HasKey(p => new { p.ProductId, p.ProductTypeId });
+            builder.Entity<Customer>()
+             .HasKey(c => new { c.AccountId });
+            builder.Entity<Employee>()
+             .HasKey(e => new { e.AccountId });
 
             Seed.SeedingData(builder);
         }
@@ -45,5 +49,7 @@ namespace Data.Context
         public DbSet<Information> Information { get; set; }
         public DbSet<Account> Accounts { get; set; } 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

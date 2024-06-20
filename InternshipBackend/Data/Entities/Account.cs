@@ -14,8 +14,12 @@ namespace Data.Entities
         public string AccountName { get; set; } = string.Empty;
         public byte[] PasswordHash { get; set; } 
         public byte[] PasswordSalt { get; set; }
-        public string Role { get; set; } = "Customer";
+        public bool IsActive { get; set; } = true;
+        public bool Deleted { get; set; } = false;
+        public Guid RoleId { get; set; }
+        public Role Role { get; set; }
         [JsonIgnore]
-        public Customer Customer { get; set; }
+        public Customer? Customer { get; set; }
+        public Employee? Employee { get; set; }
     }
 }

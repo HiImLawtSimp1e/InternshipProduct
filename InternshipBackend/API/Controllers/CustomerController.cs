@@ -30,7 +30,7 @@ namespace API.Controllers
             return Ok(res);
         }
         [HttpPost]
-        public async Task<ActionResult<ServiceResponse<Customer>>> AddOrUpdateInfoCustomer(CustomerDTO customer)
+        public async Task<ActionResult<ServiceResponse<Customer>>> AddOrUpdateInfoCustomer(UpdateCustomerDTO customer)
         {
             var res = await _service.AddOrUpdateInfoCustomer(customer);
             if (!res.Success)

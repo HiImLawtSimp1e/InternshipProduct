@@ -7,14 +7,12 @@ using System.Threading.Tasks;
 
 namespace Service.DTOs.RequestDTOs.AccountDTO
 {
-    public class RegisterDTO
+    public class CreateAccountDTO
     {
         [Required(ErrorMessage = "Account name is required")]
         public string AccountName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Password is required"), StringLength(100, MinimumLength = 6, ErrorMessage = "Password have to shorter than 100 characters & minimum characters is 6")]
         public string Password { get; set; } = string.Empty;
-        [Compare("Password", ErrorMessage = "The passwords do not match")]
-        public string ConfirmPassword { get; set; } = string.Empty;
         [Required(ErrorMessage = "FullName is required"), MinLength(6, ErrorMessage = "FullName need to at least 6 characters"), StringLength(50, ErrorMessage = "FullName can't longer than 50 characters")]
         public string FullName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Email is required"), EmailAddress(ErrorMessage = "Email is not valid")]
@@ -23,5 +21,6 @@ namespace Service.DTOs.RequestDTOs.AccountDTO
         public string Phone { get; set; } = string.Empty;
         [Required(ErrorMessage = "Address is required"), MinLength(6, ErrorMessage = "Address need to at least 6 characters"), StringLength(250, ErrorMessage = "Address can't longer than 250 characters")]
         public string Address { get; set; } = string.Empty;
+        public Guid RoleId { get; set; }
     }
 }

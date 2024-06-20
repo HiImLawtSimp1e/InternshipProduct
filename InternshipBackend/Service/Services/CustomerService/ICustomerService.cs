@@ -13,6 +13,6 @@ namespace Service.Services.CustomerService
     public interface ICustomerService
     {
         Task<ServiceResponse<Customer>> GetInfoCustomer();
-        Task<ServiceResponse<Customer>> AddOrUpdateInfoCustomer(CustomerDTO customerDTO);
+        Task<ServiceResponse<Customer>> AddOrUpdateInfoCustomer(UpdateCustomerDTO customerDTO);
     }
 }

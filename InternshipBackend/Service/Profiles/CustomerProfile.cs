@@ -13,7 +13,7 @@ namespace Service.Profiles
     {
         public CustomerProfile() 
         {
-            CreateMap<CustomerDTO, Customer>();
+            CreateMap<UpdateCustomerDTO, Customer>();
         }
     }
 }
