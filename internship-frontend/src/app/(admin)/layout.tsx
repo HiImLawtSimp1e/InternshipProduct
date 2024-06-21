@@ -4,13 +4,14 @@ import Navbar from "@/components/dashboard/navbar";
 import Footer from "@/components/dashboard/footer";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "../globals.css";
 import "./dashboard.css";
 
 interface RootLayoutProps {
   children: ReactNode;
 }
 
-const DashboardLayout: React.FC<RootLayoutProps> = ({
+const RootLayout: React.FC<RootLayoutProps> = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -49,4 +50,4 @@ const DashboardLayout: React.FC<RootLayoutProps> = ({
   );
 };
 
-export default DashboardLayout;
+export default RootLayout;
