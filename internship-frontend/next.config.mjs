@@ -19,6 +19,9 @@ const nextConfig = {
   webpackDevMiddleware: (config) => {
     return config;
   },
+  images: {
+    domains: ["res.cloudinary.com", "upload.wikimedia.org"],
+  },
 };
 
 export default nextConfig;
