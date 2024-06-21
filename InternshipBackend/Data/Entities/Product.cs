@@ -24,5 +24,6 @@ namespace Data.Entities
         public Category? Category { get; set; }
         public Guid CategoryId { get; set; }
         public List<ProductVariant> ProductVariants { get; set; } = new List<ProductVariant>();
+        public List<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
 }
