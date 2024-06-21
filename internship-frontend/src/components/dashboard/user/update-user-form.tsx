@@ -66,6 +66,12 @@ const UpdateUserForm = ({ user }: IProps) => {
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         readOnly
       />
+      <label className="block mb-2 text-sm font-medium text-white">Role</label>
+      <input
+        value={formData.role.roleName}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+        readOnly
+      />
       <InputField
         label="Email"
         id="email"
