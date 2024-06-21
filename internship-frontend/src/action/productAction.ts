@@ -1,5 +1,6 @@
 "use server";
 
+import { uploadImage } from "@/lib/cloudinary/cloudinary";
 import { validateProduct } from "@/lib/validation/validateProduct";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -207,5 +208,17 @@ export const deleteProduct = async (
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };
+  }
+};
+
+export const uploadImageProduct = async (formData: FormData) => {
+  const file = formData.get("image") as File;
+  if (file) {
+    const result = await uploadImage(file, ["product-image"]);
+    if (result && result.secure_url) {
+      console.log(result.secure_url);
+    }
+  } else {
+    throw new Error("No file found");
   }
 };
