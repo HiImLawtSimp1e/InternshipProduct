@@ -1,7 +1,7 @@
 "use client";
 
 import { addPost } from "@/action/postAction";
-import TinyMCEEditorField from "@/components/ui/editor";
+import TinyMCEEditorField from "@/lib/tinyMCE/editor";
 import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useRouter } from "next/navigation";
