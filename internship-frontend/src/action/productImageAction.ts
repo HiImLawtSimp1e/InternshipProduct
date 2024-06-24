@@ -1,7 +1,7 @@
 "use server";
 
 import { uploadImage } from "@/lib/cloudinary/cloudinary";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 interface ProductImageFormData {
   imageUrl?: string;
@@ -44,23 +44,16 @@ export const AddProductImage = async (
     });
 
     if (!res.ok) {
-      // If the response is not OK, parse the error response
+      // Handle server errors
       const errorResponse = await res.json();
-      const { errors } = errorResponse;
+      console.error(`Server error: ${JSON.stringify(errorResponse)}`);
 
-      // Create an array to hold error messages
-      let errorMessages: string[] = [];
-
-      // Check if there are specific validation errors and add them to the error messages
-      if (errors) {
-        for (const key in errors) {
-          if (errors.hasOwnProperty(key)) {
-            errorMessages = errorMessages.concat(errors[key]);
-          }
-        }
+      // Check if the error response contains a message field
+      if (errorResponse && errorResponse.message) {
+        return { errors: [errorResponse.message] };
+      } else {
+        return { errors: ["Server error occurred."] };
       }
-      // Return the updated state with errors
-      return { errors: errorMessages };
     }
 
     const responseData: ApiResponse<string> = await res.json();
@@ -70,6 +63,65 @@ export const AddProductImage = async (
     if (success) {
       // If the response is success, revalidate the path and redirect
       revalidatePath(`/dashboard/products/${productId}`);
+      return { success: true, errors: [] };
+    } else {
+      return { errors: [message] };
+    }
+  } catch (error) {
+    // Handle any unexpected errors
+    console.error("Unexpected error:", error);
+    return { errors: ["An unexpected error occurred. Please try again."] };
+  }
+};
+
+export const updateProductImage = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
+  const id = formData.get("id") as string;
+  const productId = formData.get("productId") as string;
+  const imageUrl = formData.get("imageUrl") as string;
+  const isMain = formData.get("isMain") === "true";
+  const isActive = formData.get("isActive") === "true";
+
+  const productImageData: ProductImageFormData = {
+    imageUrl,
+    isActive,
+    isMain,
+    productId,
+  };
+
+  try {
+    const res = await fetch(
+      `http://localhost:5000/api/ProductImage/admin/${id}`,
+      {
+        method: "PUT",
+        body: JSON.stringify(productImageData),
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!res.ok) {
+      // Handle server errors
+      const errorResponse = await res.json();
+      console.error(`Server error: ${JSON.stringify(errorResponse)}`);
+
+      // Check if the error response contains a message field
+      if (errorResponse && errorResponse.message) {
+        return { errors: [errorResponse.message] };
+      } else {
+        return { errors: ["Server error occurred."] };
+      }
+    }
+
+    const responseData: ApiResponse<string> = await res.json();
+    console.log(responseData);
+    const { success, message } = responseData;
+
+    if (success) {
+      // If the response is success, revalidate the path and redirect
+      revalidatePath(`/dashboard/products/${productId}`);
+      revalidateTag("getProductImage");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
