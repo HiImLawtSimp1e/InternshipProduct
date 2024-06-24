@@ -13,7 +13,10 @@ const ProductImageForm = ({ productId, images }: IProps) => {
     <>
       <div className="flex items-center justify-end mt-10">
         <Link
-          href={{ pathname: `/dashboard/images/add`, query: { productId } }}
+          href={{
+            pathname: `/dashboard/product-images/add`,
+            query: { productId },
+          }}
         >
           <button className="p-2 flex items-center justify-center mb-5 bg-purple-600 text-white rounded">
             <MdAdd />
@@ -61,7 +64,7 @@ const ProductImageForm = ({ productId, images }: IProps) => {
                 <div className="flex gap-2">
                   <Link
                     href={{
-                      pathname: `/dashboard/variants/${image.id}`,
+                      pathname: `/dashboard/product-images/${image.id}`,
                       query: { productId },
                     }}
                   >

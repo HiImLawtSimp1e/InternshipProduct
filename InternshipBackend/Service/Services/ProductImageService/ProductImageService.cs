@@ -35,11 +35,16 @@ namespace Service.Services.ProductImageService
                     var mainImage = _context.ProductImages
                                          .Where(pi => pi.ProductId == image.ProductId && !pi.Deleted)
                                          .FirstOrDefault(pi => pi.IsMain);
-                    if (mainImage != null)
+                    var dbProduct = await _context.Products
+                                           .Where(p => !p.Deleted)
+                                           .FirstOrDefaultAsync(p => p.Id == image.ProductId);
+                    if (mainImage != null && dbProduct != null)
                     {
                         mainImage.IsMain = false;
+                        dbProduct.ImageUrl = image.ImageUrl;
                     }
                 }
+
                 _context.ProductImages.Add(image);
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<bool> 
