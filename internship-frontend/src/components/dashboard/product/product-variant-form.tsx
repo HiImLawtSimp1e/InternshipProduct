@@ -71,7 +71,7 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
           </tr>
         </thead>
         <tbody>
-          {variants.map((variant: IProductVariant, index) => (
+          {variants?.map((variant: IProductVariant, index) => (
             <tr
               key={variant.productTypeId}
               className="border-b border-gray-700"

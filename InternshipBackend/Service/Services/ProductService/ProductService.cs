@@ -158,6 +158,7 @@ namespace Service.Services.ProductService
                    .Where(p => !p.Deleted)
                    .Include(p => p.ProductVariants.Where(pv => !pv.Deleted))
                    .ThenInclude(pv => pv.ProductType)
+                   .Include(p => p.ProductImages.Where(pv => !pv.Deleted))
                    .FirstOrDefaultAsync(p => p.Id == id);
                 return new ServiceResponse<Product>
                 {
