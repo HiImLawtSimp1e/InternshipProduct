@@ -92,32 +92,19 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>> GetCategoriesAsync(int page)
+        public async Task<ServiceResponse<List<CustomerCategoryResponseDTO>>> GetCategoriesAsync()
         {
-            var pageResults = 10f;
-            var pageCount = Math.Ceiling(_context.Categories.Where(p => !p.Deleted && p.IsActive).Count() / pageResults);
             try
             {
                 var categories = await _context.Categories
                    .Where(c => !c.Deleted && c.IsActive)
-                   .OrderByDescending(p => p.ModifiedAt)
-                   .Skip((page - 1) * (int)pageResults)
-                   .Take((int)pageResults)
                    .ToListAsync();
 
                 var result = categories.Select(category => _mapper.Map<CustomerCategoryResponseDTO>(category)).ToList();
 
-                var pagingData = new PagingParams<List<CustomerCategoryResponseDTO>>
+                return new ServiceResponse<List<CustomerCategoryResponseDTO>>
                 {
-                    Result = result,
-                    CurrentPage = page,
-                    Pages = (int)pageCount
-                };
-
-                return new ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>
-                {
-                    Data = pagingData,
-                    Message = "Successfully!!!"
+                    Data = result
                 };
             }
             catch (Exception ex)

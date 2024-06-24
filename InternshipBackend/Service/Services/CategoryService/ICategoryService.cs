@@ -12,7 +12,7 @@ namespace Service.Services.CategoryService
 {
     public interface ICategoryService
     {
-        Task<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>> GetCategoriesAsync(int page);
+        Task<ServiceResponse<List<CustomerCategoryResponseDTO>>> GetCategoriesAsync();
         Task<ServiceResponse<PagingParams<List<Category>>>> GetAdminCategories(int page);
         Task<ServiceResponse<Category>> GetAdminCategory(Guid categoryId);
         Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory);

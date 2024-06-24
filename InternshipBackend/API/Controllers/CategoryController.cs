@@ -22,13 +22,9 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>>> GetCategoriesAsync([FromQuery] int page)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerCategoryResponseDTO>>>>> GetCategoriesAsync()
         {
-            if (page == null || page <= 0)
-            {
-                page = 1;
-            }
-            var response = await _service.GetCategoriesAsync(page);
+            var response = await _service.GetCategoriesAsync();
             if (!response.Success)
             {
                 return BadRequest(response);

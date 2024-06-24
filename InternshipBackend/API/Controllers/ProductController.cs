@@ -31,7 +31,7 @@ namespace API.Controllers
             }
             if(pageResults == null || pageResults <= 0)
             {
-                pageResults = 8f;
+                pageResults = 12f;
             }
             var response = await _service.GetProductsAsync(page, pageResults);
             if (!response.Success)
