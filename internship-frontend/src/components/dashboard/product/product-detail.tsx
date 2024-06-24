@@ -3,7 +3,6 @@
 import Image from "next/image";
 import UpdateProductForm from "./update-product-form";
 import ProductVariantForm from "./product-variant-form";
-import { create } from "@/action/action";
 import ProductImageForm from "./product-image-form";
 
 interface IProps {
@@ -25,13 +24,6 @@ const ProductDetail = ({ product, categorySelect }: IProps) => {
             />
           </div>
           <div>{product.title}</div>
-          <form action={create}>
-            <label>Select an image to upload</label>
-            <input id="image" type="file" name="image" />
-            <button className="bg-blue-700" type="submit">
-              Upload
-            </button>
-          </form>
         </div>
         <div className="basis-3/4 bg-gray-700 p-4 rounded-lg">
           <UpdateProductForm
