@@ -91,14 +91,6 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
         required
       />
       <InputField
-        label="Image URL"
-        id="imageUrl"
-        name="imageUrl"
-        value={formData.imageUrl}
-        onChange={handleChange}
-        required
-      />
-      <InputField
         label="SEO Title"
         id="seoTitle"
         name="seoTitle"

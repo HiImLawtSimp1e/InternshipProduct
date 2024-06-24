@@ -12,6 +12,7 @@ interface IProduct {
   modifiedAt: string;
   categoryId: string;
   productVariants: IProductVariant[];
+  productImages?: IProductImage[];
 }
 
 interface IProductVariant {
@@ -28,4 +29,12 @@ interface IProductType {
   name: string;
   createdAt: string;
   modifiedAt: string;
+}
+
+interface IProductImage {
+  id: string;
+  imageUrl: string;
+  isMain: boolean;
+  productId: string;
+  isActive: boolean;
 }

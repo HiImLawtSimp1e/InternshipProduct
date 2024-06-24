@@ -25,7 +25,6 @@ const AddProductForm = ({ categorySelect }: IProps) => {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    imageUrl: "",
     seoTitle: "",
     seoDescription: "",
     seoKeyworks: "",
@@ -77,6 +76,16 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         onChange={handleChange}
         required
       />
+      <label className="block mb-2 text-sm font-medium" htmlFor="image">
+        Image
+      </label>
+      <input
+        id="image"
+        name="image"
+        type="file"
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600  border border-gray-600 cursor-pointer focus:outline-none placeholder-gray-400"
+        required
+      />
       <label
         htmlFor="description"
         className="block mb-2 text-sm font-medium text-white"
@@ -90,14 +99,6 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         rows={10}
         onChange={handleChange}
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
-        required
-      />
-      <InputField
-        label="Image URL"
-        id="imageUrl"
-        name="imageUrl"
-        value={formData.imageUrl}
-        onChange={handleChange}
         required
       />
       <InputField

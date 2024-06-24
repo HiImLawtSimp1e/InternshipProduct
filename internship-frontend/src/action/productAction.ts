@@ -10,7 +10,7 @@ import slugify from "slugify";
 interface ProductFormData {
   title: string;
   description: string;
-  imageUrl: string;
+  imageUrl?: string;
   seoTitle: string;
   seoDescription: string;
   seoKeyworks: string;
@@ -25,12 +25,23 @@ export const addProduct = async (
 ): Promise<FormState | undefined> => {
   const title = formData.get("title") as string;
   const description = formData.get("description") as string;
-  const imageUrl = formData.get("imageUrl") as string;
+  const image = formData.get("image") as File;
   const seoTitle = formData.get("seoTitle") as string;
   const seoDescription = formData.get("seoDescription") as string;
   const seoKeyworks = formData.get("seoKeyworks") as string;
   const categoryId = formData.get("categoryId") as string;
   const slug = slugify(title, { lower: true });
+
+  let imageUrl = "";
+
+  if (image) {
+    const result = await uploadImage(image, ["product-image"]);
+    if (result && result.secure_url) {
+      imageUrl = result.secure_url;
+    }
+  } else {
+    return { errors: ["No file found"] };
+  }
 
   //client validation
   const [errors, isValid] = validateProduct(
