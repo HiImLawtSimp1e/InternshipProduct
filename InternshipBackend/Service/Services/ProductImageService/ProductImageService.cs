@@ -97,7 +97,7 @@ namespace Service.Services.ProductImageService
             }
 
             var someImageElse = await _context.ProductImages
-                                     .Where(pi => pi.Id != dbImage.Id && !pi.Deleted)
+                                     .Where(pi => pi.Id != dbImage.Id && !pi.Deleted && pi.IsActive)
                                      .FirstOrDefaultAsync(pi => pi.ProductId == dbImage.ProductId);
             if (someImageElse == null)
             {
@@ -173,6 +173,7 @@ namespace Service.Services.ProductImageService
                 // If modified image is main image => check if database has already main image yet
                 if (dbImage.IsMain == true)
                 {
+                    dbImage.IsActive = true;
                     var mainImage = _context.ProductImages
                                          .Where(pi => pi.ProductId == dbImage.ProductId && !pi.Deleted)
                                          .FirstOrDefault(pi => pi.IsMain);

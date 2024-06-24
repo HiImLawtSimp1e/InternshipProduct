@@ -1,7 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MdAdd } from "react-icons/md";
 import TagFiled from "@/components/ui/tag";
+import { useRouter } from "next/navigation";
+import { useCustomActionState } from "@/lib/custom/customHook";
+import { deleteProductImage } from "@/action/productImageAction";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   productId: string;
@@ -9,6 +16,38 @@ interface IProps {
 }
 
 const ProductImageForm = ({ productId, images }: IProps) => {
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    deleteProductImage,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (
+      !window.confirm("Are you sure you want to delete this product image?")
+    ) {
+      return;
+    }
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Deleted product images successfully!");
+      router.push(`/dashboard/products/${productId}`);
+    }
+  }, [formState, toastDisplayed]);
   return (
     <>
       <div className="flex items-center justify-end mt-10">
@@ -73,7 +112,7 @@ const ProductImageForm = ({ productId, images }: IProps) => {
                     </button>
                   </Link>
 
-                  <form>
+                  <form onSubmit={handleSubmit}>
                     <input type="hidden" name="id" value={image.id} />
                     <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
                       Delete

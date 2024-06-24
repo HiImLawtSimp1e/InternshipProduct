@@ -120,7 +120,7 @@ export const updateProductImage = async (
 
     if (success) {
       // If the response is success, revalidate the path and redirect
-      revalidatePath(`/dashboard/products/${productId}`);
+      revalidateTag("productDetailAdmin");
       revalidateTag("getProductImage");
       return { success: true, errors: [] };
     } else {
@@ -130,5 +130,32 @@ export const updateProductImage = async (
     // Handle any unexpected errors
     console.error("Unexpected error:", error);
     return { errors: ["An unexpected error occurred. Please try again."] };
+  }
+};
+
+export const deleteProductImage = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
+  const id = formData.get("id") as string;
+
+  const res = await fetch(
+    `http://localhost:5000/api/ProductImage/admin/${id}`,
+    {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+    }
+  );
+
+  const responseData: ApiResponse<string> = await res.json();
+  console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If the response is success, revalidate the path and redirect
+    revalidateTag("productDetailAdmin");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
   }
 };
