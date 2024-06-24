@@ -29,6 +29,17 @@ namespace Service.Services.ProductService
             try 
             {
                 var product = _mapper.Map<Product>(newProduct);
+                
+                // Add product image
+                var productImage = new ProductImage
+                {
+                    ImageUrl = product.ImageUrl,
+                    IsActive = true,
+                    IsMain = true,
+                };
+                product.ProductImages.Add(productImage);
+
+                // Save product
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<bool>
@@ -335,6 +346,5 @@ namespace Service.Services.ProductService
                                     p.IsActive && !p.Deleted)
                                 .ToListAsync();
         }
-
     }
 }
