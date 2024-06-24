@@ -51,7 +51,7 @@ const ProductImageForm = ({ productId, images }: IProps) => {
               <td className="px-4 py-2">
                 <TagFiled
                   cssClass={image.isMain ? "bg-blue-900" : "bg-gray-700"}
-                  context={image.isActive ? "Main" : "Sub"}
+                  context={image.isMain ? "Main" : "Sub"}
                 />
               </td>
               <td className="px-4 py-2">
