@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductImageDTO;
 using Service.Models;
@@ -15,6 +16,16 @@ namespace API.Controllers
         public ProductImageController(IProductImageService service)
         {
             _service = service;
+        }
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductImage>> GetProductImage(Guid id)
+        {
+            var res = await _service.GetProductImage(id);
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+            return Ok(res);
         }
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateProductImage(AddProductImageDTO newImage)

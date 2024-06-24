@@ -11,6 +11,7 @@ namespace Service.Services.ProductImageService
 {
     public interface IProductImageService
     {
+        Task<ServiceResponse<ProductImage>> GetProductImage(Guid id);
         Task<ServiceResponse<bool>> CreateProductImage(AddProductImageDTO newImage);
         Task<ServiceResponse<bool>> UpdateProductImage(Guid id, UpdateProductImageDTO updateImage);
         Task<ServiceResponse<bool>> DeleteProductImage(Guid id);

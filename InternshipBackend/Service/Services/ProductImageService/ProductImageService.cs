@@ -24,12 +24,24 @@ namespace Service.Services.ProductImageService
             _context = context;
             _mapper = mapper;
         }
+
+        public async Task<ServiceResponse<ProductImage>> GetProductImage(Guid id)
+        {
+            var productImage = await _context.ProductImages.FirstOrDefaultAsync(pi => pi.Id == id);
+            return new ServiceResponse<ProductImage>
+            {
+                Data = productImage,
+            };
+        }
+
         public async Task<ServiceResponse<bool>> CreateProductImage(AddProductImageDTO newImage)
         {
             try
             {
                 var image = _mapper.Map<ProductImage>(newImage);
 
+                //Check if new main image
+                //If new image is main image => set already main image in database is not main
                 if (image.IsMain == true)
                 {
                     var mainImage = _context.ProductImages
@@ -38,6 +50,8 @@ namespace Service.Services.ProductImageService
                     var dbProduct = await _context.Products
                                            .Where(p => !p.Deleted)
                                            .FirstOrDefaultAsync(p => p.Id == image.ProductId);
+
+                    //if it has already main image in database => set that image is not main
                     if (mainImage != null && dbProduct != null)
                     {
                         mainImage.IsMain = false;
@@ -125,18 +139,26 @@ namespace Service.Services.ProductImageService
             }
 
             //Check if unactive main image
+            //If unactive image is main image => choose other image to main image
             if (updateImage.IsActive == false && dbImage.IsMain == true)
             {
                 updateImage.IsMain = false;
                 var someImageElse = await _context.ProductImages
-                                      .Where(pi => pi.Id != dbImage.Id && !pi.Deleted)
+                                      .Where(pi => pi.Id != dbImage.Id && !pi.Deleted && pi.IsActive)
                                       .FirstOrDefaultAsync(pi => pi.ProductId == dbImage.ProductId);
-                if(someImageElse != null)
+                var dbProduct = await _context.Products
+                                         .Where(p => !p.Deleted)
+                                         .FirstOrDefaultAsync(p => p.Id == dbImage.ProductId);
+
+                // If this product has over 2 image => set random image to main image
+                if (someImageElse != null && dbProduct != null)
                 {
                     someImageElse.IsMain = true;
+                    dbProduct.ImageUrl = someImageElse.ImageUrl;
                 }
                 else
                 {
+                    // If this product has only one image => deny that modify
                     return new ServiceResponse<bool>
                     {
                         Success = false,
@@ -148,15 +170,20 @@ namespace Service.Services.ProductImageService
             {
                 _mapper.Map(updateImage, dbImage);
                 // Check if image has mapped is main image
+                // If modified image is main image => check if database has already main image yet
                 if (dbImage.IsMain == true)
                 {
                     var mainImage = _context.ProductImages
                                          .Where(pi => pi.ProductId == dbImage.ProductId && !pi.Deleted)
                                          .FirstOrDefault(pi => pi.IsMain);
-                    // If it has already main image in db => set that image is not main 
-                    if (mainImage != null)
+                    var dbProduct = await _context.Products
+                                         .Where(p => !p.Deleted)
+                                         .FirstOrDefaultAsync(p => p.Id == dbImage.ProductId);
+                    // If it has already main image in database => set that image is not main 
+                    if (mainImage != null && dbProduct !=null)
                     {
                         mainImage.IsMain = false;
+                        dbProduct.ImageUrl = dbImage.ImageUrl;
                     }
                 }
                 await _context.SaveChangesAsync();
