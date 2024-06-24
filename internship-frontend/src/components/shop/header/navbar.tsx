@@ -6,7 +6,7 @@ import SearchBar from "./search-bar";
 
 const Navbar = () => {
   return (
-    <div className="h-20 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
+    <div className="h-20 py-3 px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative bg-light shadow-sm md:shadow-md">
       <div className="flex items-center justify-between md:hidden">
         {/* Moblie */}
         <Link href="/" className="flex items-center gap-3">
