@@ -20,7 +20,7 @@ const ProductImages = ({ images }: IProps) => {
     <div className="">
       <div className="h-[500px] relative ">
         <Image
-          src={images[index].imageUrl || "/product.png"}
+          src={images[index]?.imageUrl.toString() || "/product.png"}
           alt=""
           fill
           sizes="50vw"
@@ -36,7 +36,7 @@ const ProductImages = ({ images }: IProps) => {
               onClick={() => setIndex(index)}
             >
               <Image
-                src={image.imageUrl}
+                src={image.imageUrl?.toString() || "/product.png"}
                 alt=""
                 fill
                 sizes="50vw"
