@@ -179,6 +179,7 @@ namespace Service.Services.ProductService
                 var product = await _context.Products
                    .Include(p => p.ProductVariants.Where(pv => pv.IsActive && !pv.Deleted))
                    .ThenInclude(v => v.ProductType)
+                   .Include(p => p.ProductImages.Where(pi => pi.IsActive && !pi.Deleted))
                    .FirstOrDefaultAsync(p => p.Slug == slug && p.IsActive && !p.Deleted);
                 if (product == null)
                 {
