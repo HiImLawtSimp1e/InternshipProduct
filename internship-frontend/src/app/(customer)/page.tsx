@@ -1,6 +1,6 @@
 import Loading from "@/components/shop/loading";
-import CategoryList from "@/components/shop/main/category-list";
-import ProductList from "@/components/shop/main/product-list";
+import ShopCategoryList from "@/components/shop/category-list/category-list";
+import ShopProductList from "@/components/shop/product-list/product-list";
 import { Suspense } from "react";
 
 const Products = async () => {
@@ -13,7 +13,7 @@ const Products = async () => {
   console.log(responseData);
   const { result, pages, currentPage } = data;
 
-  return <ProductList products={result} />;
+  return <ShopProductList products={result} />;
 };
 
 const Categories = async () => {
@@ -25,7 +25,7 @@ const Categories = async () => {
   const { data, success, message } = categories;
   console.log(data);
 
-  return <CategoryList categories={data} />;
+  return <ShopCategoryList categories={data} />;
 };
 
 const Home = () => {
