@@ -1,7 +1,7 @@
 import Loading from "@/components/shop/loading";
 import ShopCategoryList from "@/components/shop/category-list/category-list";
-import ShopProductList from "@/components/shop/product-list/product-list";
 import { Suspense } from "react";
+import HomeShopProductList from "@/components/shop/home/home-product-list";
 
 const Products = async () => {
   const res = await fetch(`http://localhost:5000/api/Product`, {
@@ -13,7 +13,7 @@ const Products = async () => {
   console.log(responseData);
   const { result, pages, currentPage } = data;
 
-  return <ShopProductList products={result} />;
+  return <HomeShopProductList products={result} />;
 };
 
 const Categories = async () => {

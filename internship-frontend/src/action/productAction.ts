@@ -101,6 +101,7 @@ export const addProduct = async (
       // If the response is success, revalidate the path and redirect
       revalidatePath("/dashboard/products");
       revalidateTag("shopProductDetail");
+      revalidateTag("shopProductList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };

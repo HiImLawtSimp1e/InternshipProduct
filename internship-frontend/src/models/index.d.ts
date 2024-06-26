@@ -8,6 +8,7 @@ interface PagingParams<T> {
   result: T;
   pages: number;
   currentPage: number;
+  pageResults?: number;
 }
 
 interface FormState {

@@ -5,14 +5,23 @@ import { Suspense } from "react";
 
 interface IProps {
   categorySlug: string | null;
+  page?: number;
 }
 
-const Products = async ({ categorySlug }: IProps) => {
+const Products = async ({ categorySlug, page }: IProps) => {
   let url = "";
   if (categorySlug != null) {
-    url = `http://localhost:5000/api/Product/list/${categorySlug}`;
+    if (page == null) {
+      url = `http://localhost:5000/api/Product/list/${categorySlug}`;
+    } else {
+      url = `http://localhost:5000/api/Product/list/${categorySlug}?page=${page}`;
+    }
   } else {
-    url = `http://localhost:5000/api/Product`;
+    if (page == null) {
+      url = `http://localhost:5000/api/Product`;
+    } else {
+      url = `http://localhost:5000/api/Product?page=${page}`;
+    }
   }
   const res = await fetch(url, {
     method: "GET",
@@ -21,17 +30,24 @@ const Products = async ({ categorySlug }: IProps) => {
   const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
   const { data, success, message } = responseData;
   console.log(responseData);
-  const { result, pages, currentPage } = data;
+  const { result, pages, currentPage, pageResults } = data;
 
-  return <ShopProductList products={result} />;
+  return (
+    <ShopProductList
+      products={result}
+      pages={pages}
+      currentPage={currentPage}
+      pageSize={pageResults}
+    />
+  );
 };
 
 const ProductPage = ({
   searchParams,
 }: {
-  searchParams: { category?: string };
+  searchParams: { category?: string; page?: number };
 }) => {
-  const { category } = searchParams;
+  const { category, page } = searchParams;
   return (
     <div className="px-4 md:px-8 lg:px-16 xl:px-32 2xl:px-64 relative">
       {/* CAMPAIGN */}
@@ -50,7 +66,7 @@ const ProductPage = ({
         </div>
       </div>
       <Suspense fallback={<Loading />}>
-        <Products categorySlug={category || null} />
+        <Products categorySlug={category || null} page={page || undefined} />
       </Suspense>
     </div>
   );
