@@ -240,30 +240,44 @@ namespace Service.Services.ProductService
             }
         }
 
-        public async Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug)
+        public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsByCategory(string categorySlug, int page, double pageResults)
         {
             var category = await _context.Categories.FirstOrDefaultAsync(c => c.Slug == categorySlug);
             if (category == null)
             {
-                return new ServiceResponse<List<CustomerProductResponseDTO>>
+                return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
                 {
                     Success = false,
                     Message = "Category not found."
                 };
             }
 
+            var pageCount = Math.Ceiling(_context.Products.Where(p => !p.Deleted && p.IsActive && p.CategoryId == category.Id).Count() / pageResults);
+
             try
             {
                 var products = await _context.Products
                    .Where(p => !p.Deleted && p.IsActive && p.CategoryId == category.Id)
+                   .OrderByDescending(p => p.ModifiedAt)
+                   .Skip((page - 1) * (int)pageResults)
+                   .Take((int)pageResults)
                    .Include(p => p.ProductVariants.Where(pv => !pv.Deleted && pv.IsActive))
                    .ThenInclude(pv => pv.ProductType)
                    .ToListAsync();
+
                 var result = _mapper.Map<List<CustomerProductResponseDTO>>(products);
-                return new ServiceResponse<List<CustomerProductResponseDTO>>
+
+                var pagingData = new PagingParams<List<CustomerProductResponseDTO>>
                 {
-                    Data = result,
-                    Message = "Successfully!"
+                    Result = result,
+                    CurrentPage = page,
+                    Pages = (int)pageCount,
+                    PageResults = (int)pageResults
+                };
+
+                return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
+                {
+                    Data = pagingData,
                 };
             }
             catch(Exception ex)

@@ -79,9 +79,17 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("list/{categorySlug}")]
-        public async Task<ActionResult<ServiceResponse<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>>> GetProductsByCategory(string categorySlug, [FromQuery] int page, [FromQuery] double pageResults)
         {
-            var response = await _service.GetProductsByCategory(categorySlug);
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            if (pageResults == null || pageResults <= 0)
+            {
+                pageResults = 12f;
+            }
+            var response = await _service.GetProductsByCategory(categorySlug, page, pageResults);
             if (!response.Success)
             {
                 return BadRequest(response);

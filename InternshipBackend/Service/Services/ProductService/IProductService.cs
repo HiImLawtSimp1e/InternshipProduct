@@ -17,7 +17,7 @@ namespace Service.Services.ProductService
         Task<ServiceResponse<PagingParams<List<Product>>>> GetAdminProducts(int page, double pageResults);
         Task<ServiceResponse<Product>> GetAdminSingleProduct(Guid id);
         Task<ServiceResponse<CustomerProductResponseDTO>> GetProductBySlug(string slug);
-        Task<ServiceResponse<List<CustomerProductResponseDTO>>> GetProductsByCategory(string categorySlug);
+        Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> GetProductsByCategory(string categorySlug, int page, double pageResults);
         Task<ServiceResponse<bool>> CreateProduct(AddProductDTO newProduct);   
         Task<ServiceResponse<bool>> UpdateProduct(Guid id, UpdateProductDTO product);
         Task<ServiceResponse<bool>> SoftDeleteProduct(Guid productId);
