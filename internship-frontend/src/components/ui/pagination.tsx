@@ -3,16 +3,17 @@ import Link from "next/link";
 interface IProps {
   pages: number;
   currentPage: number;
-  pageSize: number;
+  pageSize?: number;
+  clsColor: string;
 }
 
-const Pagination = ({ pages, currentPage, pageSize }: IProps) => {
+const Pagination = ({ pages, currentPage, pageSize, clsColor }: IProps) => {
   const pageNumbers = Array.from({ length: pages }, (_, i) => i + 1);
   return (
     <ul className="mt-5 float-right inline-flex -space-x-px text-sm">
       <li>
         <button
-          className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-s-lg bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 ${
+          className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-s-lg bg-${clsColor}-800 border-${clsColor}-700 text-${clsColor}-400 hover:bg-${clsColor}-700 ${
             currentPage === 1
               ? "cursor-not-allowed pointer-events-none opacity-50"
               : ""
@@ -29,8 +30,8 @@ const Pagination = ({ pages, currentPage, pageSize }: IProps) => {
             <button
               className={`flex items-center justify-center px-3 h-8 leading-tight ${
                 currentPage === page
-                  ? "border border-gray-700 bg-gray-700 text-white"
-                  : "bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 hover:text-white"
+                  ? `border border-${clsColor}-700 bg-${clsColor}-700 text-white`
+                  : `bg-${clsColor}-800 border-${clsColor}-700 text-${clsColor}-400 hover:bg-${clsColor}-700`
               }`}
             >
               {page}
@@ -40,7 +41,7 @@ const Pagination = ({ pages, currentPage, pageSize }: IProps) => {
       ))}
       <li>
         <button
-          className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-e-lg bg-gray-800 border-gray-700 text-gray-400 hover:bg-gray-700 ${
+          className={`flex items-center justify-center px-3 h-8 ms-0 leading-tight border border-e-0 rounded-e-lg bg-${clsColor}-800 border-${clsColor}-700 text-${clsColor}-400 hover:bg-${clsColor}-700 ${
             currentPage === pages
               ? "cursor-not-allowed pointer-events-none opacity-50"
               : ""

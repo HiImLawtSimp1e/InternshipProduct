@@ -99,7 +99,12 @@ const ProductTypeList = ({ productTypes, pages, currentPage }: IProps) => {
           ))}
         </tbody>
       </table>
-      <Pagination pages={pages} currentPage={currentPage} pageSize={pageSize} />
+      <Pagination
+        pages={pages}
+        currentPage={currentPage}
+        pageSize={pageSize}
+        clsColor="gray"
+      />
     </div>
   );
 };
