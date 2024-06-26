@@ -11,7 +11,10 @@ const ShopCategoryList = ({ categories }: IProps) => {
       <div className="flex gap-4 md:gap-8">
         {categories.map((category: ICategory) => (
           <Link
-            href={`/list/${category.slug}`}
+            href={{
+              pathname: `/product`,
+              query: { category: category.slug },
+            }}
             className="flex-shrink-0 w-full sm:w-1/2 lg:w-1/4 xl:w-1/6"
             key={category.id}
           >
