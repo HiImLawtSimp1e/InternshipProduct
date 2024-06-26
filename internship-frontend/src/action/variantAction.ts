@@ -3,7 +3,6 @@
 // Import the necessary modules and interfaces
 import { validateVariant } from "@/lib/validation/validateVariant";
 import { revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 // Define the VariantFormData interface
 interface VariantFormData {
@@ -84,6 +83,7 @@ export const addVariant = async (
       revalidateTag("productListAdmin");
       revalidateTag("productDetailAdmin");
       revalidateTag("selectProductType");
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -169,6 +169,7 @@ export const updateVariant = async (
       revalidateTag("productDetailAdmin");
       revalidateTag("selectProductType");
       revalidateTag("productDetailAdmin");
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -205,6 +206,7 @@ export const deleteVariant = async (
     revalidateTag("productListAdmin");
     revalidateTag("productDetailAdmin");
     revalidateTag("selectProductType");
+    revalidateTag("shopProductDetail");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

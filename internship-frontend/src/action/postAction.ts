@@ -2,7 +2,6 @@
 
 import { validatePost } from "@/lib/validation/validatePost";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 import slugify from "slugify";
 
 interface PostFormData {

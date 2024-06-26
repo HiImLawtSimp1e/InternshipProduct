@@ -5,7 +5,6 @@ import {
   validateUpdateUser,
 } from "@/lib/validation/validateUser";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 interface AddUserFormData {
   accountName: string;

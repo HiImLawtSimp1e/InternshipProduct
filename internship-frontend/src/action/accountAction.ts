@@ -1,7 +1,5 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
-
 interface LoginFormData {
   accountName: string;
   password: string;

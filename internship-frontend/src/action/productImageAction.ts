@@ -63,6 +63,7 @@ export const AddProductImage = async (
     if (success) {
       // If the response is success, revalidate the path and redirect
       revalidatePath(`/dashboard/products/${productId}`);
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -122,6 +123,7 @@ export const updateProductImage = async (
       // If the response is success, revalidate the path and redirect
       revalidateTag("productDetailAdmin");
       revalidateTag("getProductImage");
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -154,6 +156,7 @@ export const deleteProductImage = async (
   if (success) {
     // If the response is success, revalidate the path and redirect
     revalidateTag("productDetailAdmin");
+    revalidateTag("shopProductDetail");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

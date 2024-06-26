@@ -3,7 +3,6 @@
 import { uploadImage } from "@/lib/cloudinary/cloudinary";
 import { validateProduct } from "@/lib/validation/validateProduct";
 import { revalidatePath, revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 import slugify from "slugify";
 
 // Define the updated ProductFormData interface
@@ -101,6 +100,7 @@ export const addProduct = async (
     if (success) {
       // If the response is success, revalidate the path and redirect
       revalidatePath("/dashboard/products");
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -187,6 +187,7 @@ export const updateProduct = async (
       // If the response is success, revalidate the path and redirect
       revalidatePath("/dashboard/products");
       revalidateTag("productDetailAdmin");
+      revalidateTag("shopProductDetail");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -216,20 +217,9 @@ export const deleteProduct = async (
   if (success) {
     // If the response is success, revalidate the path and redirect
     revalidatePath("/dashboard/products");
+    revalidateTag("shopProductDetail");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };
-  }
-};
-
-export const uploadImageProduct = async (formData: FormData) => {
-  const file = formData.get("image") as File;
-  if (file) {
-    const result = await uploadImage(file, ["product-image"]);
-    if (result && result.secure_url) {
-      console.log(result.secure_url);
-    }
-  } else {
-    throw new Error("No file found");
   }
 };
