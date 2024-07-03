@@ -1,5 +1,6 @@
 import AddProduct from "./product-detail-add";
 import ProductImages from "./product-detail-image";
+import ProductDetailAttribute from "./product-detail-attribute";
 
 interface IProps {
   product: IProduct;
@@ -21,33 +22,7 @@ const ShopProductDetail = ({ product }: IProps) => {
           <AddProduct variants={product.productVariants} />
         )}
         <div className="h-[2px] bg-gray-100" />
-        <div className="text-sm">
-          <div className="font-medium mb-4">Title</div>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
-            necessitatibus ratione deleniti iusto excepturi similique architecto
-            hic, harum tenetur molestiae nulla ipsum, ea esse, nihil quasi?
-            Animi esse cum maxime.
-          </p>
-        </div>
-        <div className="text-sm">
-          <div className="font-medium mb-4">Title</div>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
-            necessitatibus ratione deleniti iusto excepturi similique architecto
-            hic, harum tenetur molestiae nulla ipsum, ea esse, nihil quasi?
-            Animi esse cum maxime.
-          </p>
-        </div>
-        <div className="text-sm">
-          <div className="font-medium mb-4">Title</div>
-          <p>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Quo
-            necessitatibus ratione deleniti iusto excepturi similique architecto
-            hic, harum tenetur molestiae nulla ipsum, ea esse, nihil quasi?
-            Animi esse cum maxime.
-          </p>
-        </div>
+        <ProductDetailAttribute productValues={product.productValues} />
       </div>
     </div>
   );
