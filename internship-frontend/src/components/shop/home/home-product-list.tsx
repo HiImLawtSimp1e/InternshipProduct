@@ -6,7 +6,7 @@ interface IProps {
   products: IProduct[];
 }
 
-const ShopProductList = ({ products }: IProps) => {
+const HomeShopProductList = ({ products }: IProps) => {
   return (
     <div className="mt-12 flex gap-y-12 justify-between flex-wrap">
       {products.map((product: IProduct) => (
@@ -57,4 +57,4 @@ const ShopProductList = ({ products }: IProps) => {
   );
 };
 
-export default ShopProductList;
+export default HomeShopProductList;
