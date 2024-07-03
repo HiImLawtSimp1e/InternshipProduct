@@ -173,7 +173,7 @@ namespace Service.Services.ProductTypeService
             }
         }
 
-        public async Task<ServiceResponse<List<ProductType>>> GetProductTypeSelect(Guid productId)
+        public async Task<ServiceResponse<List<ProductType>>> GetProductTypesSelectByProduct(Guid productId)
         {
             var dbProduct = await _context.Products
                                     .Include(p => p.ProductVariants)
@@ -208,5 +208,16 @@ namespace Service.Services.ProductTypeService
             };
         }
 
+        public async Task<ServiceResponse<List<ProductType>>> GetProductTypesSelect()
+        {
+            var types = await _context.ProductTypes
+                                  .Where(pt => !pt.Deleted)
+                                  .ToListAsync();
+            return new ServiceResponse<List<ProductType>>
+            {
+                Success = true,
+                Data = types
+            };
+        }
     }
 }

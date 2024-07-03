@@ -26,10 +26,10 @@ namespace Service.Services.ProductService
         }
         public async Task<ServiceResponse<bool>> CreateProduct(AddProductDTO newProduct)
         {
-            try 
+            try
             {
                 var product = _mapper.Map<Product>(newProduct);
-                
+
                 // Add product image
                 var productImage = new ProductImage
                 {
@@ -39,6 +39,16 @@ namespace Service.Services.ProductService
                 };
                 product.ProductImages.Add(productImage);
 
+                // Add product variant
+                var variant = new ProductVariant
+                {
+                    ProductId = product.Id,
+                    ProductTypeId = newProduct.ProductTypeId,
+                    Price = newProduct.Price,
+                    OriginalPrice = newProduct.OriginalPrice
+                };
+
+                product.ProductVariants.Add(variant);
                 // Save product
                 _context.Products.Add(product);
                 await _context.SaveChangesAsync();

@@ -16,6 +16,7 @@ namespace Service.Services.ProductTypeService
         Task<ServiceResponse<bool>> CreateProductType(AddProductTypeDTO productType);
         Task<ServiceResponse<bool>> UpdateProductType(Guid productTypeId, UpdateProductTypeDTO productType);
         Task<ServiceResponse<bool>> DeleteProductType(Guid productTypeId);
-        Task<ServiceResponse<List<ProductType>>> GetProductTypeSelect(Guid productId);
+        Task<ServiceResponse<List<ProductType>>> GetProductTypesSelect();
+        Task<ServiceResponse<List<ProductType>>> GetProductTypesSelectByProduct(Guid productId);
     }
 }

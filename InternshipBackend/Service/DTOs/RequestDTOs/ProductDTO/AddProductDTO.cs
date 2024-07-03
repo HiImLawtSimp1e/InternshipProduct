@@ -23,7 +23,15 @@ namespace Service.DTOs.RequestDTOs.ProductDTO
 
         [StringLength(100, ErrorMessage = "SEO Keywords can't be longer than 100 characters")]
         public string SeoKeyworks { get; set; } = string.Empty;
+        [Required(ErrorMessage = "ImageUrl is required")]
         public string ImageUrl { get; set; } = string.Empty;
+        [Required(ErrorMessage = "CategoryId is required")]
         public Guid CategoryId { get; set; }
+        [Required(ErrorMessage = "ProductType is required")]
+        public Guid ProductTypeId { get; set; }
+        [Required(ErrorMessage = "Price is required"), Range(1000, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
+        public int Price { get; set; }
+        [Range(0, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
+        public int OriginalPrice { get; set; }
     }
 }
