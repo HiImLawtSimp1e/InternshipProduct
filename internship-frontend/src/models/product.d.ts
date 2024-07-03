@@ -38,3 +38,18 @@ interface IProductImage {
   productId: string;
   isActive: boolean;
 }
+
+interface IProductAttribute {
+  id: string;
+  name: string;
+  createdAt: string;
+  modifiedAt: string;
+}
+
+interface IProductValue {
+  productId: string;
+  productAttribute: IProductAttribute;
+  productAttributeId: string;
+  value: string;
+  isActive: boolean;
+}

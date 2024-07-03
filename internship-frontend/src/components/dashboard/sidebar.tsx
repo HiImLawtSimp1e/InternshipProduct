@@ -12,6 +12,7 @@ import {
   MdStorage,
   MdCategory,
   MdOutlinePostAdd,
+  MdDvr,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -41,6 +42,11 @@ const Sidebar = () => {
           title: "Product Types",
           path: "/dashboard/product-types",
           icon: <MdStorage />,
+        },
+        {
+          title: "Product Attributes",
+          path: "/dashboard/product-attributes",
+          icon: <MdDvr />,
         },
         {
           title: "Products",
