@@ -1,5 +1,7 @@
+import AddProductAttributeForm from "@/components/dashboard/product-attribute/add-product-attribute-form";
+
 const AddProductAttributePage = () => {
-  return <></>;
+  return <AddProductAttributeForm />;
 };
 
 export default AddProductAttributePage;

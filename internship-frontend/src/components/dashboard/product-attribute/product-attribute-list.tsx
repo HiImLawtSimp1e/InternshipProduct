@@ -62,7 +62,7 @@ const ProductAttributeList = ({
   return (
     <div>
       <div className="flex items-center justify-end mb-5">
-        <Link href="/dashboard/product-types/add">
+        <Link href="/dashboard/product-attributes/add">
           <button className="p-2 flex items-center justify-center mb-5 bg-purple-600 text-white rounded">
             <MdAdd />
             Add New Attribute
