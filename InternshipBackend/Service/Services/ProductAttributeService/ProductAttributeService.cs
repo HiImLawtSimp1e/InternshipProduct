@@ -178,7 +178,7 @@ namespace Service.Services.ProductAttributeService
             var allAttribute = await _context.ProductAttributes.ToListAsync();
 
             var existingAttributeIds = dbProduct.ProductValues
-                                                  .Where(pav => !pav.Deleted && pav.IsActive && pav.ProductAttribute != null)
+                                                  .Where(pav => !pav.Deleted && pav.ProductAttribute != null)
                                                   .Select(pav => pav.ProductAttribute.Id)
                                                   .ToList();
 

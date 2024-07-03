@@ -193,7 +193,7 @@ namespace Service.Services.ProductTypeService
             var allProductTypes = await _context.ProductTypes.ToListAsync();
 
             var existingProductTypeIds = dbProduct.ProductVariants
-                                                  .Where(pv => !pv.Deleted && pv.IsActive && pv.ProductType != null)
+                                                  .Where(pv => !pv.Deleted && pv.ProductType != null)
                                                   .Select(pv => pv.ProductType.Id)
                                                   .ToList();
 
