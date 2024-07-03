@@ -19,5 +19,6 @@ namespace Service.DTOs.ResponseDTOs.CustomerProductDTO
         public string SeoKeyworks { get; set; } = string.Empty;
         public List<ProductVariantDTO> ProductVariants { get; set; } = new List<ProductVariantDTO>();
         public List<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+        public List<ProductValueDTO>? ProductValues { get; set; } = new List<ProductValueDTO>();
     }
 }

@@ -29,6 +29,7 @@ namespace Data.Initialization
                     RoleName = "Employee"
                 }
                 );
+
             modelBuilder.Entity<ProductType>().HasData(
                new ProductType
                {
@@ -82,6 +83,54 @@ namespace Data.Initialization
                }
                );
 
+            modelBuilder.Entity<ProductAttribute>().HasData(
+                new ProductAttribute
+                {
+                    Id = new Guid("bd2d16dc-10a9-40b1-b76a-e39f3c015086"),
+                    Name = "Author",
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                    Name = "Publisher",
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("d369dc76-92cf-417a-aea5-17616c87d4ce"),
+                    Name = "ISBN"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("50b7176f-4b13-484b-aec4-edf9383b9232"),
+                    Name = "Pages"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("b96ab5d0-3155-4688-8fb4-c6427e0661d5"),
+                    Name = "Directors"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("99bf3d94-a248-46f8-bbcb-0f9ae07ce1af"),
+                    Name = "Writers"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("a5913406-23e7-4451-a19c-242c974e312e"),
+                    Name = "Stars"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("c84ec2fc-651b-42e1-b073-022596ac90c0"),
+                    Name = "Gerne"
+                },
+                new ProductAttribute
+                {
+                    Id = new Guid("4150124b-2a58-4d98-8abe-f380e99a6fa9"),
+                    Name = "Developer"
+                }
+                );
+
             modelBuilder.Entity<Category>().HasData(
               new Category
               {
@@ -117,7 +166,7 @@ namespace Data.Initialization
             {
                 Id = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
                 Title = "Ready Player One",
-                Slug= "ready-player-one",
+                Slug = "ready-player-one",
                 Description = "Ready Player One is a 2011 science fiction novel, and the debut novel of American author Ernest Cline. The story, set in a dystopia in 2045, follows protagonist Wade Watts on his search for an Easter egg in a worldwide virtual reality game, the discovery of which would lead him to inherit the game creator's fortune. Cline sold the rights to publish the novel in June 2010, in a bidding war to the Crown Publishing Group (a division of Random House). The book was published on August 16, 2011. An audiobook was released the same day; it was narrated by Wil Wheaton, who was mentioned briefly in one of the chapters. In 2012, the book received an Alex Award from the Young Adult Library Services Association division of the American Library Association and won the 2011 Prometheus Award. A film adaptation, screenwritten by Cline and Zak Penn and directed by Steven Spielberg, was released on March 29, 2018. A sequel novel, Ready Player Two, was released on November 24, 2020, to a widely negative critical reception.",
                 ImageUrl = "https://upload.wikimedia.org/wikipedia/en/a/a4/Ready_Player_One_cover.jpg",
                 CategoryId = new Guid("a186203e-0d11-4c22-a45e-58ecfeed368f")
@@ -319,7 +368,188 @@ namespace Data.Initialization
                    Price = 7990000,
                    OriginalPrice = 13990000
                }
-           );
+        );
+            modelBuilder.Entity<ProductValue>().HasData(
+                  new ProductValue
+                  {
+                      ProductId = new Guid("318f6a20-3c0b-40ca-9cf0-9533e83d3734"),
+                      ProductAttributeId = new Guid("bd2d16dc-10a9-40b1-b76a-e39f3c015086"),
+                      Value = "Douglas Adams"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("318f6a20-3c0b-40ca-9cf0-9533e83d3734"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "Random House Worlds; Reissue edition (June 23, 1997)"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("318f6a20-3c0b-40ca-9cf0-9533e83d3734"),
+                      ProductAttributeId = new Guid("d369dc76-92cf-417a-aea5-17616c87d4ce"),
+                      Value = "978-0345418913"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("318f6a20-3c0b-40ca-9cf0-9533e83d3734"),
+                      ProductAttributeId = new Guid("50b7176f-4b13-484b-aec4-edf9383b9232"),
+                      Value = "208 pages"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
+                      ProductAttributeId = new Guid("bd2d16dc-10a9-40b1-b76a-e39f3c015086"),
+                      Value = "Ernest Cline"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "Random House Publishing Group; 32089th edition (June 5, 2012)"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
+                      ProductAttributeId = new Guid("d369dc76-92cf-417a-aea5-17616c87d4ce"),
+                      Value = "978-0307887443"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
+                      ProductAttributeId = new Guid("50b7176f-4b13-484b-aec4-edf9383b9232"),
+                      Value = "384 pages"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("c7537965-c2cb-4e77-bfc5-6c466c9a3bea"),
+                      ProductAttributeId = new Guid("bd2d16dc-10a9-40b1-b76a-e39f3c015086"),
+                      Value = "George Orwell"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("c7537965-c2cb-4e77-bfc5-6c466c9a3bea"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "Hawk Press (May 12, 1994)"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("c7537965-c2cb-4e77-bfc5-6c466c9a3bea"),
+                      ProductAttributeId = new Guid("d369dc76-92cf-417a-aea5-17616c87d4ce"),
+                      Value = "978-9388318563"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("c7537965-c2cb-4e77-bfc5-6c466c9a3bea"),
+                      ProductAttributeId = new Guid("50b7176f-4b13-484b-aec4-edf9383b9232"),
+                      Value = "242 pages"
+                  },
+                  new ProductValue { 
+                      ProductId = new Guid("4f5c260c-0870-4940-a394-b20c56b3fcca"),
+                      ProductAttributeId = new Guid("b96ab5d0-3155-4688-8fb4-c6427e0661d5"),
+                      Value = "Lana Wachowski, Lilly Wachowski"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("4f5c260c-0870-4940-a394-b20c56b3fcca"),
+                      ProductAttributeId = new Guid("99bf3d94-a248-46f8-bbcb-0f9ae07ce1af"),
+                      Value = "Lana Wachowski, Lilly Wachowski"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("4f5c260c-0870-4940-a394-b20c56b3fcca"),
+                      ProductAttributeId = new Guid("a5913406-23e7-4451-a19c-242c974e312e"),
+                      Value = "Keanu Reeves, Laurence Fishburne, Carrie-Anne Moss"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("f2b7ac53-e3e5-4f7c-8094-99530bbde9eb"),
+                      ProductAttributeId = new Guid("b96ab5d0-3155-4688-8fb4-c6427e0661d5"),
+                      Value = "Robert Zemeckis"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("f2b7ac53-e3e5-4f7c-8094-99530bbde9eb"),
+                      ProductAttributeId = new Guid("99bf3d94-a248-46f8-bbcb-0f9ae07ce1af"),
+                      Value = "Robert Zemeckis, Bob Gale"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("f2b7ac53-e3e5-4f7c-8094-99530bbde9eb"),
+                      ProductAttributeId = new Guid("a5913406-23e7-4451-a19c-242c974e312e"),
+                      Value = "Michael J. Fox, Christopher Lloyd, Lea Thompson"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("321ec52d-5fb6-4b1b-bb35-6f73cf92396d"),
+                      ProductAttributeId = new Guid("b96ab5d0-3155-4688-8fb4-c6427e0661d5"),
+                      Value = "John Lasseter"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("321ec52d-5fb6-4b1b-bb35-6f73cf92396d"),
+                      ProductAttributeId = new Guid("99bf3d94-a248-46f8-bbcb-0f9ae07ce1af"),
+                      Value = "John Lasseter, Pete Docter, Andrew Stanton"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("321ec52d-5fb6-4b1b-bb35-6f73cf92396d"),
+                      ProductAttributeId = new Guid("a5913406-23e7-4451-a19c-242c974e312e"),
+                      Value = "Tom Hanks, Tim Allen, Don Rickles"
+                  },
+                  new ProductValue 
+                  { 
+                      ProductId = new Guid("106e97ab-bbce-44b8-95c4-a287752d8561"),
+                      ProductAttributeId = new Guid("c84ec2fc-651b-42e1-b073-022596ac90c0"),
+                      Value = "Action"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("106e97ab-bbce-44b8-95c4-a287752d8561"),
+                      ProductAttributeId = new Guid("4150124b-2a58-4d98-8abe-f380e99a6fa9"),
+                      Value = "Valve"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("106e97ab-bbce-44b8-95c4-a287752d8561"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "Valve"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("07acf5bd-e13d-4667-ba8e-70be6785f655"),
+                      ProductAttributeId = new Guid("c84ec2fc-651b-42e1-b073-022596ac90c0"),
+                      Value = "Action, Role-playing"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("07acf5bd-e13d-4667-ba8e-70be6785f655"),
+                      ProductAttributeId = new Guid("4150124b-2a58-4d98-8abe-f380e99a6fa9"),
+                      Value = "Blizzard North"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("07acf5bd-e13d-4667-ba8e-70be6785f655"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "Blizzard Entertainment"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("00cab8fd-ad0e-433b-8bb0-2c9596809b7b"),
+                      ProductAttributeId = new Guid("c84ec2fc-651b-42e1-b073-022596ac90c0"),
+                      Value = "Graphic Adventure"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("00cab8fd-ad0e-433b-8bb0-2c9596809b7b"),
+                      ProductAttributeId = new Guid("4150124b-2a58-4d98-8abe-f380e99a6fa9"),
+                      Value = "LucasArts"
+                  },
+                  new ProductValue
+                  {
+                      ProductId = new Guid("00cab8fd-ad0e-433b-8bb0-2c9596809b7b"),
+                      ProductAttributeId = new Guid("09ec0726-d537-4c92-aaaf-760f19c6999f"),
+                      Value = "LucasArts"
+                  }
+        );
         }
     }
 }

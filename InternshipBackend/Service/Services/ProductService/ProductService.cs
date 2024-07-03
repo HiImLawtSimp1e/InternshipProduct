@@ -158,6 +158,8 @@ namespace Service.Services.ProductService
                    .Where(p => !p.Deleted)
                    .Include(p => p.ProductVariants.Where(pv => !pv.Deleted))
                    .ThenInclude(pv => pv.ProductType)
+                   .Include(p => p.ProductValues.Where(pav => !pav.Deleted))
+                   .ThenInclude(pav => pav.ProductAttribute)
                    .Include(p => p.ProductImages.Where(pv => !pv.Deleted))
                    .FirstOrDefaultAsync(p => p.Id == id);
                 return new ServiceResponse<Product>
@@ -179,6 +181,8 @@ namespace Service.Services.ProductService
                 var product = await _context.Products
                    .Include(p => p.ProductVariants.Where(pv => pv.IsActive && !pv.Deleted))
                    .ThenInclude(v => v.ProductType)
+                   .Include(p => p.ProductValues.Where(pav => pav.IsActive && !pav.Deleted))
+                   .ThenInclude(pav => pav.ProductAttribute)
                    .Include(p => p.ProductImages.Where(pi => pi.IsActive && !pi.Deleted))
                    .FirstOrDefaultAsync(p => p.Slug == slug && p.IsActive && !p.Deleted);
                 if (product == null)

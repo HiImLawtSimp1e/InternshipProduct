@@ -28,6 +28,8 @@ namespace Data.Context
             base.OnModelCreating(builder);
             builder.Entity<ProductVariant>()
              .HasKey(p => new { p.ProductId, p.ProductTypeId });
+            builder.Entity<ProductValue>()
+             .HasKey(p => new { p.ProductId, p.ProductAttributeId });
             builder.Entity<Customer>()
              .HasKey(c => new { c.AccountId });
             builder.Entity<Employee>()
@@ -52,5 +54,7 @@ namespace Data.Context
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }
+        public DbSet<ProductAttribute> ProductAttributes { get; set; }
+        public DbSet<ProductValue> ProductValues { get; set; } 
     }
 }

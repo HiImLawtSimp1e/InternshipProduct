@@ -10,9 +10,11 @@ using Service.Services.CategoryService;
 using Service.Services.ContactService;
 using Service.Services.CustomerService;
 using Service.Services.PostService;
+using Service.Services.ProductAttributeService;
 using Service.Services.ProductImageService;
 using Service.Services.ProductService;
 using Service.Services.ProductTypeService;
+using Service.Services.ProductValueService;
 using Service.Services.ProductVariantService;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -33,6 +35,8 @@ builder.Services.AddScoped<IPostService,  PostService>();
 builder.Services.AddScoped<IContactService, ContactService>();
 builder.Services.AddScoped<IAccountService,  AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
+builder.Services.AddScoped<IProductValueService, ProductValueService>();
+builder.Services.AddScoped<IProductAttributeService, ProductAttributeService>();
 
 //Enable CORS
 builder.Services.AddCors(options =>

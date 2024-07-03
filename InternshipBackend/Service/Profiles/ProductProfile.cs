@@ -18,6 +18,8 @@ namespace Service.Profiles
             CreateMap<Product, CustomerProductResponseDTO>();
             CreateMap<ProductVariant, ProductVariantDTO>();
             CreateMap<ProductType, ProductTypeDTO>();
+            CreateMap<ProductValue, ProductValueDTO>();
+            CreateMap<ProductAttribute, ProductAttributeDTO>();
             // Map DTO to entity
             CreateMap<AddProductDTO, Product>();
             CreateMap<UpdateProductDTO, Product>();
