@@ -1,6 +1,6 @@
 "use client";
 
-import { deleteAttributeValue } from "@/action/attributeValueAction";
+import { deleteAttributeValue } from "@/action/productAttributeValueAction";
 import TagFiled from "@/components/ui/tag";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import Link from "next/link";

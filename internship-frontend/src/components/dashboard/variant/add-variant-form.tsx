@@ -83,12 +83,13 @@ const AddVariantForm = ({ productId, typeSelect }: IProps) => {
         min-value={0}
         required
       />
+      <label className="block mb-2 text-sm font-medium">Product Type</label>
       <select
         name="productTypeId"
         onChange={handleChange}
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
       >
-        {typeSelect.map((type: IProductType, index) => (
+        {typeSelect?.map((type: IProductType, index) => (
           <option key={index} value={type.id}>
             {type.name}
           </option>
