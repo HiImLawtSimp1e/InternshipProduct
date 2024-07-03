@@ -9,9 +9,10 @@ import { toast } from "react-toastify";
 
 interface IProps {
   categorySelect: ICategorySelect[];
+  typeSelect: IProductType[];
 }
 
-const AddProductForm = ({ categorySelect }: IProps) => {
+const AddProductForm = ({ categorySelect, typeSelect }: IProps) => {
   const router = useRouter();
 
   // manage state of form action [useActionState hook]
@@ -29,6 +30,9 @@ const AddProductForm = ({ categorySelect }: IProps) => {
     seoDescription: "",
     seoKeyworks: "",
     categoryId: "",
+    productTypeId: "",
+    price: "",
+    originalPrice: "",
   });
 
   const [toastDisplayed, setToastDisplayed] = useState(false);
@@ -101,6 +105,56 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         required
       />
+      <label className="block mb-2 text-sm font-medium text-white">
+        Category
+      </label>
+      <select
+        name="categoryId"
+        value={formData.categoryId}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+      >
+        {categorySelect?.map((category: ICategorySelect, index) => (
+          <option key={index} value={category.id}>
+            {category.title}
+          </option>
+        ))}
+      </select>
+      <label className="block mb-2 text-sm font-medium text-white">
+        Product Type
+      </label>
+      <select
+        name="productTypeId"
+        value={formData.productTypeId}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+      >
+        {typeSelect?.map((type: IProductType, index) => (
+          <option key={index} value={type.id}>
+            {type.name}
+          </option>
+        ))}
+      </select>
+      <InputField
+        type="number"
+        label="Price"
+        id="price"
+        name="price"
+        value={formData.price.toString()}
+        onChange={handleChange}
+        min-value={0}
+        required
+      />
+      <InputField
+        type="number"
+        label="Original Price"
+        id="originalPrice"
+        name="originalPrice"
+        value={formData.originalPrice.toString()}
+        onChange={handleChange}
+        min-value={0}
+        required
+      />
       <InputField
         label="SEO Title"
         id="seoTitle"
@@ -125,18 +179,6 @@ const AddProductForm = ({ categorySelect }: IProps) => {
         onChange={handleChange}
         required
       />
-      <select
-        name="categoryId"
-        value={formData.categoryId}
-        onChange={handleChange}
-        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
-      >
-        {categorySelect?.map((category: ICategorySelect, index) => (
-          <option key={index} value={category.id}>
-            {category.title}
-          </option>
-        ))}
-      </select>
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => {

@@ -3,7 +3,9 @@ export const validateProduct = (
   description: string,
   seoTitle: string,
   seoDescription: string,
-  seoKeyworks: string
+  seoKeyworks: string,
+  price?: number | null,
+  originalPrice?: number | null
 ): [string[], boolean] => {
   const errors: string[] = [];
 
@@ -29,6 +31,33 @@ export const validateProduct = (
 
   if (seoKeyworks && seoKeyworks.trim().length > 100) {
     errors.push("SEO Keywords can't be longer than 100 characters.");
+  }
+
+  // Validate price
+  if (price === null || price === undefined) {
+    errors.push("Price is required.");
+  } else if (price < 1000) {
+    errors.push("Price must be an integer and greater than or equal to 1000.");
+  }
+
+  // Validate original price
+  if (originalPrice === null || originalPrice === undefined) {
+    errors.push("Original price is required.");
+  } else if (originalPrice < 1000) {
+    errors.push(
+      "Original price must be an integer and greater than or equal to 1000."
+    );
+  }
+
+  // Validate that original price is greater than or equal to price
+  if (
+    originalPrice !== null &&
+    price !== null &&
+    originalPrice !== undefined &&
+    price !== undefined &&
+    originalPrice < price
+  ) {
+    errors.push("Original price must be greater than or equal to the price.");
   }
 
   return [errors, errors.length === 0];

@@ -67,6 +67,7 @@ const UpdateProductForm = ({ product, categorySelect }: IProps) => {
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
       <input type="hidden" name="id" value={product.id} />
+      <input type="hidden" name="imageUrl" value={product.imageUrl} />
       <InputField
         label="Title"
         id="title"

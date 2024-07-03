@@ -16,6 +16,9 @@ interface ProductFormData {
   slug: string;
   isActive?: boolean | null;
   categoryId?: string;
+  productTypeId?: string;
+  price?: number | null;
+  originalPrice?: number | null;
 }
 
 export const addProduct = async (
@@ -29,6 +32,11 @@ export const addProduct = async (
   const seoDescription = formData.get("seoDescription") as string;
   const seoKeyworks = formData.get("seoKeyworks") as string;
   const categoryId = formData.get("categoryId") as string;
+  const productTypeId = formData.get("productTypeId") as string;
+  const price = formData.get("price") ? Number(formData.get("price")) : null;
+  const originalPrice = formData.get("originalPrice")
+    ? Number(formData.get("originalPrice"))
+    : null;
   const slug = slugify(title, { lower: true });
 
   let imageUrl = "";
@@ -48,7 +56,9 @@ export const addProduct = async (
     description,
     seoTitle,
     seoDescription,
-    seoKeyworks
+    seoKeyworks,
+    price,
+    originalPrice
   );
 
   if (!isValid) {
@@ -64,6 +74,9 @@ export const addProduct = async (
     seoKeyworks,
     slug,
     categoryId,
+    productTypeId,
+    price,
+    originalPrice,
   };
 
   try {
@@ -189,6 +202,7 @@ export const updateProduct = async (
       revalidatePath("/dashboard/products");
       revalidateTag("productDetailAdmin");
       revalidateTag("shopProductDetail");
+      revalidateTag("shopProductList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -218,7 +232,7 @@ export const deleteProduct = async (
   if (success) {
     // If the response is success, revalidate the path and redirect
     revalidatePath("/dashboard/products");
-    revalidateTag("shopProductDetail");
+    revalidateTag("shopProductList");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

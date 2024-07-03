@@ -25,6 +25,7 @@ const Products = async ({ categorySlug, page }: IProps) => {
   }
   const res = await fetch(url, {
     method: "GET",
+    next: { tags: ["shopProductList"] },
   });
 
   const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
