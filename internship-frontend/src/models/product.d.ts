@@ -13,6 +13,7 @@ interface IProduct {
   categoryId: string;
   productVariants: IProductVariant[];
   productImages?: IProductImage[];
+  productValues: IProductValues[];
 }
 
 interface IProductVariant {

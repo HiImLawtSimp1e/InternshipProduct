@@ -4,6 +4,7 @@ import Image from "next/image";
 import UpdateProductForm from "./update-product-form";
 import ProductVariantForm from "./product-variant-form";
 import ProductImageForm from "./product-image-form";
+import ProductAttributeValueForm from "./product-attribute-form";
 
 interface IProps {
   product: IProduct;
@@ -44,6 +45,12 @@ const ProductDetail = ({ product, categorySelect }: IProps) => {
         <ProductVariantForm
           productId={product.id}
           variants={product.productVariants}
+        />
+      </div>
+      <div className="mt-5">
+        <ProductAttributeValueForm
+          productId={product.id}
+          productValues={product.productValues}
         />
       </div>
     </div>
