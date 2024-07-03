@@ -52,7 +52,7 @@ namespace Service.Services.ProductAttributeService
                 };
             }
 
-            _mapper.Map(dbAttribute, updateProductAttribute);
+            _mapper.Map(updateProductAttribute, dbAttribute);
             await _context.SaveChangesAsync();
             return new ServiceResponse<bool>
             {
