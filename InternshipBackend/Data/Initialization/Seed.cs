@@ -442,7 +442,8 @@ namespace Data.Initialization
                       ProductAttributeId = new Guid("50b7176f-4b13-484b-aec4-edf9383b9232"),
                       Value = "242 pages"
                   },
-                  new ProductValue { 
+                  new ProductValue
+                  {
                       ProductId = new Guid("4f5c260c-0870-4940-a394-b20c56b3fcca"),
                       ProductAttributeId = new Guid("b96ab5d0-3155-4688-8fb4-c6427e0661d5"),
                       Value = "Lana Wachowski, Lilly Wachowski"
@@ -495,8 +496,8 @@ namespace Data.Initialization
                       ProductAttributeId = new Guid("a5913406-23e7-4451-a19c-242c974e312e"),
                       Value = "Tom Hanks, Tim Allen, Don Rickles"
                   },
-                  new ProductValue 
-                  { 
+                  new ProductValue
+                  {
                       ProductId = new Guid("106e97ab-bbce-44b8-95c4-a287752d8561"),
                       ProductAttributeId = new Guid("c84ec2fc-651b-42e1-b073-022596ac90c0"),
                       Value = "Action"
@@ -550,6 +551,85 @@ namespace Data.Initialization
                       Value = "LucasArts"
                   }
         );
+            modelBuilder.Entity<ProductImage>().HasData(
+                  new ProductImage
+                  {
+                      Id = new Guid("2905d0d9-8be2-446d-ac2c-9d5539916672"),
+                      ProductId = new Guid("318f6a20-3c0b-40ca-9cf0-9533e83d3734"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/b/bd/H2G2_UK_front_cover.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                       Id = new Guid("5d3c3f8a-2eae-4d49-a2cf-348b42f775d4"),
+                       ProductId = new Guid("ce50c69d-5897-4e3d-8d2d-081114ed1fb0"),
+                       ImageUrl = "https://upload.wikimedia.org/wikipedia/en/a/a4/Ready_Player_One_cover.jpg",
+                       IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                       Id = new Guid("7e6dba1d-5802-4f28-9e15-87613a2e5096"),
+                       ProductId = new Guid("c7537965-c2cb-4e77-bfc5-6c466c9a3bea"),
+                       ImageUrl = "https://upload.wikimedia.org/wikipedia/en/5/51/1984_first_edition_cover.jpg",
+                       IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("e3f8a3b1-94e2-4116-a84f-5283f9983e13"),
+                      ProductId = new Guid("4f5c260c-0870-4940-a394-b20c56b3fcca"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/c/c1/The_Matrix_Poster.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("f5d7cbb2-6d3a-41d6-8b60-c27a9e44a70d"),
+                      ProductId = new Guid("f2b7ac53-e3e5-4f7c-8094-99530bbde9eb"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/d/d2/Back_to_the_Future.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("8c5b4f1e-4b5c-4f4f-819b-243bd174dd9e"),
+                      ProductId = new Guid("321ec52d-5fb6-4b1b-bb35-6f73cf92396d"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/1/13/Toy_Story.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("b9e3d1f2-0d5e-4f1d-9b6a-13fef5e5f7a4"),
+                      ProductId = new Guid("106e97ab-bbce-44b8-95c4-a287752d8561"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/2/25/Half-Life_2_cover.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("d0b7c2a1-59ef-4e8a-9d17-4b4e9a8b74e3"),
+                      ProductId = new Guid("07acf5bd-e13d-4667-ba8e-70be6785f655"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/d/d5/Diablo_II_Coverart.png",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("e2c7f8a5-2e8d-4c1f-9d74-6a4b7d4c3f1e"),
+                      ProductId = new Guid("00cab8fd-ad0e-433b-8bb0-2c9596809b7b"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/en/7/79/Day_of_the_Tentacle_artwork.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("f3a7b2c5-9d6d-4e8c-8e5a-5b4b7e3d4f2e"),
+                      ProductId = new Guid("fc67ff65-d124-4350-94fa-8dd1cc0559e1"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/4/43/Xbox-console.jpg",
+                      IsMain = true,
+                  },
+                  new ProductImage
+                  {
+                      Id = new Guid("c8d9a7b4-3f1d-4e2a-8d4b-5b7e4f1d2c6e"),
+                      ProductId = new Guid("aed54a62-e6e7-4670-ab24-1c84b911deb0"),
+                      ImageUrl = "https://upload.wikimedia.org/wikipedia/commons/e/ee/Nintendo-Super-Famicom-Set-FL.jpg",
+                      IsMain = true,
+                  }
+                );
         }
     }
 }
