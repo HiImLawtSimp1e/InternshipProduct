@@ -80,7 +80,7 @@ export const createUser = async (
     }
 
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -138,7 +138,7 @@ export const updateUser = async (prevState: FormState, formData: FormData) => {
     }
 
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
 
     const { success, message } = responseData;
 
@@ -165,7 +165,7 @@ export const deleteUser = async (prevState: FormState, formData: FormData) => {
   });
 
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  // console.log(responseData);
   const { success, message } = responseData;
 
   if (success) {

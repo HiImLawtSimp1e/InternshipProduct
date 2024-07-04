@@ -16,7 +16,7 @@ const Variant = async ({ productId, productTypeId }: IProps) => {
 
   const variant: ApiResponse<IProductVariant> = await res.json();
 
-  console.log(variant.data);
+  // console.log(variant.data);
 
   return <UpdateVariantForm variant={variant.data} />;
 };

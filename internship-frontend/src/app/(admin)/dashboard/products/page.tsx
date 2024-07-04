@@ -15,7 +15,7 @@ const Products = async ({ params }: { params: { page?: number } }) => {
 
   const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage } = data;
 
   return (
@@ -30,7 +30,7 @@ const ProductsPage = ({
 }) => {
   // Destructure page from searchParams
   const { page } = searchParams;
-  
+
   // Render Products component with params prop
   return <Products params={{ page: page || undefined }} />;
 };

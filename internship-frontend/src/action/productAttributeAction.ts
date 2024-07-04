@@ -102,7 +102,7 @@ export const updateAttribute = async (
 
     // If the response is OK, parse the response data
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -135,7 +135,7 @@ export const deleteAttribute = async (
   );
 
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  // console.log(responseData);
   const { success, message } = responseData;
 
   if (success) {

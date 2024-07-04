@@ -16,7 +16,7 @@ const ProductTypes = async ({ params }: { params: { page?: number } }) => {
   const responseData: ApiResponse<PagingParams<IProductType[]>> =
     await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage } = data;
 
   return (

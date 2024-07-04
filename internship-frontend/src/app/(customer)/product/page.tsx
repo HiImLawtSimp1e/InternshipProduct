@@ -31,7 +31,7 @@ const Products = async ({ categorySlug, page }: IProps) => {
 
   const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage, pageResults } = data;
 
   return (
@@ -51,7 +51,7 @@ const Categories = async () => {
 
   const categories: ApiResponse<ICategory[]> = await res.json();
   const { data, success, message } = categories;
-  console.log(data);
+  // console.log(data);
 
   return <CategorySidebar categories={data} />;
 };

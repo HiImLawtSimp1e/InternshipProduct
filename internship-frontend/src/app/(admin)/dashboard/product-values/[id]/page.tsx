@@ -16,7 +16,7 @@ const ProductValue = async ({ productId, productAttributeId }: IProps) => {
 
   const productValue: ApiResponse<IProductValue> = await res.json();
 
-  console.log(productValue.data);
+  // console.log(productValue.data);
 
   return <UpdateProductAttributeValueForm productValue={productValue.data} />;
 };

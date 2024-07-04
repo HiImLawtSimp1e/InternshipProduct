@@ -11,7 +11,7 @@ const Product = async () => {
   const categorySelect: ApiResponse<ICategorySelect[]> =
     await categorySelectRes.json();
 
-  console.log(categorySelect.data);
+  // console.log(categorySelect.data);
 
   const productTypeSelectRes = await fetch(
     `http://localhost:5000/api/ProductType/select`,
@@ -23,7 +23,7 @@ const Product = async () => {
   const productTypeSelect: ApiResponse<IProductType[]> =
     await productTypeSelectRes.json();
 
-  console.log(categorySelect.data);
+  // console.log(categorySelect.data);
 
   return (
     <AddProductForm

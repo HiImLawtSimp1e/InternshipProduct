@@ -13,7 +13,7 @@ const ProductImage = async ({ productId, id }: IProps) => {
 
   const productImage: ApiResponse<IProductImage> = await res.json();
 
-  console.log(productImage.data);
+  // console.log(productImage.data);
 
   return (
     <UpdateProductImageForm

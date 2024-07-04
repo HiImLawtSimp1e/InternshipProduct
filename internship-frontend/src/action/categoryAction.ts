@@ -40,7 +40,7 @@ export const addCategory = async (
     }
 
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -97,7 +97,7 @@ export const updateCategory = async (
     }
 
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -128,7 +128,7 @@ export const deleteCategory = async (
   });
 
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  // console.log(responseData);
   const { success, message } = responseData;
 
   if (success) {

@@ -7,7 +7,7 @@ const Product = async ({ productSlug }: { productSlug: string }) => {
   });
 
   const product: ApiResponse<IProduct> = await res.json();
-  console.log(product.data);
+  // console.log(product.data);
 
   return <ShopProductDetail product={product.data} />;
 };

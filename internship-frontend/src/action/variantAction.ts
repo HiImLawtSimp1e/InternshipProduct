@@ -76,7 +76,7 @@ export const addVariant = async (
     }
 
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -165,7 +165,7 @@ export const updateVariant = async (
 
     // If the response is OK, parse the response data
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -203,7 +203,7 @@ export const deleteVariant = async (
   );
 
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  // console.log(responseData);
   const { success, message } = responseData;
 
   if (success) {

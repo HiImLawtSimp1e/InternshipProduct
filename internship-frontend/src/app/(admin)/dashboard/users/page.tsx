@@ -16,7 +16,7 @@ const Users = async ({ params }: { params: { page?: number } }) => {
 
   const responseData: ApiResponse<PagingParams<IUser[]>> = await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage } = data;
 
   return <UserList users={result} pages={pages} currentPage={currentPage} />;

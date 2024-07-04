@@ -10,7 +10,7 @@ const Products = async () => {
 
   const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage } = data;
 
   return <HomeShopProductList products={result} />;

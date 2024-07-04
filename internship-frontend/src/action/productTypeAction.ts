@@ -99,7 +99,7 @@ export const updateType = async (
 
     // If the response is OK, parse the response data
     const responseData: ApiResponse<string> = await res.json();
-    console.log(responseData);
+    // console.log(responseData);
     const { success, message } = responseData;
 
     if (success) {
@@ -129,7 +129,7 @@ export const deleteType = async (
   });
 
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  // console.log(responseData);
   const { success, message } = responseData;
 
   if (success) {

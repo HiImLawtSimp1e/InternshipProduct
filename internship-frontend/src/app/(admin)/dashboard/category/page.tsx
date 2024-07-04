@@ -15,7 +15,7 @@ const Categories = async ({ params }: { params: { page?: number } }) => {
 
   const responseData: ApiResponse<PagingParams<ICategory[]>> = await res.json();
   const { data, success, message } = responseData;
-  console.log(responseData);
+  // console.log(responseData);
   const { result, pages, currentPage } = data;
 
   return (
