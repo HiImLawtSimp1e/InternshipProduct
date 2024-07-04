@@ -13,6 +13,7 @@ namespace Service.DTOs.ResponseDTOs.CustomerProductDTO
         public Guid ProductTypeId { get; set; }
         public decimal Price { get; set; }
         public decimal OriginalPrice { get; set; }
+        public int Quantity { get; set; }
 
     }
 }

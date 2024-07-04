@@ -18,6 +18,7 @@ namespace Data.Entities
         public Guid ProductTypeId { get; set; }
         public int Price { get; set; }
         public int OriginalPrice { get; set; }
+        public int Quantity { get; set; } = 1000;
         public bool IsActive { get; set; } = true;
         public bool Deleted { get; set; } = false;
     }
