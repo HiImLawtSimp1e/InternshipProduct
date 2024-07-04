@@ -18,10 +18,10 @@ const ShopProductList = ({
 }: IProps) => {
   return (
     <>
-      <div className="mt-12 flex gap-y-12 justify-between flex-wrap">
+      <div className="mt-12 flex flex-wrap gap-4">
         {products.map((product: IProduct) => (
           <div
-            className="w-full flex flex-col gap-4 sm:w-[45%] lg:w-[22%] pb-2 rounded-md bg-white"
+            className="w-full flex flex-col gap-4 md:w-[45%] lg:w-[30%] xl:w-[22%] pb-2 rounded-md bg-white"
             key={product.id}
           >
             <div className="relative w-full h-80">
@@ -47,19 +47,33 @@ const ShopProductList = ({
                 {product.description}
               </div>
             </div>
-            <div className="ml-1 p-2 flex justify-between items-center">
+            <div className="m-2 px-2 flex justify-end min-h-[64px]">
               {product.productVariants != null && (
-                <span className="font-semibold">
-                  {formatPrice(product.productVariants[0].price)}
-                </span>
+                <div>
+                  {product.productVariants[0].originalPrice <=
+                  product.productVariants[0].price ? (
+                    <h2 className="font-medium text-2xl lg:text-lg">
+                      {formatPrice(product.productVariants[0].price)}
+                    </h2>
+                  ) : (
+                    <div className="flex flex-col items-center gap-1">
+                      <h3 className="text-lg text-gray-500 line-through lg:text-sm">
+                        {formatPrice(product.productVariants[0].originalPrice)}
+                      </h3>
+                      <h2 className="text-2xl font-medium lg:text-lg">
+                        {formatPrice(product.productVariants[0].price)}
+                      </h2>
+                    </div>
+                  )}
+                </div>
               )}
-              <div className="flex justify-end">
-                <Link href={"/product/" + product.slug}>
-                  <button className="rounded-2xl ring-1 text-teal-600 py-2 px-4 text-xs font-semibold hover:bg-teal-600 hover:text-white">
-                    Add to Cart
-                  </button>
-                </Link>
-              </div>
+            </div>
+            <div className="mx-1 flex justify-center">
+              <Link href={"/product/" + product.slug}>
+                <button className="rounded-2xl ring-1 text-teal-600 py-3 px-6 text-lg font-semibold hover:bg-teal-600 hover:text-white lg:py-2 lg:px-4 lg:text-xs">
+                  Add to Cart
+                </button>
+              </Link>
             </div>
           </div>
         ))}
