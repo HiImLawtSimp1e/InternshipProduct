@@ -66,6 +66,7 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
             <th className="px-4 py-2">Product Type</th>
             <th className="px-4 py-2">Price</th>
             <th className="px-4 py-2">Original Price</th>
+            <th className="px-4 py-2">Quantity</th>
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Action</th>
           </tr>
@@ -80,6 +81,7 @@ const ProductVariantForm = ({ productId, variants }: IProps) => {
               <td className="px-4 py-2">{variant.productType.name}</td>
               <td className="px-4 py-2">{variant.price}</td>
               <td className="px-4 py-2">{variant.originalPrice}</td>
+              <td className="px-4 py-2">{variant.quantity}</td>
               <td className="px-4 py-2">
                 <TagFiled
                   cssClass={variant.isActive ? "bg-lime-900" : "bg-red-700"}

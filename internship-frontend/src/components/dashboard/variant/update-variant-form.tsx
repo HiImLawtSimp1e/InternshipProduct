@@ -91,6 +91,16 @@ const UpdateVariantForm = ({ variant }: IProps) => {
         min-value={0}
         required
       />
+      <InputField
+        type="number"
+        label="Quantity"
+        id="quantity"
+        name="quantity"
+        value={formData.quantity.toString()}
+        onChange={handleChange}
+        min-value={0}
+        required
+      />
       <label className="block mb-2 text-sm font-medium text-white">
         Product Type
       </label>

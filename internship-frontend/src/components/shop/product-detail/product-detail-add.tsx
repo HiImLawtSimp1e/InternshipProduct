@@ -8,8 +8,9 @@ interface IProps {
 }
 
 const AddProduct = ({ variants }: IProps) => {
-  const stockNumber = 4;
   const [quantity, setQuantity] = useState<number>(1);
+
+  const [stockNumber, setStockNumber] = useState<number>(variants[0].quantity);
   const [selectedVariant, setSelectedVariant] = useState<IProductVariant>(
     variants[0]
   );
@@ -24,7 +25,9 @@ const AddProduct = ({ variants }: IProps) => {
   };
 
   const handleSelectVariant = (variant: IProductVariant) => {
+    setQuantity(1);
     setSelectedVariant(variant);
+    setStockNumber(variant.quantity);
   };
 
   return (
@@ -65,35 +68,53 @@ const AddProduct = ({ variants }: IProps) => {
         </ul>
       </div>
       <div className="flex flex-col gap-4">
-        <h4 className="font-medium">Choose a Quantity</h4>
-        <div className="flex justify-between">
-          <div className="flex items-center gap-4">
-            <div className="bg-gray-100 py-2 px-4 rounded-3xl flex items-center justify-between w-32">
-              <button
-                className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
-                onClick={() => handleQuantity("d")}
-              >
-                -
-              </button>
-              {quantity}
-              <button
-                className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
-                onClick={() => handleQuantity("i")}
-              >
-                +
-              </button>
-            </div>
-            {stockNumber <= 10 && (
-              <div className="text-xs">
-                Only{" "}
-                <span className="text-orange-500">{stockNumber} items</span>{" "}
-                left!
-                <br /> {"Don't "} miss it
+        <div>
+          {stockNumber > 0 ? (
+            <div>
+              <h4 className="font-medium">Choose a Quantity</h4>
+              <div className="flex items-center gap-4">
+                <div className="bg-gray-100 py-2 px-4 rounded-3xl flex items-center justify-between w-32">
+                  <button
+                    className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+                    onClick={() => handleQuantity("d")}
+                  >
+                    -
+                  </button>
+                  {quantity}
+                  <button
+                    className="cursor-pointer text-xl disabled:cursor-not-allowed disabled:opacity-20"
+                    onClick={() => handleQuantity("i")}
+                  >
+                    +
+                  </button>
+                </div>
+                {stockNumber <= 10 && (
+                  <div className="text-xs">
+                    {"Only "}
+                    <span className="text-orange-500">
+                      {stockNumber} items
+                    </span>{" "}
+                    left!
+                    <br />
+                    {" Don't miss it"}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="pt-2 min-h-[65px] text-2xl font-semibold text-red-500">
+              Out of Stock
+            </div>
+          )}
         </div>
-        <button className="w-36 text-sm rounded-3xl ring-1 ring-teal-600 text-teal-600 py-2 px-4 hover:bg-teal-600 hover:text-white">
+        <button
+          className={`w-36 text-sm rounded-3xl ring-1 ring-teal-600 text-teal-600 py-2 px-4 ${
+            stockNumber > 0
+              ? "hover:bg-teal-600 hover:text-white"
+              : "disabled:cursor-not-allowed disabled:opacity-50"
+          }`}
+          disabled={stockNumber <= 0}
+        >
           Add to cart
         </button>
       </div>

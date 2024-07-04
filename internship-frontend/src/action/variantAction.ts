@@ -9,6 +9,7 @@ interface VariantFormData {
   productTypeId: string;
   price: number | null;
   originalPrice: number | null;
+  quantity?: number | null;
   isActive?: boolean;
 }
 
@@ -107,13 +108,17 @@ export const updateVariant = async (
   const originalPrice = formData.get("originalPrice")
     ? Number(formData.get("originalPrice"))
     : null;
+  const quantity = formData.get("quantity")
+    ? Number(formData.get("quantity"))
+    : null;
   const isActive = formData.get("isActive") === "true";
 
   // Validate the extracted fields
   const [errors, isValid] = validateVariant(
     productTypeId,
     price,
-    originalPrice
+    originalPrice,
+    quantity
   );
 
   // If the data is not valid, return errors
@@ -126,6 +131,7 @@ export const updateVariant = async (
     productTypeId,
     price,
     originalPrice,
+    quantity,
     isActive,
   };
 

@@ -22,6 +22,7 @@ interface IProductVariant {
   productTypeId: string;
   price: number;
   originalPrice: number;
+  quantity: number;
   isActive: boolean;
 }
 

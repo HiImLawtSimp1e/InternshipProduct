@@ -1,7 +1,8 @@
 export const validateVariant = (
   productTypeId: string,
   price: number | null,
-  originalPrice: number | null
+  originalPrice: number | null,
+  quantity?: number | null
 ): [string[], boolean] => {
   const errors: string[] = [];
 
@@ -29,6 +30,11 @@ export const validateVariant = (
   // Validate that original price is greater than or equal to price
   if (originalPrice !== null && price !== null && originalPrice < price) {
     errors.push("Original price must be greater than or equal to the price.");
+  }
+
+  // Validate quantity
+  if (quantity != null && quantity != undefined && quantity < 0) {
+    errors.push("Quantity must be an integer.");
   }
 
   // Return errors and a boolean indicating validity
