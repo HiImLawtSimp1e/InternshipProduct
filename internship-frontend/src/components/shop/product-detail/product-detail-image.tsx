@@ -18,13 +18,13 @@ const ProductImages = ({ images }: IProps) => {
   }, [images]);
   return (
     <div className="">
-      <div className="h-[500px] relative ">
+      <div className="relative w-full h-[80vh]">
         <Image
           src={images[index]?.imageUrl.toString() || "/product.png"}
           alt=""
           fill
-          sizes="50vw"
-          className="object-cover rounded-md"
+          sizes="25vw"
+          className="absolute object-cover rounded-md z-10 shadow-md"
         />
       </div>
       <div className="flex justify-between gap-4 mt-8">
@@ -39,7 +39,7 @@ const ProductImages = ({ images }: IProps) => {
                 src={image.imageUrl?.toString() || "/product.png"}
                 alt=""
                 fill
-                sizes="50vw"
+                sizes="25vw"
                 className="object-cover rounded-md"
               />
             </div>
