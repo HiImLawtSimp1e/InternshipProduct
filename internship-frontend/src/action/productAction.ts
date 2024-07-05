@@ -1,7 +1,10 @@
 "use server";
 
 import { uploadImage } from "@/lib/cloudinary/cloudinary";
-import { validateProduct } from "@/lib/validation/validateProduct";
+import {
+  validateAddProduct,
+  validateUpdateProduct,
+} from "@/lib/validation/validateProduct";
 import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
 
@@ -51,7 +54,7 @@ export const addProduct = async (
   }
 
   //client validation
-  const [errors, isValid] = validateProduct(
+  const [errors, isValid] = validateAddProduct(
     title,
     description,
     seoTitle,
@@ -141,7 +144,7 @@ export const updateProduct = async (
   const categoryId = formData.get("categoryId") as string;
   const slug = slugify(title, { lower: true });
 
-  const [errors, isValid] = validateProduct(
+  const [errors, isValid] = validateUpdateProduct(
     title,
     description,
     seoTitle,
