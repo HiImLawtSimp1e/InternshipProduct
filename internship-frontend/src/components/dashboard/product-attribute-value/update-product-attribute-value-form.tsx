@@ -75,6 +75,16 @@ const UpdateProductAttributeValueForm = ({ productValue }: IProps) => {
         name="productAttributeId"
         value={productValue.productAttributeId}
       />
+      <div className="mb-5">
+        <label className="block mb-2 text-sm font-medium text-white">
+          Product Attribute
+        </label>
+        <input
+          value={productValue.productAttribute.name}
+          className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+          readOnly
+        />
+      </div>
       <InputField
         label="Value"
         id="value"
