@@ -1,14 +1,13 @@
 import Loading from "@/components/shop/loading";
-import ShopCategoryList from "@/components/shop/category-list/category-list";
 import { Suspense } from "react";
 import HomeShopProductList from "@/components/shop/home/home-product-list";
+import api from "@/services/axios/instance-api";
 
 const Products = async () => {
-  const res = await fetch(`http://localhost:5000/api/Product`, {
-    method: "GET",
-  });
+  const res = await api.get("/Product");
 
-  const responseData: ApiResponse<PagingParams<IProduct[]>> = await res.json();
+  const responseData: ApiResponse<PagingParams<IProduct[]>> = res.data;
+
   const { data, success, message } = responseData;
   // console.log(responseData);
   const { result, pages, currentPage } = data;

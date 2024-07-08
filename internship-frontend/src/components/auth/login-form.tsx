@@ -2,19 +2,39 @@
 
 import { login } from "@/action/accountAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
+import { setAuthPublic } from "@/services/auth-service/auth-service";
 
 const LoginForm = () => {
+  const router = useRouter();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     login,
     initialState
   );
 
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      setAuthPublic(formState.data?.toString() || "");
+      router.push("/");
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <form

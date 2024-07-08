@@ -34,6 +34,5 @@ export const login = async (
     return { errors };
   }
 
-  // console.log(data);
-  return { errors: [] };
+  return { errors: [], success: true, data };
 };

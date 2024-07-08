@@ -1,4 +1,5 @@
 import ShopProductDetail from "@/components/shop/product-detail/product-detail";
+import api from "@/services/axios/instance-api";
 
 const Product = async ({ productSlug }: { productSlug: string }) => {
   const res = await fetch(`http://localhost:5000/api/Product/${productSlug}`, {
@@ -7,6 +8,11 @@ const Product = async ({ productSlug }: { productSlug: string }) => {
   });
 
   const product: ApiResponse<IProduct> = await res.json();
+
+  // const res = await api.get<ApiResponse<IProduct>>(`/Product/${productSlug}`);
+
+  // const product = res.data;
+
   // console.log(product.data);
 
   return <ShopProductDetail product={product.data} />;
