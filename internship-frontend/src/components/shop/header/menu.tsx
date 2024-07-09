@@ -21,8 +21,8 @@ const Menu = () => {
         <div className="absolute bg-white text-zinc-800 left-0 top-20 w-full z-10">
           <div className="flex mb-4 flex-col items-center justify-center gap-8 text-xl z-10">
             <Link href="/">Homepage</Link>
-            <Link href="/">Shop</Link>
-            <Link href="/">Deals</Link>
+            <Link href="/shop">Shop</Link>
+            <Link href="/post">Post</Link>
             <Link href="/">About</Link>
             <Link href="/">Contact</Link>
             <Link href="/">Logout</Link>
