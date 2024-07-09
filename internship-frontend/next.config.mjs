@@ -20,7 +20,7 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: ["res.cloudinary.com", "upload.wikimedia.org"],
+    domains: ["res.cloudinary.com", "upload.wikimedia.org", "i.pinimg.com"],
   },
 };
 
