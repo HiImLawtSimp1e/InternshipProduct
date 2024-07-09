@@ -45,7 +45,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet]
-        public async Task<ActionResult<ServiceResponse<List<CustomerPostReponseDTO>>>> GetPostsAsync([FromQuery] int page)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerPostReponseDTO>>>>>  GetPostsAsync([FromQuery] int page)
         {
             if (page == null || page <= 0)
             {

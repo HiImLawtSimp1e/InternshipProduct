@@ -14,6 +14,7 @@ namespace Data.Entities
         public string Title { get; set; } = string.Empty;
         public string Slug { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
         [AllowHtml]
         public string Content { get; set; } = string.Empty;
         public string SeoTitle { get; set; } = string.Empty;

@@ -630,6 +630,44 @@ namespace Data.Initialization
                       IsMain = true,
                   }
                 );
+            modelBuilder.Entity<Post>().HasData(
+                  new Post
+                  {
+                      Id = Guid.NewGuid(),
+                      Title = "Cách trồng rau sạch tại nhà",
+                      Slug = "cach-trong-rau-sach-tai-nha",
+                      Image = "https://i.pinimg.com/564x/c1/e1/5a/c1e15a598e8781a59fffe859ddf66595.jpg",
+                      Description = "Hướng dẫn chi tiết cách trồng rau sạch tại nhà cho người mới bắt đầu.",
+                      Content = "<p>Trồng rau sạch tại nhà đang trở thành xu hướng. Bạn có thể tự tay trồng rau sạch để đảm bảo an toàn thực phẩm cho gia đình mình. <strong>Hãy bắt đầu với những bước đơn giản sau:</strong></p><ol><li>Chọn loại rau phù hợp.</li><li>Chuẩn bị đất và chậu trồng.</li><li>Gieo hạt và chăm sóc cây con.</li><li>Thu hoạch và sử dụng.</li></ol><p>Chúc bạn thành công!</p>",
+                      SeoTitle = "Cách trồng rau sạch tại nhà - Hướng dẫn chi tiết",
+                      SeoDescription = "Hướng dẫn chi tiết cách trồng rau sạch tại nhà cho người mới bắt đầu.",
+                      SeoKeyworks = "trồng rau sạch, rau sạch tại nhà, hướng dẫn trồng rau"
+                  }, 
+                  new Post
+                  {
+                      Id = Guid.NewGuid(),
+                      Title = "10 món ăn ngon từ thịt gà",
+                      Slug = "10-mon-an-ngon-tu-thit-ga",
+                      Image = "https://i.pinimg.com/564x/f6/5d/23/f65d23606ba71e48cc7f6c0b52f44b29.jpg",
+                      Description = "Khám phá 10 món ăn ngon từ thịt gà mà bạn không thể bỏ qua.",
+                      Content = "<p>Thịt gà là nguyên liệu dễ chế biến và rất phổ biến trong bữa ăn hàng ngày. Dưới đây là <strong>10 món ăn ngon từ thịt gà</strong> bạn có thể thử:</p><ul><li>Gà nướng mật ong.</li><li>Gà chiên xù.</li><li>Gà xào sả ớt.</li><li>Canh gà nấu nấm.</li><li>Gà luộc chấm muối tiêu.</li><li>Gỏi gà xé phay.</li><li>Cơm gà Hải Nam.</li><li>Gà kho gừng.</li><li>Gà hấp lá chanh.</li><li>Gà rang muối.</li></ul><p>Hãy thử và cảm nhận hương vị đặc biệt của từng món ăn!</p>",
+                      SeoTitle = "10 món ăn ngon từ thịt gà - Bí quyết nấu ăn",
+                      SeoDescription = "Khám phá 10 món ăn ngon từ thịt gà mà bạn không thể bỏ qua.",
+                      SeoKeyworks = "món ăn từ thịt gà, nấu ăn, bí quyết nấu ăn"
+                  }, 
+                  new Post
+                  {
+                      Id = Guid.NewGuid(),
+                      Title = "Lợi ích của việc đọc sách mỗi ngày",
+                      Slug = "loi-ich-cua-viec-doc-sach-moi-ngay",
+                      Image = "https://i.pinimg.com/564x/66/dc/ca/66dcca5a43bc51a2d669fa4782618c12.jpg",
+                      Description = "Tìm hiểu những lợi ích tuyệt vời của việc đọc sách mỗi ngày.",
+                      Content = "<p>Đọc sách mỗi ngày mang lại nhiều lợi ích cho sức khỏe tinh thần và kiến thức của bạn. <strong>Dưới đây là một số lợi ích:</strong></p><ul><li>Cải thiện khả năng tập trung.</li><li>Mở rộng vốn từ vựng.</li><li>Giảm căng thẳng và lo âu.</li><li>Tăng cường khả năng phân tích và suy luận.</li><li>Cải thiện trí nhớ.</li></ul><p>Hãy dành ít nhất 30 phút mỗi ngày để đọc sách và cảm nhận sự thay đổi tích cực!</p>",
+                      SeoTitle = "Lợi ích của việc đọc sách mỗi ngày - Sức khỏe tinh thần",
+                      SeoDescription = "Tìm hiểu những lợi ích tuyệt vời của việc đọc sách mỗi ngày.",
+                      SeoKeyworks = "đọc sách, lợi ích của đọc sách, sức khỏe tinh thần"
+                  }
+                );
         }
     }
 }

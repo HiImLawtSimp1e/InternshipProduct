@@ -13,9 +13,11 @@ namespace Service.DTOs.RequestDTOs.PostDTO
         [Required(ErrorMessage = "Post title is required")]
         [StringLength(100, ErrorMessage = "Title can't be longer than 100 characters")]
         public string Title { get; set; } = string.Empty;
-        [StringLength(100, ErrorMessage = "Title can't be longer than 250 characters")]
+      
         public string Slug { get; set; } = string.Empty;
         public string Image { get; set; } = string.Empty;
+        [StringLength(250, ErrorMessage = "Description can't be longer than 250 characters")]
+        public string Description { get; set; } = string.Empty;
 
         [AllowHtml]
         public string Content { get; set; } = string.Empty;

@@ -14,9 +14,10 @@ namespace Service.DTOs.ResponseDTOs.CustomerPostDTO
         public string Image { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         [AllowHtml]
-        public string Detail { get; set; } = string.Empty;
+        public string Content { get; set; } = string.Empty;
         public string SeoTitle { get; set; } = string.Empty;
         public string SeoDescription { get; set; } = string.Empty;
         public string SeoKeyworks { get; set; } = string.Empty;
+        public DateTime CreatedAt { get; set; } 
     }
 }
