@@ -1,6 +1,7 @@
 export const validatePost = (
   title: string,
   content: string,
+  description: string,
   seoTitle: string,
   seoDescription: string,
   seoKeyworks: string
@@ -11,6 +12,10 @@ export const validatePost = (
     errors.push("Product title is required.");
   } else if (title.trim().length < 2) {
     errors.push("Product title must have at least 2 characters.");
+  }
+
+  if (description && description.trim().length > 250) {
+    errors.push("Description must have can't be longer than 250 characters.");
   }
 
   if (!content || content.trim().length === 0) {

@@ -1,5 +1,6 @@
 "use server";
 
+import { uploadImage } from "@/lib/cloudinary/cloudinary";
 import { validatePost } from "@/lib/validation/validatePost";
 import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
@@ -7,6 +8,8 @@ import slugify from "slugify";
 interface PostFormData {
   title: string;
   slug: string;
+  description: string;
+  image?: string;
   content: string;
   seoTitle: string;
   seoDescription: string;
@@ -19,15 +22,29 @@ export const addPost = async (
   formData: FormData
 ): Promise<FormState | undefined> => {
   const title = formData.get("title") as string;
+  const description = formData.get("description") as string;
+  const imageFile = formData.get("image") as File;
   const content = formData.get("content") as string;
   const seoTitle = formData.get("seoTitle") as string;
   const seoDescription = formData.get("seoDescription") as string;
   const seoKeyworks = formData.get("seoKeyworks") as string;
   const slug = slugify(title);
 
+  let image = "";
+
+  if (imageFile) {
+    const result = await uploadImage(imageFile, ["post-image"]);
+    if (result && result.secure_url) {
+      image = result.secure_url;
+    }
+  } else {
+    return { errors: ["No file found"] };
+  }
+
   const [errors, isValid] = validatePost(
     title,
     content,
+    description,
     seoTitle,
     seoDescription,
     seoKeyworks
@@ -40,6 +57,8 @@ export const addPost = async (
   const postData: PostFormData = {
     title,
     slug,
+    description,
+    image,
     content,
     seoTitle,
     seoDescription,
@@ -80,6 +99,7 @@ export const addPost = async (
     if (success) {
       // If the response is success, revalidate the path and redirect
       revalidatePath("/dashboard/posts");
+      revalidateTag("shopPostList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -97,6 +117,8 @@ export const updatePost = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
   const title = formData.get("title") as string;
+  const image = formData.get("image") as string;
+  const description = formData.get("description") as string;
   const content = formData.get("content") as string;
   const seoTitle = formData.get("seoTitle") as string;
   const seoDescription = formData.get("seoDescription") as string;
@@ -107,6 +129,7 @@ export const updatePost = async (
   const [errors, isValid] = validatePost(
     title,
     content,
+    description,
     seoTitle,
     seoDescription,
     seoKeyworks
@@ -119,6 +142,8 @@ export const updatePost = async (
   const postData: PostFormData = {
     title,
     slug,
+    description,
+    image,
     content,
     seoTitle,
     seoDescription,
@@ -161,6 +186,7 @@ export const updatePost = async (
       // If the response is success, revalidate the path and redirect
       revalidatePath("/dashboard/posts");
       revalidateTag("postDetail");
+      revalidateTag("shopPostList");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };

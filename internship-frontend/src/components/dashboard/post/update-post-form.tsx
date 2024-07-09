@@ -87,12 +87,28 @@ const UpdatePostForm = ({ post }: IProps) => {
   return (
     <form onSubmit={handleSubmit} className="px-4 w-full">
       <input type="hidden" name="id" value={post.id} />
+      <input type="hidden" name="image" value={post.image} />
       <InputField
         label="Title"
         id="title"
         name="title"
         value={formData.title}
         onChange={handleChange}
+        required
+      />
+      <label
+        htmlFor="description"
+        className="block mb-2 text-sm font-medium text-white"
+      >
+        Description
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description}
+        rows={10}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         required
       />
       <InputField

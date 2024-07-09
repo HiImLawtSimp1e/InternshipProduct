@@ -23,6 +23,7 @@ const CreatePost: React.FC = () => {
   // manage state of form data
   const [formData, setFormData] = useState({
     title: "",
+    description: "",
     seoTitle: "",
     seoDescription: "",
     seoKeyworks: "",
@@ -73,6 +74,31 @@ const CreatePost: React.FC = () => {
         name="title"
         value={formData.title}
         onChange={handleChange}
+        required
+      />
+      <label className="block mb-2 text-sm font-medium" htmlFor="image">
+        Image
+      </label>
+      <input
+        id="image"
+        name="image"
+        type="file"
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600  border border-gray-600 cursor-pointer focus:outline-none placeholder-gray-400"
+        required
+      />
+      <label
+        htmlFor="description"
+        className="block mb-2 text-sm font-medium text-white"
+      >
+        Description
+      </label>
+      <textarea
+        id="description"
+        name="description"
+        value={formData.description}
+        rows={10}
+        onChange={handleChange}
+        className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         required
       />
       <InputField
