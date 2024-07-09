@@ -32,10 +32,16 @@ const ShopPostDetail = ({ post }: IProps) => {
           </h2>
         </div>
       </div>
-      <div
-        className="px-4 lg:px-0 mt-12 text-gray-700 max-w-screen-md mx-auto text-lg leading-relaxed"
-        dangerouslySetInnerHTML={{ __html: post.content }}
-      />
+
+      <div className="px-4 lg:px-0 mt-12  max-w-screen-md mx-auto">
+        <p className="py-2 text-sm text-gray-400">
+          {formatDate(post.createdAt)}
+        </p>
+        <div
+          className=" text-gray-700 text-lg leading-relaxed"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
+      </div>
     </div>
   );
 };
