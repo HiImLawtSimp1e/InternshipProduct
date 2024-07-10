@@ -7,7 +7,7 @@ const Post = async ({ postSlug }: { postSlug: string }) => {
   });
 
   const post: ApiResponse<IPost> = await res.json();
-  console.log(post.data);
+//   console.log(post.data);
 
   return <ShopPostDetail post={post.data} />;
 };
