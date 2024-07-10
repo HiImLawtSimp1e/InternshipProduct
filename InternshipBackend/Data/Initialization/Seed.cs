@@ -5,13 +5,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Untils;
 
 namespace Data.Initialization
 {
     public class Seed
     {
-        public static void SeedingData(ModelBuilder modelBuilder)
+        public static void SeedingAccount(ModelBuilder modelBuilder)
         {
+            CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash1, out byte[] passwordSalt1);
+            CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash2, out byte[] passwordSalt2);
+            CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash3, out byte[] passwordSalt3);
+
             modelBuilder.Entity<Role>().HasData(
                 new Role
                 {
@@ -28,8 +33,47 @@ namespace Data.Initialization
                     Id = new Guid("5b3a05b0-c011-4593-abd1-cb2e486f8e43"),
                     RoleName = "Employee"
                 }
-                );
-
+              ); 
+            modelBuilder.Entity<Account>().HasData(
+                new Account
+                {
+                    Id = Guid.NewGuid(),
+                    AccountName = "admin@example.com",
+                    PasswordHash = passwordHash1,
+                    PasswordSalt = passwordSalt1,
+                    RoleId = new Guid("80a02536-2e92-466f-914f-8f1c61d01fd5")
+                }, 
+                new Account
+                {
+                    Id = new Guid("2b25a754-a50e-4468-942c-d65c0bc2c86f"),
+                    AccountName = "customer@example.com",
+                    PasswordHash = passwordHash2,
+                    PasswordSalt = passwordSalt2,
+                    RoleId = new Guid("9ebee0d5-323a-4052-af12-827a9e856639")
+                }, 
+                new Account
+                {
+                    Id = Guid.NewGuid(),
+                    AccountName = "employee@example.com",
+                    PasswordHash = passwordHash3,
+                    PasswordSalt = passwordSalt3,
+                    RoleId = new Guid("5b3a05b0-c011-4593-abd1-cb2e486f8e43")
+                }
+              );
+            modelBuilder.Entity<Customer>().HasData(
+                new Customer
+                {
+                    Id = Guid.NewGuid(),
+                    AccountId = new Guid("2b25a754-a50e-4468-942c-d65c0bc2c86f"),
+                    FullName = "John Doe",
+                    Email = "johndoe@example.com",
+                    Phone = "123-456-7890",
+                    Address = "123 Main St"
+                }
+              );
+        }
+        public static void SeedingData(ModelBuilder modelBuilder)
+        {
             modelBuilder.Entity<ProductType>().HasData(
                new ProductType
                {
@@ -634,38 +678,38 @@ namespace Data.Initialization
                   new Post
                   {
                       Id = Guid.NewGuid(),
-                      Title = "Cách trồng rau sạch tại nhà",
-                      Slug = "cach-trong-rau-sach-tai-nha",
+                      Title = "How to Grow Clean Vegetables at Home",
+                      Slug = "how-to-grow-clean-vegetables-at-home",
                       Image = "https://i.pinimg.com/564x/c1/e1/5a/c1e15a598e8781a59fffe859ddf66595.jpg",
-                      Description = "Hướng dẫn chi tiết cách trồng rau sạch tại nhà cho người mới bắt đầu.",
-                      Content = "<p>Trồng rau sạch tại nhà đang trở thành xu hướng. Bạn có thể tự tay trồng rau sạch để đảm bảo an toàn thực phẩm cho gia đình mình. <strong>Hãy bắt đầu với những bước đơn giản sau:</strong></p><ol><li>Chọn loại rau phù hợp.</li><li>Chuẩn bị đất và chậu trồng.</li><li>Gieo hạt và chăm sóc cây con.</li><li>Thu hoạch và sử dụng.</li></ol><p>Chúc bạn thành công!</p>",
-                      SeoTitle = "Cách trồng rau sạch tại nhà - Hướng dẫn chi tiết",
-                      SeoDescription = "Hướng dẫn chi tiết cách trồng rau sạch tại nhà cho người mới bắt đầu.",
-                      SeoKeyworks = "trồng rau sạch, rau sạch tại nhà, hướng dẫn trồng rau"
-                  }, 
+                      Description = "A detailed guide on how to grow clean vegetables at home for beginners.",
+                      Content = "<p>Growing clean vegetables at home is becoming a trend. You can grow your own clean vegetables to ensure food safety for your family. <strong>Start with these simple steps:</strong></p><ol><li>Choose the right vegetables.</li><li>Prepare soil and pots.</li><li>Sow seeds and take care of seedlings.</li><li>Harvest and use.</li></ol><p>Good luck!</p>",
+                      SeoTitle = "How to Grow Clean Vegetables at Home - Detailed Guide",
+                      SeoDescription = "A detailed guide on how to grow clean vegetables at home for beginners.",
+                      SeoKeyworks = "grow clean vegetables, home gardening, vegetable gardening guide",
+                  },
                   new Post
                   {
                       Id = Guid.NewGuid(),
-                      Title = "10 món ăn ngon từ thịt gà",
-                      Slug = "10-mon-an-ngon-tu-thit-ga",
+                      Title = "10 Delicious Chicken Dishes",
+                      Slug = "10-delicious-chicken-dishes",
                       Image = "https://i.pinimg.com/564x/f6/5d/23/f65d23606ba71e48cc7f6c0b52f44b29.jpg",
-                      Description = "Khám phá 10 món ăn ngon từ thịt gà mà bạn không thể bỏ qua.",
-                      Content = "<p>Thịt gà là nguyên liệu dễ chế biến và rất phổ biến trong bữa ăn hàng ngày. Dưới đây là <strong>10 món ăn ngon từ thịt gà</strong> bạn có thể thử:</p><ul><li>Gà nướng mật ong.</li><li>Gà chiên xù.</li><li>Gà xào sả ớt.</li><li>Canh gà nấu nấm.</li><li>Gà luộc chấm muối tiêu.</li><li>Gỏi gà xé phay.</li><li>Cơm gà Hải Nam.</li><li>Gà kho gừng.</li><li>Gà hấp lá chanh.</li><li>Gà rang muối.</li></ul><p>Hãy thử và cảm nhận hương vị đặc biệt của từng món ăn!</p>",
-                      SeoTitle = "10 món ăn ngon từ thịt gà - Bí quyết nấu ăn",
-                      SeoDescription = "Khám phá 10 món ăn ngon từ thịt gà mà bạn không thể bỏ qua.",
-                      SeoKeyworks = "món ăn từ thịt gà, nấu ăn, bí quyết nấu ăn"
-                  }, 
+                      Description = "Discover 10 delicious chicken dishes that you cannot miss.",
+                      Content = "<p>Chicken is an easy-to-cook ingredient and very popular in daily meals. Here are <strong>10 delicious chicken dishes</strong> you can try:</p><ul><li>Honey roasted chicken.</li><li>Fried chicken.</li><li>Chicken stir-fried with lemongrass and chili.</li><li>Chicken soup with mushrooms.</li><li>Boiled chicken with salt and pepper dip.</li><li>Shredded chicken salad.</li><li>Hainanese chicken rice.</li><li>Chicken braised with ginger.</li><li>Steamed chicken with lime leaves.</li><li>Salt-roasted chicken.</li></ul><p>Try them and enjoy the unique flavors of each dish!</p>",
+                      SeoTitle = "10 Delicious Chicken Dishes - Cooking Tips",
+                      SeoDescription = "Discover 10 delicious chicken dishes that you cannot miss.",
+                      SeoKeyworks = "chicken dishes, cooking tips, delicious recipes",
+                  },
                   new Post
                   {
                       Id = Guid.NewGuid(),
-                      Title = "Lợi ích của việc đọc sách mỗi ngày",
-                      Slug = "loi-ich-cua-viec-doc-sach-moi-ngay",
+                      Title = "Benefits of Reading Books Every Day",
+                      Slug = "benefits-of-reading-books-every-day",
                       Image = "https://i.pinimg.com/564x/66/dc/ca/66dcca5a43bc51a2d669fa4782618c12.jpg",
-                      Description = "Tìm hiểu những lợi ích tuyệt vời của việc đọc sách mỗi ngày.",
-                      Content = "<p>Đọc sách mỗi ngày mang lại nhiều lợi ích cho sức khỏe tinh thần và kiến thức của bạn. <strong>Dưới đây là một số lợi ích:</strong></p><ul><li>Cải thiện khả năng tập trung.</li><li>Mở rộng vốn từ vựng.</li><li>Giảm căng thẳng và lo âu.</li><li>Tăng cường khả năng phân tích và suy luận.</li><li>Cải thiện trí nhớ.</li></ul><p>Hãy dành ít nhất 30 phút mỗi ngày để đọc sách và cảm nhận sự thay đổi tích cực!</p>",
-                      SeoTitle = "Lợi ích của việc đọc sách mỗi ngày - Sức khỏe tinh thần",
-                      SeoDescription = "Tìm hiểu những lợi ích tuyệt vời của việc đọc sách mỗi ngày.",
-                      SeoKeyworks = "đọc sách, lợi ích của đọc sách, sức khỏe tinh thần"
+                      Description = "Learn about the wonderful benefits of reading books every day.",
+                      Content = "<p>Reading books every day brings many benefits to your mental health and knowledge. <strong>Here are some benefits:</strong></p><ul><li>Improves concentration.</li><li>Expands vocabulary.</li><li>Reduces stress and anxiety.</li><li>Enhances analytical and reasoning skills.</li><li>Improves memory.</li></ul><p>Spend at least 30 minutes a day reading books and feel the positive changes!</p>",
+                      SeoTitle = "Benefits of Reading Books Every Day - Mental Health",
+                      SeoDescription = "Learn about the wonderful benefits of reading books every day.",
+                      SeoKeyworks = "reading books, benefits of reading, mental health",
                   }
                 );
         }

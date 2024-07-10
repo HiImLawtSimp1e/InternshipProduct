@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Service.Services.AccountService;
+using Service.Services.CartService;
 using Service.Services.CategoryService;
 using Service.Services.ContactService;
 using Service.Services.CustomerService;
@@ -37,6 +38,7 @@ builder.Services.AddScoped<IAccountService,  AccountService>();
 builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductValueService, ProductValueService>();
 builder.Services.AddScoped<IProductAttributeService, ProductAttributeService>();
+builder.Services.AddScoped<ICartService, CartService>();
 
 //Enable CORS
 builder.Services.AddCors(options =>

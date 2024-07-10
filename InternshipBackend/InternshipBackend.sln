@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "Data\Data.csproj", "{BA36D7BE-F2DF-4F89-AA81-FD39E80C7B67}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Data", "Data\Data.csproj", "{BA36D7BE-F2DF-4F89-AA81-FD39E80C7B67}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service", "Service\Service.csproj", "{0E4A259F-5D2E-4D5B-B17A-E7586D5B1EB5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Service", "Service\Service.csproj", "{0E4A259F-5D2E-4D5B-B17A-E7586D5B1EB5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "API", "API\API.csproj", "{A20C2A31-985E-43B6-8D0A-41007DA68DB4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "API\API.csproj", "{A20C2A31-985E-43B6-8D0A-41007DA68DB4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Untils", "Untils\Untils.csproj", "{FD7FFCB7-851C-4FBF-8DB6-F95AEAFDD1CA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Untils", "Untils\Untils.csproj", "{FD7FFCB7-851C-4FBF-8DB6-F95AEAFDD1CA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

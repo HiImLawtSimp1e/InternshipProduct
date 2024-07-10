@@ -30,11 +30,14 @@ namespace Data.Context
              .HasKey(p => new { p.ProductId, p.ProductTypeId });
             builder.Entity<ProductValue>()
              .HasKey(p => new { p.ProductId, p.ProductAttributeId });
-            builder.Entity<Customer>()
-             .HasKey(c => new { c.AccountId });
             builder.Entity<Employee>()
              .HasKey(e => new { e.AccountId });
+            builder.Entity<CartItem>()
+             .HasKey(ci => new { ci.CartId, ci.ProductId, ci.ProductTypeId });
+            builder.Entity<OrderItem>()
+             .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
 
+            Seed.SeedingAccount(builder);
             Seed.SeedingData(builder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -56,5 +59,9 @@ namespace Data.Context
         public DbSet<ProductImage> ProductImages { get; set; }
         public DbSet<ProductAttribute> ProductAttributes { get; set; }
         public DbSet<ProductValue> ProductValues { get; set; } 
+        public DbSet<Cart> Carts { get; set; }
+        public DbSet<CartItem> CartItems { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderItem> OrderItems { get; set; }
     }
 }
