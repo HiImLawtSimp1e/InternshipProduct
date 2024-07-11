@@ -3,6 +3,7 @@
 import { formatPrice } from "@/lib/format/format";
 import ShoppingCartItem from "./shopping-cart-item";
 import { useState } from "react";
+import { placeOrder } from "@/action/orderAction";
 
 interface IProps {
   cartItems: ICartItem[];
@@ -46,9 +47,14 @@ const ShoppingCart = ({ cartItems }: IProps) => {
                   <p className="text-sm text-gray-700">including VAT</p>
                 </div>
               </div>
-              <button className="mt-6 w-full rounded-md bg-blue-500 text-2xl py-4 font-medium text-blue-50 md:text-lg md:py-2 hover:bg-blue-600">
-                Check out
-              </button>
+              <form action={placeOrder}>
+                <button
+                  type="submit"
+                  className="mt-6 w-full rounded-md bg-blue-500 text-2xl py-4 font-medium text-blue-50 md:text-lg md:py-2 hover:bg-blue-600"
+                >
+                  Check out
+                </button>
+              </form>
             </div>
           </div>
         </>
