@@ -10,6 +10,7 @@ using Service.Services.CartService;
 using Service.Services.CategoryService;
 using Service.Services.ContactService;
 using Service.Services.CustomerService;
+using Service.Services.OrderService;
 using Service.Services.PostService;
 using Service.Services.ProductAttributeService;
 using Service.Services.ProductImageService;
@@ -39,6 +40,7 @@ builder.Services.AddScoped<ICustomerService, CustomerService>();
 builder.Services.AddScoped<IProductValueService, ProductValueService>();
 builder.Services.AddScoped<IProductAttributeService, ProductAttributeService>();
 builder.Services.AddScoped<ICartService, CartService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 //Enable CORS
 builder.Services.AddCors(options =>
