@@ -11,7 +11,7 @@ const NavIcons = () => {
   const cartRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     getCart();
-  });
+  }, [cartItems]);
 
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);

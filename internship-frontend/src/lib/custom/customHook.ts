@@ -34,7 +34,6 @@ export const useCartStore = create<CartState>((set) => ({
     try {
       const res = await fetch("http://localhost:5000/api/Cart", {
         method: "GET",
-        next: { tags: ["shoppingCart"] },
       });
 
       const responseData: ApiResponse<ICartItem[]> = await res.json();
