@@ -1,5 +1,6 @@
 "use client";
 
+import { addCartItem } from "@/action/cartAction";
 import { formatPrice } from "@/lib/format/format";
 import { useState } from "react";
 
@@ -9,6 +10,11 @@ interface IProps {
 
 const AddProduct = ({ variants }: IProps) => {
   const [quantity, setQuantity] = useState<number>(1);
+
+  const productId = variants[0].productId;
+  const [productTypeId, setProductTypeId] = useState<string>(
+    variants[0].productTypeId
+  );
 
   const [stockNumber, setStockNumber] = useState<number>(variants[0].quantity);
   const [selectedVariant, setSelectedVariant] = useState<IProductVariant>(
@@ -27,6 +33,7 @@ const AddProduct = ({ variants }: IProps) => {
   const handleSelectVariant = (variant: IProductVariant) => {
     setQuantity(1);
     setSelectedVariant(variant);
+    setProductTypeId(variant.productTypeId);
     setStockNumber(variant.quantity);
   };
 
@@ -107,16 +114,22 @@ const AddProduct = ({ variants }: IProps) => {
             </div>
           )}
         </div>
-        <button
-          className={`w-36 text-sm rounded-3xl ring-1 ring-teal-600 text-teal-600 py-2 px-4 ${
-            stockNumber > 0
-              ? "hover:bg-teal-600 hover:text-white"
-              : "disabled:cursor-not-allowed disabled:opacity-50"
-          }`}
-          disabled={stockNumber <= 0}
-        >
-          Add to cart
-        </button>
+        <form action={addCartItem}>
+          <input type="hidden" name="productId" value={productId} />
+          <input type="hidden" name="productTypeId" value={productTypeId} />
+          <input type="hidden" name="quantity" value={quantity} />
+          <button
+            type="submit"
+            className={`w-36 text-sm rounded-3xl ring-1 ring-teal-600 text-teal-600 py-2 px-4 ${
+              stockNumber > 0
+                ? "hover:bg-teal-600 hover:text-white"
+                : "disabled:cursor-not-allowed disabled:opacity-50"
+            }`}
+            disabled={stockNumber <= 0}
+          >
+            Add to cart
+          </button>
+        </form>
       </div>
     </>
   );
