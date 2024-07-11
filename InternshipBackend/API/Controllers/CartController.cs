@@ -30,10 +30,43 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpPost]
+        public async Task<ActionResult<ServiceResponse<bool>>> AddToCart(StoreCartItemDTO item)
+        {
+            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
+            var response = await _service.AddToCart(mockAccountId, item);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPost("store-cart")]
         public async Task<ActionResult<ServiceResponse<bool>>> StoreCartItems(List<StoreCartItemDTO> items)
         {
             var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
             var response = await _service.StoreCartItems(mockAccountId, items);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpPut]
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateQuantity(StoreCartItemDTO item)
+        {
+            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
+            var response = await _service.UpdateQuantity(mockAccountId, item);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [HttpDelete]
+        public async Task<ActionResult<ServiceResponse<bool>>> ReomveFromCart(StoreCartItemDTO item)
+        {
+            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
+            var response = await _service.RemoveFromCart(mockAccountId, item);
             if (!response.Success)
             {
                 return BadRequest(response);
