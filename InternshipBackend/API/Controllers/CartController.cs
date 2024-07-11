@@ -62,11 +62,11 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpDelete]
-        public async Task<ActionResult<ServiceResponse<bool>>> ReomveFromCart(StoreCartItemDTO item)
+        [HttpDelete("{productId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> RemoveFromCart(Guid productId, [FromQuery] Guid productTypeId)
         {
             var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.RemoveFromCart(mockAccountId, item);
+            var response = await _service.RemoveFromCart(mockAccountId, productId, productTypeId);
             if (!response.Success)
             {
                 return BadRequest(response);

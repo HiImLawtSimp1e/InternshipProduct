@@ -100,7 +100,7 @@ namespace Service.Services.CartService
             };
         }
 
-        public async Task<ServiceResponse<bool>> RemoveFromCart(Guid accountId, StoreCartItemDTO deleteItem)
+        public async Task<ServiceResponse<bool>> RemoveFromCart(Guid accountId, Guid productId, Guid productTypeId)
         {
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
@@ -125,7 +125,7 @@ namespace Service.Services.CartService
             }
 
             var item = await _context.CartItems
-                                          .FirstOrDefaultAsync(ci => ci.ProductId == deleteItem.ProductId && ci.ProductTypeId == deleteItem.ProductTypeId && ci.CartId == dbCart.Id);
+                                          .FirstOrDefaultAsync(ci => ci.ProductId == productId && ci.ProductTypeId == productTypeId && ci.CartId == dbCart.Id);
 
             if (item == null)
             {
