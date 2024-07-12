@@ -36,6 +36,12 @@ namespace Data.Context
              .HasKey(ci => new { ci.CartId, ci.ProductId, ci.ProductTypeId });
             builder.Entity<OrderItem>()
              .HasKey(oi => new { oi.OrderId, oi.ProductId, oi.ProductTypeId });
+            builder.Entity<Order>(entity =>
+            {
+                entity.Property(o => o.State)
+                      .HasConversion<int>()
+                      .IsRequired();
+            });
 
             Seed.SeedingAccount(builder);
             Seed.SeedingData(builder);

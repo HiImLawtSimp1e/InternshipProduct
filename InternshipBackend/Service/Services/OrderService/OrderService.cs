@@ -21,6 +21,31 @@ namespace Service.Services.OrderService
             _context = context;
             _cartService = cartService;
         }
+
+        public async Task<ServiceResponse<PagingParams<List<Order>>>> GetAdminOrders(int page)
+        {
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Orders.Count() / pageResults);
+
+            var orders =  await _context.Orders
+                                   .OrderByDescending(p => p.ModifiedAt)
+                                   .Skip((page - 1) * (int)pageResults)
+                                   .Take((int)pageResults)
+                                   .ToListAsync();
+
+            var pagingData = new PagingParams<List<Order>>
+            {
+                Result = orders,
+                CurrentPage = page,
+                Pages = (int)pageCount
+            };
+
+            return new ServiceResponse<PagingParams<List<Order>>>
+            {
+                Data = pagingData
+            };
+        }
+
         public async Task<ServiceResponse<bool>> PlaceOrder(Guid accountId)
         {
             var customer = await _context.Customers
@@ -67,6 +92,7 @@ namespace Service.Services.OrderService
             var order = new Order
             {
                 CustomerId = customer.Id,
+                InvoiceCode = GenerateInvoiceCode(),
                 TotalPrice = totalAmount,
                 OrderItems = orderItems
             };
@@ -80,6 +106,11 @@ namespace Service.Services.OrderService
                 Data = true,
                 Message = "Place order successfully!"
             };
+        }
+
+        private string GenerateInvoiceCode()
+        {
+            return $"INV-{DateTime.Now:yyyyMMddHHmmssfff}-{new Random().Next(1000, 9999)}";
         }
     }
 }

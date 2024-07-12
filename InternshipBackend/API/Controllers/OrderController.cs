@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Models;
 using Service.Services.OrderService;
@@ -14,6 +15,20 @@ namespace API.Controllers
         public OrderController(IOrderService service)
         {
             _service = service;
+        }
+        [HttpGet("admin")]
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<Order>>>>> GetAdminOrders([FromQuery] int page)
+        {
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            var response = await _service.GetAdminOrders(page);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
         [HttpPost("place-order")]
         public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder()

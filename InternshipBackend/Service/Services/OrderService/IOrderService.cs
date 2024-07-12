@@ -1,4 +1,5 @@
-﻿using Service.Models;
+﻿using Data.Entities;
+using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace Service.Services.OrderService
     public interface IOrderService
     {
         public Task<ServiceResponse<bool>> PlaceOrder(Guid accountId);
+        public Task<ServiceResponse<PagingParams<List<Order>>>> GetAdminOrders(int page);
     }
 }
