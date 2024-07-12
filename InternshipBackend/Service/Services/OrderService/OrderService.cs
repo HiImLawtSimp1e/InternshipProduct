@@ -1,6 +1,9 @@
 ﻿using Data.Context;
 using Data.Entities;
+using Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using Service.DTOs.ResponseDTOs.CustomerCartItemsDTO;
+using Service.DTOs.ResponseDTOs.OrerDetailDTO;
 using Service.Models;
 using Service.Services.CartService;
 using System;
@@ -43,6 +46,142 @@ namespace Service.Services.OrderService
             return new ServiceResponse<PagingParams<List<Order>>>
             {
                 Data = pagingData
+            };
+        }
+
+        public async Task<ServiceResponse<List<OrderItemDTO>>> GetAdminOrderItems(Guid orderId)
+        {
+            var items = await _context.OrderItems 
+                                    .Where(oi => oi.OrderId == orderId)
+                                    .ToListAsync();
+
+            var result = new ServiceResponse<List<OrderItemDTO>>
+            {
+                Data = new List<OrderItemDTO>()
+            };
+
+            foreach (var item in items)
+            {
+                var product = await _context.Products
+                    .Where(p => p.Id == item.ProductId)
+                    .FirstOrDefaultAsync();
+
+                if (product == null)
+                {
+                    continue;
+                }
+
+                var productVariant = await _context.ProductVariants
+                    .Where(v => v.ProductId == item.ProductId
+                        && v.ProductTypeId == item.ProductTypeId)
+                    .Include(v => v.ProductType)
+                    .FirstOrDefaultAsync();
+
+                if (productVariant == null)
+                {
+                    continue;
+                }
+
+                var cartProduct = new OrderItemDTO
+                {
+                    ProductId = product.Id,
+                    ProductTitle = product.Title,
+                    ImageUrl = product.ImageUrl,
+                    ProductTypeId = productVariant.ProductTypeId,
+                    Price = productVariant.Price,
+                    ProductTypeName = productVariant.ProductType.Name,
+                    Quantity = item.Quantity
+                };
+
+                result.Data.Add(cartProduct);
+            }
+
+            return result;
+        }
+
+        public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetAdminOrderCustomerInfo(Guid orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if(order == null)
+            {
+                return new ServiceResponse<OrderDetailCustomerDTO>
+                {
+                    Success = false,
+                    Message = "Not found order"
+                };
+            }
+
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == order.CustomerId);
+
+            if (customer == null)
+            {
+                return new ServiceResponse<OrderDetailCustomerDTO>
+                {
+                    Success = false,
+                    Message = "Not found customer"
+                };
+            }
+
+            var orderCustomerInfo = new OrderDetailCustomerDTO
+            {
+                Id = customer.Id,
+                FullName = customer.FullName,
+                Email = customer.Email,
+                Address = customer.Address,
+                Phone = customer.Phone,
+                InvoiceCode = order.InvoiceCode,
+                OrderCreatedAt = order.CreatedAt
+            };
+
+            return new ServiceResponse<OrderDetailCustomerDTO>
+            {
+                Data = orderCustomerInfo
+            };
+        }
+
+        public async Task<ServiceResponse<bool>> UpdateOrderState(Guid orderId, OrderState state)
+        {
+            if (!Enum.IsDefined(typeof(OrderState), state))
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Invalid state"
+                };
+            }
+
+            var dbOrder = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (dbOrder == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Not found order"
+                };
+            }
+            dbOrder.State = state;
+            await _context.SaveChangesAsync();
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Message = "Updated order state successfully!"
+            };
+        }
+
+        public async Task<ServiceResponse<int>> GetOrderState(Guid orderId)
+        {
+            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            if (order == null)
+            {
+                return new ServiceResponse<int>
+                {
+                    Success = false,
+                    Message = "Not found order"
+                };
+            }
+            return new ServiceResponse<int>
+            {
+                Data = (int)order.State
             };
         }
 
@@ -112,5 +251,6 @@ namespace Service.Services.OrderService
         {
             return $"INV-{DateTime.Now:yyyyMMddHHmmssfff}-{new Random().Next(1000, 9999)}";
         }
+
     }
 }
