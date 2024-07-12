@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import CartModal from "./cart-modal";
-import { useCartStore } from "@/lib/custom/customHook";
+import { useCartStore } from "@/lib/store/useCartStore";
 
 const NavIcons = () => {
   const { cartItems, counter, totalAmount, getCart } = useCartStore();
