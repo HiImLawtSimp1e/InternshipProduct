@@ -13,6 +13,7 @@ import {
   MdCategory,
   MdOutlinePostAdd,
   MdDvr,
+  MdArticle,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -57,6 +58,11 @@ const Sidebar = () => {
           title: "Category",
           path: "/dashboard/category",
           icon: <MdCategory />,
+        },
+        {
+          title: "Orders",
+          path: "/dashboard/orders",
+          icon: <MdArticle />,
         },
         {
           title: "Users",
