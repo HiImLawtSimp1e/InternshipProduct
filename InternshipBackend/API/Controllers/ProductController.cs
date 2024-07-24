@@ -127,18 +127,26 @@ namespace API.Controllers
             return Ok(response);
         }
 
-        [HttpGet("search/{searchText}/{page}")]
-        public async Task<ActionResult<ServiceResponse<ProductSearchResult>>> SearchProducts(string searchText, int page)
+        [HttpGet("search/{searchText}")]
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>>> SearchProducts(string searchText, [FromQuery] int page, [FromQuery] double pageResults)
         {
-            var response = await _service.SearchProducts(searchText, page);
+            if (page == null || page <= 0)
+            {
+                page = 1;
+            }
+            if (pageResults == null || pageResults <= 0)
+            {
+                pageResults = 12f;
+            }
+            var response = await _service.SearchProducts(searchText, page, pageResults);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-        [HttpGet("SearchSuggestions/{searchText}")]
-        public async Task<ActionResult<ServiceResponse<ProductSearchResult>>> GetProductSearchSuggestions(string searchText)
+        [HttpGet("search-suggestions/{searchText}")]
+        public async Task<ActionResult<ServiceResponse<List<string>>>> GetProductSearchSuggestions(string searchText)
         {
             var response = await _service.GetProductSearchSuggestions(searchText);
             return Ok(response);

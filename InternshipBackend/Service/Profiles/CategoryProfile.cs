@@ -15,9 +15,12 @@ namespace Service.Profiles
     {
         public CategoryProfile()
         {
+            //Map Entity to DTOs
             CreateMap<Category, CustomerCategoryResponseDTO>();
             CreateMap<Category, CategorySelectResponseDTO>();
+            //Map DTOs to Entity
             CreateMap<AddCategoryDTO, Category>();
+            CreateMap<UpdateCategoryDTO, Category>();
         }
     }
 

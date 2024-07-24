@@ -21,7 +21,7 @@ namespace Service.Services.ProductService
         Task<ServiceResponse<bool>> CreateProduct(AddProductDTO newProduct);   
         Task<ServiceResponse<bool>> UpdateProduct(Guid id, UpdateProductDTO product);
         Task<ServiceResponse<bool>> SoftDeleteProduct(Guid productId);
-        Task<ServiceResponse<ProductSearchResult>> SearchProducts(string searchText, int page);
+        Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> SearchProducts(string searchText, int page, double pageResults);
         Task<ServiceResponse<List<string>>> GetProductSearchSuggestions(string seacrchText);
     }
 }

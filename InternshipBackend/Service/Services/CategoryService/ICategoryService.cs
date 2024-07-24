@@ -16,7 +16,7 @@ namespace Service.Services.CategoryService
         Task<ServiceResponse<PagingParams<List<Category>>>> GetAdminCategories(int page);
         Task<ServiceResponse<Category>> GetAdminCategory(Guid categoryId);
         Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory);
-        Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category);
+        Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO updateCategory);
         Task<ServiceResponse<bool>> SoftDeleteCategory(Guid categoryId);
         Task<ServiceResponse<List<CategorySelectResponseDTO>>> GetCategoriesSelect();
 

@@ -201,7 +201,7 @@ namespace Service.Services.OrderService
             }
 
             var cartItem = (await _cartService.GetCartItems(accountId)).Data;
-            if(cartItem == null)
+            if(cartItem == null || cartItem.Count == 0)
             {
                 return new ServiceResponse<bool>
                 {

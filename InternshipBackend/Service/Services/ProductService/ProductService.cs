@@ -333,9 +333,8 @@ namespace Service.Services.ProductService
             };
         }
 
-        public async Task<ServiceResponse<ProductSearchResult>> SearchProducts(string searchText, int page)
+        public async Task<ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>> SearchProducts(string searchText, int page, double pageResults)
         {
-            var pageResults = 2f;
             var pageCount = Math.Ceiling((await FindProductsBySearchText(searchText)).Count / pageResults);
 
 
@@ -350,21 +349,26 @@ namespace Service.Services.ProductService
 
             if (products == null)
             {
-                return new ServiceResponse<ProductSearchResult>
+                return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
                 {
                     Success = false,
                     Message = "Product not found"
                 };
             }
-            return new ServiceResponse<ProductSearchResult>
+
+            var result = _mapper.Map<List<CustomerProductResponseDTO>>(products);
+
+            var pagingData = new PagingParams<List<CustomerProductResponseDTO>>
             {
-                Data = new ProductSearchResult
-                {
-                    Products = products,
-                    CurrentPage = page,
-                    Pages = (int)pageCount
-                },
-                Message = "Successfully!"
+                Result = result,
+                CurrentPage = page,
+                Pages = (int)pageCount,
+                PageResults = (int)pageResults
+            };
+
+            return new ServiceResponse<PagingParams<List<CustomerProductResponseDTO>>>
+            {
+                Data = pagingData,
             };
         }
 

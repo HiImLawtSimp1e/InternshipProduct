@@ -100,7 +100,7 @@ namespace Service.Services.CategoryService
                    .Where(c => !c.Deleted && c.IsActive)
                    .ToListAsync();
 
-                var result = categories.Select(category => _mapper.Map<CustomerCategoryResponseDTO>(category)).ToList();
+                var result = _mapper.Map<List<CustomerCategoryResponseDTO>>(categories);
 
                 return new ServiceResponse<List<CustomerCategoryResponseDTO>>
                 {
@@ -141,7 +141,7 @@ namespace Service.Services.CategoryService
             }
         }
 
-        public async Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO category)
+        public async Task<ServiceResponse<bool>> UpdateCategory(Guid categoryId, UpdateCategoryDTO updateCategory)
         {
             var dbCategory = await _context.Categories.FirstOrDefaultAsync(c => c.Id == categoryId);
             if (dbCategory == null)
@@ -155,9 +155,7 @@ namespace Service.Services.CategoryService
 
             try
             {
-                dbCategory.Title = category.Title;
-                dbCategory.Slug = category.Slug;
-                dbCategory.IsActive = category.IsActive;
+                _mapper.Map(updateCategory, dbCategory);
                 dbCategory.ModifiedAt = DateTime.Now;
 
                 await _context.SaveChangesAsync();
