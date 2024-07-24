@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Service.Models.Validation;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -31,7 +32,8 @@ namespace Service.DTOs.RequestDTOs.ProductDTO
         public Guid ProductTypeId { get; set; }
         [Required(ErrorMessage = "Price is required"), Range(1000, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
         public int Price { get; set; }
-        [Range(0, int.MaxValue, ErrorMessage = "Price is must be integer & greater than 1000")]
+        [ZeroOrRange(1000, int.MaxValue, ErrorMessage = "Original Price (if any) is must be integer & greater than 1000")]
+        [GreaterThanOrEqualTo("Price", ErrorMessage = "The original price (if any) must be greater than price")]
         public int OriginalPrice { get; set; }
     }
 }
