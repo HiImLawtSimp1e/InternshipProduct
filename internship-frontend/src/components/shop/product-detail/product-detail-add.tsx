@@ -1,8 +1,11 @@
 "use client";
 
 import { addCartItem } from "@/action/cartAction";
+import { useCustomActionState } from "@/lib/custom/customHook";
 import { formatPrice } from "@/lib/format/format";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   variants: IProductVariant[];
@@ -36,6 +39,35 @@ const AddProduct = ({ variants }: IProps) => {
     setProductTypeId(variant.productTypeId);
     setStockNumber(variant.quantity);
   };
+
+  // for action
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    addCartItem,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Product has been added to the cart.");
+      window.location.reload();
+    }
+  }, [formState, toastDisplayed]);
 
   return (
     <>
@@ -114,7 +146,7 @@ const AddProduct = ({ variants }: IProps) => {
             </div>
           )}
         </div>
-        <form action={addCartItem}>
+        <form onSubmit={handleSubmit}>
           <input type="hidden" name="productId" value={productId} />
           <input type="hidden" name="productTypeId" value={productTypeId} />
           <input type="hidden" name="quantity" value={quantity} />

@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
-import { redirect } from "next/navigation";
 
 interface CartItemFormData {
   productId: string;
@@ -9,7 +8,10 @@ interface CartItemFormData {
   quantity: number | null;
 }
 
-export const addCartItem = async (formData: FormData) => {
+export const addCartItem = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const productId = formData.get("productId") as string;
   const productTypeId = formData.get("productTypeId") as string;
   const quantity = formData.get("quantity")
@@ -27,10 +29,19 @@ export const addCartItem = async (formData: FormData) => {
   //   console.log(responseData);
   const { success, message } = responseData;
 
-  revalidateTag("shoppingCart");
+  if (success) {
+    // If response is success, revalidate and redirect.
+    revalidateTag("shoppingCart");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };
 
-export const updateQuantity = async (formData: FormData) => {
+export const updateQuantity = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const productId = formData.get("productId") as string;
   const productTypeId = formData.get("productTypeId") as string;
   const quantity = formData.get("quantity")
@@ -48,10 +59,19 @@ export const updateQuantity = async (formData: FormData) => {
   //   console.log(responseData);
   const { success, message } = responseData;
 
-  revalidatePath("/cart");
+  if (success) {
+    // If response is success, revalidate and redirect.
+    revalidatePath("/cart");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };
 
-export const removeCartItem = async (formData: FormData) => {
+export const removeCartItem = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
   const productId = formData.get("productId") as string;
   const productTypeId = formData.get("productTypeId") as string;
 
@@ -62,6 +82,16 @@ export const removeCartItem = async (formData: FormData) => {
       headers: { "Content-Type": "application/json" },
     }
   );
-  //   console.log(res);
-  revalidateTag("shoppingCart");
+
+  const responseData: ApiResponse<string> = await res.json();
+  // console.log(responseData);
+  const { success, message } = responseData;
+
+  if (success) {
+    // If response is success, revalidate and redirect.
+    revalidateTag("shoppingCart");
+    return { success: true, errors: [] };
+  } else {
+    return { errors: [message] };
+  }
 };

@@ -1,9 +1,13 @@
 "use client";
 
 import { removeCartItem } from "@/action/cartAction";
+import { useCustomActionState } from "@/lib/custom/customHook";
 import { formatPrice } from "@/lib/format/format";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 interface IProps {
   cartItems: ICartItem[];
@@ -11,6 +15,32 @@ interface IProps {
 }
 
 const CartModal = ({ cartItems, totalAmount }: IProps) => {
+  const router = useRouter();
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    removeCartItem,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Product has been removed from the cart.");
+      window.location.reload();
+    }
+  }, [formState, toastDisplayed]);
   return (
     <>
       <h2 className="text-xl">Shopping Cart</h2>
@@ -51,7 +81,7 @@ const CartModal = ({ cartItems, totalAmount }: IProps) => {
               {/* BOTTOM */}
               <div className="flex justify-between text-sm">
                 <span className="text-gray-500">Qty. {item.quantity}</span>
-                <form action={removeCartItem}>
+                <form onSubmit={handleSubmit}>
                   <input
                     type="hidden"
                     name="productId"

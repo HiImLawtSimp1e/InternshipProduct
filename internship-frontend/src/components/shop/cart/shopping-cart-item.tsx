@@ -1,12 +1,50 @@
-import { removeCartItem, updateQuantity } from "@/action/cartAction";
+"use client";
+
+import { removeCartItem } from "@/action/cartAction";
 import { formatPrice } from "@/lib/format/format";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useCustomActionState } from "@/lib/custom/customHook";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import ShoppingCartItemQlt from "./shoping-cart-item-qlt";
+import { useCartStore } from "@/lib/store/useCartStore";
 
 interface IProps {
   cartItem: ICartItem;
 }
 
 const ShoppingCartItem = ({ cartItem }: IProps) => {
+  const { getCart } = useCartStore();
+
+  //for action
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    removeCartItem,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Product has been removed from the cart");
+      window.location.reload();
+    }
+  }, [formState, toastDisplayed]);
   return (
     <div className="justify-between mb-6 rounded-lg bg-white p-6 shadow-md sm:flex sm:justify-start">
       <div className="w-full sm:w-40 relative">
@@ -30,68 +68,11 @@ const ShoppingCartItem = ({ cartItem }: IProps) => {
         </div>
         <div className="mt-4 flex justify-between sm:space-y-6 sm:mt-0 sm:block sm:space-x-6">
           <div className="flex items-center border-gray-100">
-            <form action={updateQuantity}>
-              <input
-                type="hidden"
-                name="productId"
-                value={cartItem.productId}
-              />
-              <input
-                type="hidden"
-                name="productTypeId"
-                value={cartItem.productTypeId}
-              />
-              <input
-                type="hidden"
-                name="quantity"
-                value={cartItem.quantity - 1 > 0 ? cartItem.quantity - 1 : 1}
-              />
-              <button
-                type="submit"
-                className={`rounded-l bg-gray-100 py-2 px-4 text-2xl duration-100 lg:py-1 lg:px-4 lg:text-lg ${
-                  cartItem.quantity - 1 <= 0
-                    ? "opacity-50 cursor-not-allowed"
-                    : "cursor-pointer hover:bg-blue-500 hover:text-blue-50"
-                } `}
-              >
-                <span>-</span>
-              </button>
-            </form>
-
-            <input
-              className="border h-12 w-12 text-xl bg-white text-center lg:h-9 lg:w-9 lg:text-sm outline-none"
-              type="number"
-              value={cartItem.quantity}
-              min="1"
-              readOnly
-            />
-            <form action={updateQuantity}>
-              <input
-                type="hidden"
-                name="productId"
-                value={cartItem.productId}
-              />
-              <input
-                type="hidden"
-                name="productTypeId"
-                value={cartItem.productTypeId}
-              />
-              <input
-                type="hidden"
-                name="quantity"
-                value={cartItem.quantity + 1}
-              />
-              <button
-                type="submit"
-                className="p-2 cursor-pointer rounded-r bg-gray-100 py-2 px-4 text-2xl duration-100 lg:py-1 lg:px-4 lg:text-lg hover:bg-blue-500 hover:text-blue-50"
-              >
-                <span>+</span>
-              </button>
-            </form>
+            <ShoppingCartItemQlt cartItem={cartItem} />
           </div>
           <div className="flex items-center space-x-4">
             <p className="text-xl">{formatPrice(cartItem.price)}</p>
-            <form action={removeCartItem}>
+            <form onSubmit={handleSubmit}>
               <input
                 type="hidden"
                 name="productId"

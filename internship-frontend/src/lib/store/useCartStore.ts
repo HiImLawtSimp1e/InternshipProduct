@@ -6,6 +6,7 @@ type CartState = {
   counter: number;
   totalAmount: number;
   getCart: () => void;
+  clearCart: () => void;
 };
 
 export const useCartStore = create<CartState>((set) => ({
@@ -17,6 +18,7 @@ export const useCartStore = create<CartState>((set) => ({
     try {
       const res = await fetch("http://localhost:5000/api/Cart", {
         method: "GET",
+        cache: "no-store",
       });
 
       const responseData: ApiResponse<ICartItem[]> = await res.json();
@@ -35,4 +37,10 @@ export const useCartStore = create<CartState>((set) => ({
       set((prev) => ({ ...prev, isLoading: false }));
     }
   },
+  clearCart: () =>
+    set({
+      cartItems: [],
+      counter: 0,
+      totalAmount: 0,
+    }),
 }));

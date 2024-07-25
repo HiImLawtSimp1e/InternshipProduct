@@ -2,16 +2,32 @@
 
 import { revalidateTag } from "next/cache";
 
-export const placeOrder = async (formData: FormData) => {
+export const placeOrder = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
+  //declare errors
+  const errors: string[] = [];
+
   const res = await fetch(`http://localhost:5000/api/Order/place-order`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
   });
   const responseData: ApiResponse<string> = await res.json();
-  console.log(responseData);
+  //console.log(responseData);
   const { success, message } = responseData;
 
+  //catch error
+  if (!success) {
+    errors.push(message);
+  }
+  if (errors.length > 0) {
+    return { errors };
+  }
+
   revalidateTag("shoppingCart");
+
+  return { success: true, errors: [] };
 };
 
 export const updateOrderState = async (
