@@ -118,6 +118,8 @@ export const addProduct = async (
       revalidatePath("/dashboard/products");
       revalidateTag("shopProductDetail");
       revalidateTag("shopProductList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -206,6 +208,8 @@ export const updateProduct = async (
       revalidateTag("productDetailAdmin");
       revalidateTag("shopProductDetail");
       revalidateTag("shopProductList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -236,6 +240,8 @@ export const deleteProduct = async (
     // If the response is success, revalidate the path and redirect
     revalidatePath("/dashboard/products");
     revalidateTag("shopProductList");
+    revalidatePath("/");
+    revalidatePath("/product");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

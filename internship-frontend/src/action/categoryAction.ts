@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
 
 // Define the addCategory function
@@ -47,6 +47,7 @@ export const addCategory = async (
       // If the response is success, revalidate the path and redirect
       revalidateTag("categoryListAdmin");
       revalidateTag("categorySelect");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -105,6 +106,7 @@ export const updateCategory = async (
       revalidateTag("categoryListAdmin");
       revalidateTag("categorySelect");
       revalidateTag("categoryDetail");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -135,6 +137,7 @@ export const deleteCategory = async (
     // If the response is success, revalidate the path and redirect
     revalidateTag("categoryListAdmin");
     revalidateTag("categorySelect");
+    revalidatePath("/product");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

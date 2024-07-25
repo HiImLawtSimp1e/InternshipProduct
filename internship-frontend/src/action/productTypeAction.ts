@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // Define the addType function
 export const addType = async (
@@ -46,6 +46,8 @@ export const addType = async (
       // If the response is success and success is true, revalidate the path and redirect
       revalidateTag("selectProductType");
       revalidateTag("productTypeList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -106,6 +108,8 @@ export const updateType = async (
       // If the response is success, revalidate the path and redirect
       revalidateTag("selectProductType");
       revalidateTag("productTypeList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -136,6 +140,8 @@ export const deleteType = async (
     // If the response is success, revalidate the path and redirect
     revalidateTag("selectProductType");
     revalidateTag("productTypeList");
+    revalidatePath("/");
+    revalidatePath("/product");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

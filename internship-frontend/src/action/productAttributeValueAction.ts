@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // Define the ProductAttributeValueFormData interface
 interface ProductAttributeValueFormData {
@@ -65,6 +65,8 @@ export const addAttributeValue = async (
       revalidateTag("productDetailAdmin");
       revalidateTag("selectProductAttribute");
       revalidateTag("shopProductDetail");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -136,6 +138,8 @@ export const updateAttributeValue = async (
       revalidateTag("selectProductAttribute");
       revalidateTag("productDetailAdmin");
       revalidateTag("shopProductDetail");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -173,6 +177,8 @@ export const deleteAttributeValue = async (
     revalidateTag("productDetailAdmin");
     revalidateTag("selectProductAttribute");
     revalidateTag("shopProductDetail");
+    revalidatePath("/");
+    revalidatePath("/product");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };

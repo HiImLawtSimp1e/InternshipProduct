@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 // Define the addAttribute function
 export const addAttribute = async (
@@ -49,6 +49,8 @@ export const addAttribute = async (
       // If the response is success and success is true, revalidate the path and redirect
       revalidateTag("selectProductAttribute");
       revalidateTag("productAttributeList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -109,6 +111,8 @@ export const updateAttribute = async (
       // If the response is success, revalidate the path and redirect
       revalidateTag("selectProductAttribute");
       revalidateTag("productAttributeList");
+      revalidatePath("/");
+      revalidatePath("/product");
       return { success: true, errors: [] };
     } else {
       return { errors: [message] };
@@ -142,6 +146,8 @@ export const deleteAttribute = async (
     // If the response is success, revalidate the path and redirect
     revalidateTag("selectProductAttribute");
     revalidateTag("productAttributeList");
+    revalidatePath("/");
+    revalidatePath("/product");
     return { success: true, errors: [] };
   } else {
     return { errors: [message] };
