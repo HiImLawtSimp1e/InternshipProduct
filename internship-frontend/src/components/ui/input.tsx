@@ -23,6 +23,11 @@ const InputField: React.FC<InputFieldProps> = ({
   readonly = false,
   onChange,
 }) => {
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (type === "number" && (event.key === "-" || event.key === "e")) {
+      event.preventDefault();
+    }
+  };
   return (
     <div className="mb-5">
       <label htmlFor={id} className="block mb-2 text-sm font-medium text-white">
@@ -33,10 +38,12 @@ const InputField: React.FC<InputFieldProps> = ({
         id={id}
         name={name}
         value={value}
+        min={type === "number" ? 0 : undefined}
         className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
         required={required}
         readOnly={readonly}
         onChange={onChange}
+        onKeyDown={handleKeyDown}
       />
     </div>
   );

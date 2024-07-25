@@ -81,7 +81,6 @@ const AddVariantForm = ({ productId, typeSelect }: IProps) => {
         value={formData.originalPrice.toString()}
         onChange={handleChange}
         min-value={0}
-        required
       />
       <label className="block mb-2 text-sm font-medium">Product Type</label>
       <select

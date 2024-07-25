@@ -89,7 +89,6 @@ const UpdateVariantForm = ({ variant }: IProps) => {
         value={formData.originalPrice.toString()}
         onChange={handleChange}
         min-value={0}
-        required
       />
       <InputField
         type="number"

@@ -4,8 +4,8 @@ export const validateAddProduct = (
   seoTitle: string,
   seoDescription: string,
   seoKeyworks: string,
-  price?: number | null,
-  originalPrice?: number | null
+  price: number | null,
+  originalPrice: number | null
 ): [string[], boolean] => {
   const errors: string[] = [];
 
@@ -41,23 +41,35 @@ export const validateAddProduct = (
   }
 
   // Validate original price
-  if (originalPrice === null || originalPrice === undefined) {
-    errors.push("Original price is required.");
-  } else if (originalPrice < 1000) {
-    errors.push(
-      "Original price must be an integer and greater than or equal to 1000."
-    );
+  if (
+    originalPrice !== undefined &&
+    originalPrice != null &&
+    originalPrice < 0
+  ) {
+    errors.push("Original price must be greater than or equal to 0.");
   }
-
-  // Validate that original price is greater than or equal to price
   if (
     originalPrice !== null &&
-    price !== null &&
     originalPrice !== undefined &&
-    price !== undefined &&
-    originalPrice < price
+    originalPrice !== 0
   ) {
-    errors.push("Original price must be greater than or equal to the price.");
+    if (originalPrice < 1000) {
+      errors.push(
+        "Original price must be an integer and greater than or equal to 1000."
+      );
+    }
+  }
+
+  // Validate that original price is greater than or equal to price, except when original price is 0
+  if (
+    originalPrice !== null &&
+    originalPrice !== undefined &&
+    price !== null &&
+    price !== undefined
+  ) {
+    if (originalPrice !== 0 && originalPrice < price) {
+      errors.push("Original price must be greater than or equal to the price.");
+    }
   }
 
   return [errors, errors.length === 0];

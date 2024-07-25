@@ -39,7 +39,7 @@ export const addProduct = async (
   const price = formData.get("price") ? Number(formData.get("price")) : null;
   const originalPrice = formData.get("originalPrice")
     ? Number(formData.get("originalPrice"))
-    : null;
+    : 0;
   const slug = slugify(title, { lower: true });
 
   let imageUrl = "";
@@ -65,6 +65,7 @@ export const addProduct = async (
   );
 
   if (!isValid) {
+    //console.log(errors);
     return { errors };
   }
 

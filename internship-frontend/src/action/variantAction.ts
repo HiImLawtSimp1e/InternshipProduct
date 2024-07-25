@@ -24,7 +24,7 @@ export const addVariant = async (
   const price = formData.get("price") ? Number(formData.get("price")) : null;
   const originalPrice = formData.get("originalPrice")
     ? Number(formData.get("originalPrice"))
-    : null;
+    : 0;
 
   // Validate the extracted fields
   const [errors, isValid] = validateVariant(
@@ -44,6 +44,8 @@ export const addVariant = async (
     price,
     originalPrice,
   };
+
+  //console.log(variantData);
 
   try {
     const res = await fetch(
@@ -109,7 +111,7 @@ export const updateVariant = async (
   const price = formData.get("price") ? Number(formData.get("price")) : null;
   const originalPrice = formData.get("originalPrice")
     ? Number(formData.get("originalPrice"))
-    : null;
+    : 0;
   const quantity = formData.get("quantity")
     ? Number(formData.get("quantity"))
     : null;
@@ -136,6 +138,8 @@ export const updateVariant = async (
     quantity,
     isActive,
   };
+
+  console.log(variantData);
 
   try {
     const res = await fetch(

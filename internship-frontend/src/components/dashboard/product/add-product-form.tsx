@@ -153,7 +153,6 @@ const AddProductForm = ({ categorySelect, typeSelect }: IProps) => {
         value={formData.originalPrice.toString()}
         onChange={handleChange}
         min-value={0}
-        required
       />
       <InputField
         label="SEO Title"
