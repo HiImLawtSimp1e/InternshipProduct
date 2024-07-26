@@ -31,7 +31,7 @@ const Navbar = () => {
           </div>
         </div>
         {/* RIGHT */}
-        <div className="w-2/3 xl:w-1/2 flex items-center justify-between gap-8">
+        <div className="mx-4 w-2/3 xl:w-1/2 flex items-center justify-between gap-8">
           <SearchBar />
           <NavIcons />
         </div>
