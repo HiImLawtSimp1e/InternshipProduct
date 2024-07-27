@@ -48,7 +48,7 @@ const ShoppingCart = ({ cartItems }: IProps) => {
     if (formState.success) {
       toast.success("Order placed successfully");
       clearCart();
-      router.push("/");
+      router.push("/order-history");
     }
   }, [formState, toastDisplayed]);
 

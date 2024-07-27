@@ -73,10 +73,23 @@ const NavIcons = () => {
       {isProfileOpen && (
         <div
           ref={profileRef}
-          className="absolute p-4 rounded-md top-12 left-0 bg-white text-sm shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20"
+          className="p-4 absolute flex flex-col gap-4 text-md rounded-md top-12 right-0 bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20"
         >
-          <Link href="/profile">Profile</Link>
-          <div className="mt-2 cursor-pointer">Logout</div>
+          <Link
+            className="inline-block min-w-40 hover:opacity-60"
+            href="/profile"
+          >
+            Profile
+          </Link>
+          <Link
+            className="inline-block min-w-40 hover:opacity-60"
+            href="/order-history"
+          >
+            My Order
+          </Link>
+          <div className="inline-block min-w-40 hover:opacity-60 cursor-pointer">
+            Logout
+          </div>
         </div>
       )}
     </div>
