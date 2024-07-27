@@ -22,6 +22,7 @@ const OrderDetail = ({ orderItems }: IProps) => {
               <th className="px-4 py-2">Product Type</th>
               <th className="px-4 py-2">Quantity</th>
               <th className="px-4 py-2">Price</th>
+              <th className="px-4 py-2">Original Price</th>
               <th className="px-4 py-2">Total</th>
             </tr>
           </thead>
@@ -36,6 +37,7 @@ const OrderDetail = ({ orderItems }: IProps) => {
                 <td className="px-4 py-2">{item.productTypeName}</td>
                 <td className="px-4 py-2">{item.quantity}</td>
                 <td className="px-4 py-2">{formatPrice(item.price)}</td>
+                <td className="px-4 py-2">{formatPrice(item.originalPrice)}</td>
                 <td className="px-4 py-2">
                   {formatPrice(item.price * item.quantity)}
                 </td>

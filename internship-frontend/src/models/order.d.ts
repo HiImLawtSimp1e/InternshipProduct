@@ -13,6 +13,7 @@ interface IOrderItem {
   productTitle: string;
   productTypeName: string;
   price: number;
+  originalPrice: number;
   imageUrl: string;
   quantity: number;
 }
