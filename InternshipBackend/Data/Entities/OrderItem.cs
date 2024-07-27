@@ -16,7 +16,10 @@ namespace Data.Entities
         public Guid ProductId { get; set; }
         public ProductType? ProductType { get; set; }
         public Guid ProductTypeId { get; set; }
+        public string ProductTitle { get; set; } = string.Empty;
+        public string ProductTypeName { get; set; } = string.Empty;
+        public int Price { get; set; }
+        public int OriginalPrice { get; set; }
         public int Quantity { get; set; }
-        public int TotalPrice { get; set; }
     }
 }

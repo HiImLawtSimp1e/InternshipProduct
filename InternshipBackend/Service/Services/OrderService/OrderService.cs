@@ -71,25 +71,15 @@ namespace Service.Services.OrderService
                     continue;
                 }
 
-                var productVariant = await _context.ProductVariants
-                    .Where(v => v.ProductId == item.ProductId
-                        && v.ProductTypeId == item.ProductTypeId)
-                    .Include(v => v.ProductType)
-                    .FirstOrDefaultAsync();
-
-                if (productVariant == null)
-                {
-                    continue;
-                }
-
                 var cartProduct = new OrderItemDTO
                 {
-                    ProductId = product.Id,
-                    ProductTitle = product.Title,
+                    ProductId = item.ProductId,
+                    ProductTitle = item.ProductTitle,
                     ImageUrl = product.ImageUrl,
-                    ProductTypeId = productVariant.ProductTypeId,
-                    Price = productVariant.Price,
-                    ProductTypeName = productVariant.ProductType.Name,
+                    ProductTypeId = item.ProductTypeId,
+                    Price = item.Price,
+                    OriginalPrice = item.OriginalPrice,
+                    ProductTypeName = item.ProductTypeName,
                     Quantity = item.Quantity
                 };
 
@@ -125,10 +115,10 @@ namespace Service.Services.OrderService
             var orderCustomerInfo = new OrderDetailCustomerDTO
             {
                 Id = customer.Id,
-                FullName = customer.FullName,
-                Email = customer.Email,
-                Address = customer.Address,
-                Phone = customer.Phone,
+                FullName = order.FullName,
+                Email = order.Email,
+                Address = order.Address,
+                Phone = order.Phone,
                 InvoiceCode = order.InvoiceCode,
                 OrderCreatedAt = order.CreatedAt
             };
@@ -218,12 +208,20 @@ namespace Service.Services.OrderService
 
             cartItem.ForEach(ci =>
             {
+                var product = _context.Products.FirstOrDefault(p => p.Id == ci.ProductId);
+                var variant = _context.ProductVariants
+                                    .Include(v => v.ProductType)
+                                    .FirstOrDefault(v => v.ProductId == ci.ProductId && v.ProductTypeId == ci.ProductTypeId);
+
                 var item = new OrderItem
                 {
                     ProductId = ci.ProductId,
                     ProductTypeId = ci.ProductTypeId,
                     Quantity = ci.Quantity,
-                    TotalPrice = ci.Quantity * ci.Price,
+                    Price = ci.Price,
+                    OriginalPrice = variant.OriginalPrice,
+                    ProductTypeName = variant.ProductType.Name,
+                    ProductTitle = product.Title,
                 };
                 orderItems.Add(item);
             });
@@ -233,7 +231,11 @@ namespace Service.Services.OrderService
                 CustomerId = customer.Id,
                 InvoiceCode = GenerateInvoiceCode(),
                 TotalPrice = totalAmount,
-                OrderItems = orderItems
+                OrderItems = orderItems,
+                FullName = customer.FullName,
+                Email = customer.Email,
+                Address = customer.Address,
+                Phone = customer.Phone,
             };
 
             _context.Orders.Add(order);
