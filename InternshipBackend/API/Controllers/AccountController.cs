@@ -18,26 +18,6 @@ namespace API.Controllers
         {
             _service = service;
         }
-        [HttpPost("register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDTO req)
-        { 
-            var res = await _service.Register(req);
-            if (!res.Success)
-            {
-                return BadRequest(res);
-            }
-            return Ok(res);
-        }
-        [HttpPost("login")]
-        public async Task<ActionResult<ServiceResponse<string>>> Login(LoginDTO req)
-        {
-            var res = await _service.Login(req);
-            if (!res.Success)
-            {
-                return BadRequest(res);
-            }
-            return Ok(res);
-        }
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Account>>>>> GetAdminAccounts([FromQuery] int page)
         {
