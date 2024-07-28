@@ -1,18 +1,18 @@
 "use client";
 
-import { adminLogin } from "@/action/accountAction";
+import { customerLogin } from "@/action/accountAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import { setAuthPublic } from "@/services/auth-service/auth-service";
 
-const LoginForm = () => {
+const CustomerLoginForm = () => {
   const router = useRouter();
 
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
-    adminLogin,
+    customerLogin,
     initialState
   );
 
@@ -32,7 +32,7 @@ const LoginForm = () => {
     }
     if (formState.success) {
       setAuthPublic(formState.data?.toString() || "");
-      router.push("/dashboard");
+      router.push("/");
     }
   }, [formState, toastDisplayed]);
 
@@ -72,4 +72,4 @@ const LoginForm = () => {
     </form>
   );
 };
-export default LoginForm;
+export default CustomerLoginForm;
