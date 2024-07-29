@@ -4,11 +4,9 @@ import { Suspense } from "react";
 
 const LoginPage = () => {
   return (
-    <div className="min-h-screen bg-gray-800 flex items-center justify-center">
-      <Suspense fallback={<Loading />}>
-        <CustomerLoginForm />
-      </Suspense>
-    </div>
+    <Suspense fallback={<Loading />}>
+      <CustomerLoginForm />
+    </Suspense>
   );
 };
 export default LoginPage;

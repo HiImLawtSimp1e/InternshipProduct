@@ -4,14 +4,17 @@ import Link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import CartModal from "./cart-modal";
 import { useCartStore } from "@/lib/store/useCartStore";
+import {
+  getAuthPublic,
+  setLogoutPublic,
+} from "@/services/auth-service/auth-service";
 
 const NavIcons = () => {
   const { cartItems, counter, totalAmount, getCart } = useCartStore();
   const profileRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    getCart();
-  }, []);
+
+  const authToken = getAuthPublic();
 
   const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
@@ -37,7 +40,15 @@ const NavIcons = () => {
     }
   };
 
+  const handleLogout = () => {
+    setLogoutPublic();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
+  };
+
   useEffect(() => {
+    getCart();
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -75,21 +86,43 @@ const NavIcons = () => {
           ref={profileRef}
           className="p-4 absolute flex flex-col gap-4 text-md rounded-md top-12 right-0 bg-white shadow-[0_3px_10px_rgb(0,0,0,0.2)] z-20"
         >
-          <Link
-            className="inline-block min-w-40 hover:opacity-60"
-            href="/profile"
-          >
-            Profile
-          </Link>
-          <Link
-            className="inline-block min-w-40 hover:opacity-60"
-            href="/order-history"
-          >
-            My Order
-          </Link>
-          <div className="inline-block min-w-40 hover:opacity-60 cursor-pointer">
-            Logout
-          </div>
+          {authToken ? (
+            <>
+              <Link
+                className="inline-block min-w-40 hover:opacity-60"
+                href="/profile"
+              >
+                Profile
+              </Link>
+              <Link
+                className="inline-block min-w-40 hover:opacity-60"
+                href="/order-history"
+              >
+                My Order
+              </Link>
+              <div
+                onClick={handleLogout}
+                className="inline-block min-w-40 hover:opacity-60 cursor-pointer"
+              >
+                Logout
+              </div>
+            </>
+          ) : (
+            <>
+              <Link
+                className="inline-block min-w-40 hover:opacity-60"
+                href="/login"
+              >
+                Login
+              </Link>
+              <Link
+                className="inline-block min-w-40 hover:opacity-60"
+                href="/register"
+              >
+                Register
+              </Link>
+            </>
+          )}
         </div>
       )}
     </div>

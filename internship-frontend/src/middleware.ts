@@ -4,17 +4,35 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname === "/dashboard") {
     const token = request.cookies.get("authToken");
     if (!token) {
-      return NextResponse.rewrite(new URL("/login/admin", request.url));
+      return NextResponse.redirect(new URL("/login/admin", request.url));
     }
 
     const isAccess = await verifyToken(token.value);
 
     if (!isAccess) {
-      return NextResponse.rewrite(new URL("/login/admin", request.url));
+      return NextResponse.redirect(new URL("/login/admin", request.url));
     }
 
     if (isAccess !== "Employee" && isAccess !== "Admin") {
       return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    return NextResponse.next();
+  }
+  if (
+    request.nextUrl.pathname === "/order-history" ||
+    request.nextUrl.pathname === "/cart" ||
+    request.nextUrl.pathname === "/profile"
+  ) {
+    const token = request.cookies.get("authToken");
+    if (!token) {
+      return NextResponse.rewrite(new URL("/login", request.url));
+    }
+
+    const isAccess = await verifyToken(token.value);
+
+    if (!isAccess) {
+      return NextResponse.rewrite(new URL("/login", request.url));
     }
 
     return NextResponse.next();

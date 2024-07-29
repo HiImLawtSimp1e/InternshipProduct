@@ -21,7 +21,7 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
   const pageSize = 10;
   const startIndex = (currentPage - 1) * pageSize;
   return (
-    <div className="mt-24 min-h-[100vh]">
+    <div className="mt-24 min-h-[100vh] overflow-x-auto">
       <table className="w-full text-left text-gray-600">
         <thead className="bg-gray-200 text-gray-600 border border-gray-300 font-bold uppercase">
           <tr>
