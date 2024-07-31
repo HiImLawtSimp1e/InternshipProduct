@@ -12,10 +12,10 @@ namespace Service.Services.CartService
 {
     public interface ICartService
     {
-        Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItems(Guid accountId);
-        Task<ServiceResponse<bool>> StoreCartItems(Guid accountId, List<StoreCartItemDTO> items);
-        Task<ServiceResponse<bool>> AddToCart(Guid accountId, StoreCartItemDTO newItem);
-        Task<ServiceResponse<bool>> UpdateQuantity(Guid accountId, StoreCartItemDTO updateItem);
-        Task<ServiceResponse<bool>> RemoveFromCart(Guid accountId, Guid productId, Guid productTypeId);
+        Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItems();
+        Task<ServiceResponse<bool>> StoreCartItems(List<StoreCartItemDTO> items);
+        Task<ServiceResponse<bool>> AddToCart(StoreCartItemDTO newItem);
+        Task<ServiceResponse<bool>> UpdateQuantity(StoreCartItemDTO updateItem);
+        Task<ServiceResponse<bool>> RemoveFromCart(Guid productId, Guid productTypeId);
     }
 }

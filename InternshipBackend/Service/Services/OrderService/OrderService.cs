@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.DTOs.ResponseDTOs.CustomerCartItemsDTO;
 using Service.DTOs.ResponseDTOs.OrerDetailDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using Service.Services.CartService;
 using System;
 using System.Collections.Generic;
@@ -18,11 +19,13 @@ namespace Service.Services.OrderService
     {
         private readonly DataContext _context;
         private readonly ICartService _cartService;
+        private readonly IAuthService _authService;
 
-        public OrderService(DataContext context, ICartService cartService)
+        public OrderService(DataContext context, ICartService cartService, IAuthService authService)
         {
             _context = context;
             _cartService = cartService;
+            _authService = authService;
         }
 
         public async Task<ServiceResponse<PagingParams<List<Order>>>> GetAdminOrders(int page)
@@ -175,8 +178,48 @@ namespace Service.Services.OrderService
             };
         }
 
-        public async Task<ServiceResponse<bool>> PlaceOrder(Guid accountId)
+        public async Task<ServiceResponse<PagingParams<List<Order>>>> GetCustomerOrders(int page)
         {
+            var accountId = _authService.GetUserId();
+
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
+
+            if (customer == null)
+            {
+                return new ServiceResponse<PagingParams<List<Order>>>
+                {
+                    Success = false,
+                    Message = "You need to log in"
+                };
+            }
+
+            var pageResults = 10f;
+            var pageCount = Math.Ceiling(_context.Orders.Count() / pageResults);
+
+            var orders = await _context.Orders
+                                   .Where(o => o.CustomerId == customer.Id)
+                                   .OrderByDescending(o => o.CreatedAt)
+                                   .Skip((page - 1) * (int)pageResults)
+                                   .Take((int)pageResults)
+                                   .ToListAsync();
+
+            var pagingData = new PagingParams<List<Order>>
+            {
+                Result = orders,
+                CurrentPage = page,
+                Pages = (int)pageCount
+            };
+
+            return new ServiceResponse<PagingParams<List<Order>>>
+            {
+                Data = pagingData
+            };
+        }
+
+        public async Task<ServiceResponse<bool>> PlaceOrder()
+        {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers
                                          .Include(c => c.Cart)
                                          .FirstOrDefaultAsync(c => c.AccountId == accountId);
@@ -190,8 +233,8 @@ namespace Service.Services.OrderService
                 };
             }
 
-            var cartItem = (await _cartService.GetCartItems(accountId)).Data;
-            if(cartItem == null || cartItem.Count == 0)
+            var cartItem = (await _cartService.GetCartItems()).Data;
+            if(cartItem == null || cartItem.Count() == 0)
             {
                 return new ServiceResponse<bool>
                 {

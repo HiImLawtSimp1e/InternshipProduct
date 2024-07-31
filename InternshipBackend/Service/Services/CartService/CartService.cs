@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Service.DTOs.RequestDTOs.StoreCartDTO;
 using Service.DTOs.ResponseDTOs.CustomerCartItemsDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlTypes;
@@ -19,14 +20,18 @@ namespace Service.Services.CartService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public CartService(DataContext context, IMapper mapper)
+        public CartService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
-        public async Task<ServiceResponse<bool>> AddToCart(Guid accountId, StoreCartItemDTO newItem)
+        public async Task<ServiceResponse<bool>> AddToCart(StoreCartItemDTO newItem)
         {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
             if (customer == null)
@@ -63,8 +68,10 @@ namespace Service.Services.CartService
             };
         }
 
-        public async Task<ServiceResponse<bool>> UpdateQuantity(Guid accountId, StoreCartItemDTO updateItem)
+        public async Task<ServiceResponse<bool>> UpdateQuantity(StoreCartItemDTO updateItem)
         {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
             if (customer == null)
@@ -100,8 +107,10 @@ namespace Service.Services.CartService
             };
         }
 
-        public async Task<ServiceResponse<bool>> RemoveFromCart(Guid accountId, Guid productId, Guid productTypeId)
+        public async Task<ServiceResponse<bool>> RemoveFromCart(Guid productId, Guid productTypeId)
         {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
             if (customer == null)
@@ -145,8 +154,10 @@ namespace Service.Services.CartService
             };
         }
 
-        public async Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItems(Guid accountId)
+        public async Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItems()
         {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
             if (customer == null)
@@ -220,8 +231,10 @@ namespace Service.Services.CartService
             return result;
         }
 
-        public async Task<ServiceResponse<bool>> StoreCartItems(Guid accountId, List<StoreCartItemDTO> items)
+        public async Task<ServiceResponse<bool>> StoreCartItems(List<StoreCartItemDTO> items)
         {
+            var accountId = _authService.GetUserId();
+
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.AccountId == accountId);
 
             if (customer == null)

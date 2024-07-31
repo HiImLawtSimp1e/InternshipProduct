@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Context;
 using Data.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -23,14 +24,21 @@ namespace Service.Services.AuthService
         private readonly DataContext _context;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AuthService(DataContext context, IMapper mapper, IConfiguration configuration)
+        public AuthService(DataContext context, IMapper mapper, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
             _mapper = mapper;
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
         #region AuthService
+
+        public Guid GetUserId() => new Guid(_httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+        public string GetUserName() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
+
 
         public async Task<ServiceResponse<bool>> ChangePassword(Guid accountId, string newPassword)
         {
@@ -79,6 +87,14 @@ namespace Service.Services.AuthService
                 {
                     Success = false,
                     Message = "Wrong password"
+                };
+            }
+            else if (account.Role.RoleName != "Customer")
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "You do not have access."
                 };
             }
             else

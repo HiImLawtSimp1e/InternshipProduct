@@ -1,4 +1,5 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.StoreCartDTO;
@@ -10,6 +11,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Customer")]
     public class CartController : ControllerBase
     {
         private readonly ICartService _service;
@@ -21,8 +23,7 @@ namespace API.Controllers
         [HttpGet]
         public async Task<ActionResult<ServiceResponse<List<CustomerCartItemsDTO>>>> GetCartItems()
         {
-            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.GetCartItems(mockAccountId);
+            var response = await _service.GetCartItems();
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -32,8 +33,7 @@ namespace API.Controllers
         [HttpPost]
         public async Task<ActionResult<ServiceResponse<bool>>> AddToCart(StoreCartItemDTO item)
         {
-            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.AddToCart(mockAccountId, item);
+            var response = await _service.AddToCart(item);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -43,8 +43,7 @@ namespace API.Controllers
         [HttpPost("store-cart")]
         public async Task<ActionResult<ServiceResponse<bool>>> StoreCartItems(List<StoreCartItemDTO> items)
         {
-            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.StoreCartItems(mockAccountId, items);
+            var response = await _service.StoreCartItems(items);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -54,8 +53,7 @@ namespace API.Controllers
         [HttpPut]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateQuantity(StoreCartItemDTO item)
         {
-            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.UpdateQuantity(mockAccountId, item);
+            var response = await _service.UpdateQuantity(item);
             if (!response.Success)
             {
                 return BadRequest(response);
@@ -65,8 +63,7 @@ namespace API.Controllers
         [HttpDelete("{productId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> RemoveFromCart(Guid productId, [FromQuery] Guid productTypeId)
         {
-            var mockAccountId = new Guid("2B25A754-A50E-4468-942C-D65C0BC2C86F");
-            var response = await _service.RemoveFromCart(mockAccountId, productId, productTypeId);
+            var response = await _service.RemoveFromCart(productId, productTypeId);
             if (!response.Success)
             {
                 return BadRequest(response);
