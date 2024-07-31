@@ -1,6 +1,6 @@
 "use client";
 
-import { adminLogin } from "@/action/accountAction";
+import { adminLoginAction } from "@/action/accountAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -12,7 +12,7 @@ const AdminLoginForm = () => {
 
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
-    adminLogin,
+    adminLoginAction,
     initialState
   );
 
@@ -27,7 +27,7 @@ const AdminLoginForm = () => {
 
   useEffect(() => {
     if (formState.errors.length > 0 && !toastDisplayed) {
-      toast.error(formState.errors[0]);
+      toast.error("Login failed");
       setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
     }
     if (formState.success) {
@@ -47,12 +47,14 @@ const AdminLoginForm = () => {
         placeholder="username"
         name="accountName"
         className="w-full text-zinc-950 px-4 py-3 border-2 border-gray-400 rounded-lg bg-gray-100 focus:outline-none focus:border-blue-500"
+        required
       />
       <input
         type="password"
         placeholder="password"
         name="password"
         className="w-full text-zinc-950 px-4 py-3 border-2 border-gray-400 rounded-lg bg-gray-100 focus:outline-none focus:border-blue-500"
+        required
       />
       {formState.errors.length > 0 && (
         <ul>

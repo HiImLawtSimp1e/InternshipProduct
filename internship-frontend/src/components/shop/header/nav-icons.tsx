@@ -8,11 +8,13 @@ import {
   getAuthPublic,
   setLogoutPublic,
 } from "@/services/auth-service/auth-service";
+import { usePathname } from "next/navigation";
 
 const NavIcons = () => {
   const { cartItems, counter, totalAmount, getCart } = useCartStore();
   const profileRef = useRef<HTMLDivElement>(null);
   const cartRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
 
   const authToken = getAuthPublic();
 
@@ -111,7 +113,10 @@ const NavIcons = () => {
             <>
               <Link
                 className="inline-block min-w-40 hover:opacity-60"
-                href="/login"
+                href={{
+                  pathname: "/login",
+                  query: { redirectUrl: encodeURIComponent(pathname) },
+                }}
               >
                 Login
               </Link>

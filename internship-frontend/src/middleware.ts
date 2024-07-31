@@ -24,15 +24,18 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname === "/cart" ||
     request.nextUrl.pathname === "/profile"
   ) {
+    const loginUrl = new URL("/login", request.url);
+    const redirectUrl = encodeURIComponent(request.nextUrl.pathname);
+    loginUrl.searchParams.set("redirectUrl", redirectUrl);
     const token = request.cookies.get("authToken");
     if (!token) {
-      return NextResponse.rewrite(new URL("/login", request.url));
+      return NextResponse.redirect(loginUrl);
     }
 
     const isAccess = await verifyToken(token.value);
 
     if (!isAccess) {
-      return NextResponse.rewrite(new URL("/login", request.url));
+      return NextResponse.redirect(loginUrl);
     }
 
     return NextResponse.next();
