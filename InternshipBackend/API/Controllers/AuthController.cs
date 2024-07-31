@@ -17,7 +17,7 @@ namespace API.Controllers
             _service = service;
         }
         [HttpPost("register")]
-        public async Task<ActionResult<ServiceResponse<int>>> Register(RegisterDTO req)
+        public async Task<ActionResult<ServiceResponse<string>>> Register(RegisterDTO req)
         {
             var res = await _service.Register(req);
             if (!res.Success)

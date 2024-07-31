@@ -132,17 +132,17 @@ namespace Service.Services.AuthService
             }
         }
 
-        public async Task<ServiceResponse<int>> Register(RegisterDTO registerDTO)
+        public async Task<ServiceResponse<string>> Register(RegisterDTO registerDTO)
         {
             try
             {
                 //check account name exist
                 if (await AccountExists(registerDTO.AccountName))
                 {
-                    return new ServiceResponse<int>
+                    return new ServiceResponse<string>
                     {
                         Success = false,
-                        Message = "User already exists"
+                        Message = string.Format("User \"{0}\" already exists", registerDTO.AccountName)
                     };
                 }
 
@@ -150,7 +150,7 @@ namespace Service.Services.AuthService
                 var role = await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "Customer");
                 if (role == null)
                 {
-                    return new ServiceResponse<int>
+                    return new ServiceResponse<string>
                     {
                         Success = false,
                         Message = "Something error!!!"
@@ -183,9 +183,13 @@ namespace Service.Services.AuthService
 
                 _context.Accounts.Add(account);
                 await _context.SaveChangesAsync();
-                return new ServiceResponse<int>
+
+                var token = CreateToken(account);
+
+                return new ServiceResponse<string>
                 {
-                    Message = "Registration successful !"
+                    Data = token,
+                    Message = "Registration successfully!"
                 };
             }
             catch (Exception ex)

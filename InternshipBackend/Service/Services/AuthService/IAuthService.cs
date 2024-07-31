@@ -12,7 +12,7 @@ namespace Service.Services.AuthService
 {
     public interface IAuthService
     {
-        Task<ServiceResponse<int>> Register(RegisterDTO registerDTO);
+        Task<ServiceResponse<string>> Register(RegisterDTO registerDTO);
         Task<ServiceResponse<string>> Login(LoginDTO loginDTO);
         Task<ServiceResponse<string>> AdminLogin(LoginDTO loginDTO);
         Task<ServiceResponse<bool>> ChangePassword(Guid accountId, string newPassword);
