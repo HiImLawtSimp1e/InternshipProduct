@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function middleware(request: NextRequest) {
-  if (request.nextUrl.pathname === "/dashboard") {
+  if (request.nextUrl.pathname.startsWith("/dashboard")) {
     const token = request.cookies.get("authToken");
     if (!token) {
       return NextResponse.redirect(new URL("/login/admin", request.url));
@@ -20,9 +20,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   if (
-    request.nextUrl.pathname === "/order-history" ||
-    request.nextUrl.pathname === "/cart" ||
-    request.nextUrl.pathname === "/profile"
+    request.nextUrl.pathname.startsWith("/order-history") ||
+    request.nextUrl.pathname.startsWith("/cart") ||
+    request.nextUrl.pathname.startsWith("/profile")
   ) {
     const loginUrl = new URL("/login", request.url);
     const redirectUrl = encodeURIComponent(request.nextUrl.pathname);
@@ -35,6 +35,10 @@ export async function middleware(request: NextRequest) {
     const isAccess = await verifyToken(token.value);
 
     if (!isAccess) {
+      return NextResponse.redirect(loginUrl);
+    }
+
+    if (isAccess !== "Customer") {
       return NextResponse.redirect(loginUrl);
     }
 
