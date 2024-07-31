@@ -1,15 +1,23 @@
 import OrderHistoryList from "@/components/shop/order-history/order-history-list";
+import { cookies as nextCookies } from "next/headers";
 
 const Orders = async ({ params }: { params: { page?: number } }) => {
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const { page } = params;
   let url = "";
   if (page == null || page <= 0) {
-    url = "http://localhost:5000/api/Order/admin";
+    url = "http://localhost:5000/api/Order";
   } else {
-    url = `http://localhost:5000/api/Order/admin?page=${page}`;
+    url = `http://localhost:5000/api/Order?page=${page}`;
   }
+
   const res = await fetch(url, {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // Thêm header Authorization
+    },
     cache: "no-store",
   });
 

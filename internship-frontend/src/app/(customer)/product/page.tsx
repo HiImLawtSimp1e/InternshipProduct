@@ -24,6 +24,7 @@ const Products = async ({ search, page }: IProps) => {
       url = `http://localhost:5000/api/Product?page=${page}`;
     }
   }
+
   const res = await fetch(url, {
     method: "GET",
     next: { tags: ["shopProductList"] },

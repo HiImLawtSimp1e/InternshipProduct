@@ -1,6 +1,7 @@
 "use server";
 
 import { validateLogin, validateRegister } from "@/lib/validation/validateAuth";
+import { cookies as nextCookies } from "next/headers";
 
 interface LoginFormData {
   accountName: string;
@@ -47,6 +48,8 @@ export const customerLoginAction = async (
 
   if (success) {
     // If the response is success, revalidate the path and redirect
+    const cookieStore = nextCookies();
+    cookieStore.set("authToken", data);
     return { success: true, errors: [], data };
   } else {
     return { errors: [message] };
@@ -82,6 +85,8 @@ export const adminLoginAction = async (
 
   if (success) {
     // If the response is success, revalidate the path and redirect
+    const cookieStore = nextCookies();
+    cookieStore.set("authToken", data);
     return { success: true, errors: [], data };
   } else {
     return { errors: [message] };
@@ -140,6 +145,8 @@ export const registerAction = async (
 
   if (success) {
     // If the response is success, revalidate the path and redirect
+    const cookieStore = nextCookies();
+    cookieStore.set("authToken", data);
     return { success: true, errors: [], data };
   } else {
     return { errors: [message] };

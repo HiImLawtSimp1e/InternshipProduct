@@ -3,7 +3,8 @@
 import { addCartItem } from "@/action/cartAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { formatPrice } from "@/lib/format/format";
-import { useRouter } from "next/navigation";
+import { getAuthPublic } from "@/services/auth-service/auth-service";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -43,6 +44,8 @@ const AddProduct = ({ variants }: IProps) => {
   // for action
   const router = useRouter();
 
+  const pathname = usePathname();
+
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     addCartItem,
@@ -53,9 +56,15 @@ const AddProduct = ({ variants }: IProps) => {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    formAction(formData);
-    setToastDisplayed(false); // Reset toastDisplayed when submitting
+    const authToken = getAuthPublic();
+    if (!authToken || authToken === "") {
+      const redirectUrl = encodeURIComponent(pathname);
+      router.push(`/login?redirectUrl=${redirectUrl}`);
+    } else {
+      const formData = new FormData(event.currentTarget);
+      formAction(formData);
+      setToastDisplayed(false); // Reset toastDisplayed when submitting
+    }
   };
 
   useEffect(() => {

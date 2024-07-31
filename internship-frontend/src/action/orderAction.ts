@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 export const placeOrder = async (
   prevState: FormState,
@@ -9,9 +10,16 @@ export const placeOrder = async (
   //declare errors
   const errors: string[] = [];
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(`http://localhost:5000/api/Order/place-order`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
   const responseData: ApiResponse<string> = await res.json();
   //console.log(responseData);

@@ -50,7 +50,9 @@ const NavIcons = () => {
   };
 
   useEffect(() => {
-    getCart();
+    if (authToken) {
+      getCart();
+    }
     document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
