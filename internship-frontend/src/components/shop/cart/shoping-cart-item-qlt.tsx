@@ -3,7 +3,6 @@
 import { updateQuantity } from "@/action/cartAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useCartStore } from "@/lib/store/useCartStore";
-import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -15,8 +14,6 @@ const ShoppingCartItemQlt = ({ cartItem }: IProps) => {
   const { getCart } = useCartStore();
 
   //for action
-  const router = useRouter();
-
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     updateQuantity,

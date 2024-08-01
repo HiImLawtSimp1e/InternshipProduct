@@ -1,7 +1,7 @@
 import OrderHistoryDetail from "@/components/shop/order-history/order-detail";
 
 const Order = async ({ id }: { id: string }) => {
-  const res = await fetch(`http://localhost:5000/api/Order/admin/${id}`, {
+  const res = await fetch(`http://localhost:5000/api/Order/${id}`, {
     method: "GET",
     next: { tags: ["orderDetail"] },
   });
@@ -9,7 +9,7 @@ const Order = async ({ id }: { id: string }) => {
   const orderItems: ApiResponse<IOrderItem[]> = await res.json();
 
   const customerRes = await fetch(
-    `http://localhost:5000/api/Order/admin/customer/${id}`,
+    `http://localhost:5000/api/Order/customer/${id}`,
     {
       method: "GET",
       next: { tags: ["orderCustomerDetail"] },

@@ -3,23 +3,17 @@
 import { removeCartItem } from "@/action/cartAction";
 import { formatPrice } from "@/lib/format/format";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import ShoppingCartItemQlt from "./shoping-cart-item-qlt";
-import { useCartStore } from "@/lib/store/useCartStore";
 
 interface IProps {
   cartItem: ICartItem;
 }
 
 const ShoppingCartItem = ({ cartItem }: IProps) => {
-  const { getCart } = useCartStore();
-
   //for action
-  const router = useRouter();
-
   const initialState: FormState = { errors: [] };
   const [formState, formAction] = useCustomActionState<FormState>(
     removeCartItem,
@@ -71,7 +65,19 @@ const ShoppingCartItem = ({ cartItem }: IProps) => {
             <ShoppingCartItemQlt cartItem={cartItem} />
           </div>
           <div className="flex items-center space-x-4">
-            <p className="text-xl">{formatPrice(cartItem.price)}</p>
+            <p className="flex flex-col text-xl">
+              {cartItem.originalPrice > cartItem.price ? (
+                <>
+                  {formatPrice(cartItem.price)}
+                  <span className="text-base text-red-300 line-through">
+                    {" "}
+                    {formatPrice(cartItem.originalPrice)}
+                  </span>
+                </>
+              ) : (
+                formatPrice(cartItem.price)
+              )}
+            </p>{" "}
             <form onSubmit={handleSubmit}>
               <input
                 type="hidden"

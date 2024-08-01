@@ -52,7 +52,7 @@ namespace Service.Services.OrderService
             };
         }
 
-        public async Task<ServiceResponse<List<OrderItemDTO>>> GetAdminOrderItems(Guid orderId)
+        public async Task<ServiceResponse<List<OrderItemDTO>>> GetOrderItems(Guid orderId)
         {
             var items = await _context.OrderItems 
                                     .Where(oi => oi.OrderId == orderId)
@@ -92,7 +92,7 @@ namespace Service.Services.OrderService
             return result;
         }
 
-        public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetAdminOrderCustomerInfo(Guid orderId)
+        public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderCustomerInfo(Guid orderId)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
             if(order == null)

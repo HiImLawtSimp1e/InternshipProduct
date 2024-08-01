@@ -3,7 +3,7 @@ import OrderDetailCustomer from "@/components/dashboard/order/order-detail-custo
 import UpdateOrderDetail from "@/components/dashboard/order/update-order-detail";
 
 const Order = async ({ id }: { id: string }) => {
-  const res = await fetch(`http://localhost:5000/api/Order/admin/${id}`, {
+  const res = await fetch(`http://localhost:5000/api/Order/${id}`, {
     method: "GET",
     next: { tags: ["orderDetail"] },
   });
@@ -29,13 +29,10 @@ const Order = async ({ id }: { id: string }) => {
 };
 
 const Customer = async ({ id }: { id: string }) => {
-  const res = await fetch(
-    `http://localhost:5000/api/Order/admin/customer/${id}`,
-    {
-      method: "GET",
-      next: { tags: ["orderCustomerDetail"] },
-    }
-  );
+  const res = await fetch(`http://localhost:5000/api/Order/customer/${id}`, {
+    method: "GET",
+    next: { tags: ["orderCustomerDetail"] },
+  });
 
   const orderCustomer: ApiResponse<IOrderCustomer> = await res.json();
 

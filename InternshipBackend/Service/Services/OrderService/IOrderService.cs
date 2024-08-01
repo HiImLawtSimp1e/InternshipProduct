@@ -15,8 +15,8 @@ namespace Service.Services.OrderService
         public Task<ServiceResponse<bool>> PlaceOrder();
         public Task<ServiceResponse<PagingParams<List<Order>>>> GetCustomerOrders(int page);
         public Task<ServiceResponse<PagingParams<List<Order>>>> GetAdminOrders(int page);
-        public Task<ServiceResponse<List<OrderItemDTO>>> GetAdminOrderItems(Guid orderId);
-        public Task<ServiceResponse<OrderDetailCustomerDTO>> GetAdminOrderCustomerInfo(Guid orderId);
+        public Task<ServiceResponse<List<OrderItemDTO>>> GetOrderItems(Guid orderId);
+        public Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderCustomerInfo(Guid orderId);
         public Task<ServiceResponse<bool>> UpdateOrderState(Guid orderId, OrderState state);
         public Task<ServiceResponse<int>> GetOrderState(Guid orderId);
     }

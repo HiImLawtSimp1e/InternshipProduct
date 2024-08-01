@@ -60,20 +60,20 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("admin/{orderId}")]
-        public async Task<ActionResult<ServiceResponse<List<OrderItemDTO>>>> GetAdminOrderItems(Guid orderId)
+        [HttpGet("{orderId}")]
+        public async Task<ActionResult<ServiceResponse<List<OrderItemDTO>>>> GetOrderItems(Guid orderId)
         {
-            var response = await _service.GetAdminOrderItems(orderId);
+            var response = await _service.GetOrderItems(orderId);
             if(!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
-        [HttpGet("admin/customer/{orderId}")]
-        public async Task<ActionResult<ServiceResponse<OrderDetailCustomerDTO>>> GetAdminOrderCustomerInfo(Guid orderId) 
+        [HttpGet("customer/{orderId}")]
+        public async Task<ActionResult<ServiceResponse<OrderDetailCustomerDTO>>> GetOrderCustomerInfo(Guid orderId) 
         {
-            var response = await _service.GetAdminOrderCustomerInfo(orderId);
+            var response = await _service.GetOrderCustomerInfo(orderId);
             if (!response.Success)
             {
                 return BadRequest(response);
