@@ -1,6 +1,6 @@
 import CategorySidebar from "@/components/shop/category-list/category-sidebar";
-import Loading from "@/components/shop/loading";
 import ShopProductList from "@/components/shop/product-list/product-list";
+import Loading from "@/components/ui/loading";
 import Image from "next/image";
 import { Suspense } from "react";
 

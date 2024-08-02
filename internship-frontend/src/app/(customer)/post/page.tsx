@@ -1,5 +1,5 @@
-import Loading from "@/components/shop/loading";
 import ShopPostList from "@/components/shop/post-list/post-list";
+import Loading from "@/components/ui/loading";
 import { Suspense } from "react";
 
 interface IProps {

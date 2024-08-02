@@ -16,3 +16,9 @@ interface FormState {
   success?: boolean;
   data?: string;
 }
+
+interface FormStateData<T> {
+  errors: string[];
+  success?: boolean;
+  data?: T;
+}

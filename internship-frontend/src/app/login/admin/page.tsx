@@ -1,5 +1,5 @@
 import AdminLoginForm from "@/components/auth/admin-login-form";
-import Loading from "@/components/shop/loading";
+import Loading from "@/components/ui/loading";
 import { Suspense } from "react";
 
 const LoginPage = () => {

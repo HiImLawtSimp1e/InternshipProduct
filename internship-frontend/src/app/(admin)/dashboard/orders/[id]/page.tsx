@@ -28,22 +28,22 @@ const Order = async ({ id }: { id: string }) => {
   );
 };
 
-const Customer = async ({ id }: { id: string }) => {
-  const res = await fetch(`http://localhost:5000/api/Order/customer/${id}`, {
+const DetailCustomer = async ({ id }: { id: string }) => {
+  const res = await fetch(`http://localhost:5000/api/Order/detail/${id}`, {
     method: "GET",
     next: { tags: ["orderCustomerDetail"] },
   });
 
-  const orderCustomer: ApiResponse<IOrderCustomer> = await res.json();
+  const orderDetail: ApiResponse<IOrderDetail> = await res.json();
 
-  return <OrderDetailCustomer customer={orderCustomer.data} />;
+  return <OrderDetailCustomer orderDetail={orderDetail.data} />;
 };
 
 const OrderDetailPage = ({ params }: { params: { id: string } }) => {
   const { id } = params;
   return (
     <>
-      <Customer id={id} />
+      <DetailCustomer id={id} />
       <Order id={id} />
     </>
   );

@@ -28,6 +28,7 @@ const OrderList = ({ orders, pages, currentPage }: IProps) => {
             <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">Invoice Code</th>
             <th className="px-4 py-2">State</th>
+            <th className="px-4 py-2">Discount Value</th>
             <th className="px-4 py-2">Total Amount</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
@@ -45,7 +46,10 @@ const OrderList = ({ orders, pages, currentPage }: IProps) => {
                   context={mapOrderState(order.state)}
                 />
               </td>
-              <td className="px-4 py-2">{formatPrice(order.totalPrice)}</td>
+              <td className="px-4 py-2">{formatPrice(order.discountValue)}</td>
+              <td className="px-4 py-2">
+                {formatPrice(order.totalPrice - order.discountValue)}
+              </td>
               <td className="px-4 py-2">{formatDate(order.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(order.modifiedAt)}</td>
               <td className="px-4 py-2">

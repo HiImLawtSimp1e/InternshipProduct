@@ -1,6 +1,6 @@
-import Loading from "@/components/shop/loading";
 import { Suspense } from "react";
 import HomeShopProductList from "@/components/shop/home/home-product-list";
+import Loading from "@/components/ui/loading";
 
 const Products = async () => {
   const res = await fetch("http://localhost:5000/api/Product", {

@@ -3,8 +3,20 @@ interface IOrder {
   invoiceCode: string;
   totalPrice: number;
   state: number;
+  discountValue: number;
   createdAt: string;
   modifiedAt: string;
+}
+
+interface IOrderDetail {
+  id: string;
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  invoiceCode: string;
+  discountValue: number;
+  orderCreatedAt: string;
 }
 
 interface IOrderItem {

@@ -1,5 +1,5 @@
 import RegisterForm from "@/components/auth/register-form";
-import Loading from "@/components/shop/loading";
+import Loading from "@/components/ui/loading";
 import { Suspense } from "react";
 
 const RegisterPage = () => {

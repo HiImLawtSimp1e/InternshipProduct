@@ -10,11 +10,20 @@ export const placeOrder = async (
   //declare errors
   const errors: string[] = [];
 
+  const voucherId = formData.get("voucherId") as string;
+
   //get access token form cookie
   const cookieStore = nextCookies();
   const token = cookieStore.get("authToken")?.value || "";
 
-  const res = await fetch(`http://localhost:5000/api/Order/place-order`, {
+  let url = "";
+  if (!voucherId || voucherId === "") {
+    url = "http://localhost:5000/api/Order/place-order";
+  } else {
+    url = `http://localhost:5000/api/Order/place-order?voucherId=${voucherId}`;
+  }
+
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -38,6 +47,46 @@ export const placeOrder = async (
   return { success: true, errors: [] };
 };
 
+export const applyVoucher = async (
+  prevState: FormStateData<IVoucher>,
+  formData: FormData
+): Promise<FormStateData<IVoucher> | undefined> => {
+  //declare errors
+  const errors: string[] = [];
+
+  const discountCode = formData.get("discountCode") as string;
+
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
+  const res = await fetch(
+    `http://localhost:5000/api/Order/apply-voucher?discountCode=${discountCode}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const responseData: ApiResponse<IVoucher> = await res.json();
+  //console.log(responseData);
+  const { data, success, message } = responseData;
+
+  //catch error
+  if (!success) {
+    errors.push(message);
+  }
+  if (errors.length > 0) {
+    return { errors };
+  }
+
+  revalidateTag("shoppingCart");
+
+  return { data, success: true, errors: [] };
+};
+
 export const updateOrderState = async (
   prevState: FormState,
   formData: FormData
@@ -46,11 +95,18 @@ export const updateOrderState = async (
   const state = formData.get("state") as string;
 
   try {
+    //get access token form cookie
+    const cookieStore = nextCookies();
+    const token = cookieStore.get("authToken")?.value || "";
+
     const res = await fetch(
       `http://localhost:5000/api/Order/admin/${id}?state=${state}`,
       {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 

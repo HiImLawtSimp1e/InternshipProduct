@@ -79,7 +79,7 @@ async function verifyToken(token: string) {
     );
 
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
 
     if (!data.success) {
       return null;
