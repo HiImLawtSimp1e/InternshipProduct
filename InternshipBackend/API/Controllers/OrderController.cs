@@ -3,6 +3,7 @@ using Data.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using Service.DTOs.ResponseDTOs.OrerDetailDTO;
 using Service.Models;
 using Service.Services.OrderService;
@@ -12,6 +13,7 @@ namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _service;
@@ -37,15 +39,27 @@ namespace API.Controllers
         }
         [Authorize(Roles = "Customer")]
         [HttpPost("place-order")]
-        public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder()
+        public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder([FromQuery] Guid? voucherId)
         {
-            var response = await _service.PlaceOrder();
+            var response = await _service.PlaceOrder(voucherId);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Customer")]
+        [HttpPost("apply-voucher")]
+        public async Task<ActionResult<ServiceResponse<CustomerVoucherResponseDTO>>> ApplyVoucher(string discountCode)
+        {
+            var response = await _service.ApplyVoucher(discountCode);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Order>>>>> GetAdminOrders([FromQuery] int page)
         {
@@ -70,16 +84,17 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [HttpGet("customer/{orderId}")]
-        public async Task<ActionResult<ServiceResponse<OrderDetailCustomerDTO>>> GetOrderCustomerInfo(Guid orderId) 
+        [HttpGet("detail/{orderId}")]
+        public async Task<ActionResult<ServiceResponse<OrderDetailCustomerDTO>>> GetOrderDetailInfo(Guid orderId) 
         {
-            var response = await _service.GetOrderCustomerInfo(orderId);
+            var response = await _service.GetOrderDetailInfo(orderId);
             if (!response.Success)
             {
                 return BadRequest(response);
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin/get-state/{orderId}")]
         public async Task<ActionResult<ServiceResponse<int>>> GetOrderState(Guid orderId)
         {
@@ -90,6 +105,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{orderId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateOrderState(Guid orderId, OrderState state)
         {

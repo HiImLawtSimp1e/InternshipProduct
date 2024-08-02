@@ -28,6 +28,18 @@ namespace Service.Services.CartService
             _mapper = mapper;
             _authService = authService;
         }
+        public async Task<int> GetCartTotalAmountAsync()
+        {
+            int totalAmount = 0;
+            var cartItem = (await GetCartItems()).Data;
+            if (cartItem == null)
+            {
+                return 0;
+            }
+            cartItem.ForEach(ci => totalAmount += ci.Price * ci.Quantity);
+            return totalAmount;
+
+        }
         public async Task<ServiceResponse<bool>> AddToCart(StoreCartItemDTO newItem)
         {
             var accountId = _authService.GetUserId();

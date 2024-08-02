@@ -19,6 +19,7 @@ using Service.Services.ProductService;
 using Service.Services.ProductTypeService;
 using Service.Services.ProductValueService;
 using Service.Services.ProductVariantService;
+using Service.Services.VoucherService;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
@@ -42,6 +43,7 @@ builder.Services.AddScoped<IProductValueService, ProductValueService>();
 builder.Services.AddScoped<IProductAttributeService, ProductAttributeService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 //Enable CORS

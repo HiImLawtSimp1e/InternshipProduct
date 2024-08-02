@@ -17,5 +17,6 @@ namespace Service.Services.CartService
         Task<ServiceResponse<bool>> AddToCart(StoreCartItemDTO newItem);
         Task<ServiceResponse<bool>> UpdateQuantity(StoreCartItemDTO updateItem);
         Task<ServiceResponse<bool>> RemoveFromCart(Guid productId, Guid productTypeId);
+        Task<int> GetCartTotalAmountAsync();
     }
 }

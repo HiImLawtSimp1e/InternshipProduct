@@ -1,8 +1,10 @@
-﻿using Data.Context;
+﻿using AutoMapper;
+using Data.Context;
 using Data.Entities;
 using Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.ResponseDTOs.CustomerCartItemsDTO;
+using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using Service.DTOs.ResponseDTOs.OrerDetailDTO;
 using Service.Models;
 using Service.Services.AuthService;
@@ -18,12 +20,14 @@ namespace Service.Services.OrderService
     public class OrderService : IOrderService
     {
         private readonly DataContext _context;
+        private readonly IMapper _mapper;
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
 
-        public OrderService(DataContext context, ICartService cartService, IAuthService authService)
+        public OrderService(DataContext context,IMapper mapper, ICartService cartService, IAuthService authService)
         {
             _context = context;
+            _mapper = mapper;
             _cartService = cartService;
             _authService = authService;
         }
@@ -92,7 +96,7 @@ namespace Service.Services.OrderService
             return result;
         }
 
-        public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderCustomerInfo(Guid orderId)
+        public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderDetailInfo(Guid orderId)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
             if(order == null)
@@ -104,26 +108,16 @@ namespace Service.Services.OrderService
                 };
             }
 
-            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.Id == order.CustomerId);
-
-            if (customer == null)
-            {
-                return new ServiceResponse<OrderDetailCustomerDTO>
-                {
-                    Success = false,
-                    Message = "Not found customer"
-                };
-            }
-
             var orderCustomerInfo = new OrderDetailCustomerDTO
             {
-                Id = customer.Id,
+                Id = order.Id,
                 FullName = order.FullName,
                 Email = order.Email,
                 Address = order.Address,
                 Phone = order.Phone,
                 InvoiceCode = order.InvoiceCode,
-                OrderCreatedAt = order.CreatedAt
+                OrderCreatedAt = order.CreatedAt,
+                DiscountValue = order.DiscountValue
             };
 
             return new ServiceResponse<OrderDetailCustomerDTO>
@@ -216,7 +210,7 @@ namespace Service.Services.OrderService
             };
         }
 
-        public async Task<ServiceResponse<bool>> PlaceOrder()
+        public async Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId)
         {
             var accountId = _authService.GetUserId();
 
@@ -281,6 +275,27 @@ namespace Service.Services.OrderService
                 Phone = customer.Phone,
             };
 
+            if(voucherId != null)
+            {
+                //Check if the voucher is active, not expired, and has remaining quantity or not.
+                var voucher = await _context.Vouchers
+                                         .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
+                                         .FirstOrDefaultAsync(v => v.Id == voucherId);
+                if(voucher != null)
+                {
+                    // MinOrderCondition = 0 meaning max min order condition doesn't exist => pass
+                    // Order's total amount > voucher's min order condition => pass
+
+                    if (voucher.MinOrderCondition <= 0 || totalAmount > voucher.MinOrderCondition)
+                    {
+                        var discountValue = CaculateDiscountValue(voucher, totalAmount);
+                        order.DiscountValue = discountValue;
+                        order.VoucherId = voucher.Id;
+                        voucher.Quantity -= 1;
+                    }
+                }
+            }
+
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.CartId == customer.Cart.Id));
 
@@ -292,10 +307,100 @@ namespace Service.Services.OrderService
             };
         }
 
+        public async Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode)
+        {
+            var totalAmount = await _cartService.GetCartTotalAmountAsync();
+            if (totalAmount == 0)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Empty Cart"
+                };
+            }
+
+            //Check if the voucher is active, not expired, and has remaining quantity or not.
+            var voucher = await _context.Vouchers
+                                           .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
+                                           .FirstOrDefaultAsync(v => v.Code == discountCode);
+            if (voucher == null)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Discount code is incorrect or has expired"
+                };
+            }
+            else if(IsVoucherUsed(voucher.Id)){
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Discount code has been used"
+                };
+            }
+            else
+            {
+                // MinOrderCondition = 0 meaning max min order condition doesn't exist
+                if (voucher.MinOrderCondition > 0 && totalAmount < voucher.MinOrderCondition)
+                {
+                    return new ServiceResponse<CustomerVoucherResponseDTO>
+                    {
+                        Success = false,
+                        Message = string.Format("The voucher is only applicable for orders with a value greater than {0}", voucher.MinOrderCondition)
+                    };
+                }
+                
+                var result = _mapper.Map<CustomerVoucherResponseDTO>(voucher);
+
+                return new ServiceResponse<CustomerVoucherResponseDTO> 
+                { 
+                    Data = result
+                };
+            }
+
+        }
+
+        //Generate random invoice code
         private string GenerateInvoiceCode()
         {
             return $"INV-{DateTime.Now:yyyyMMddHHmmssfff}-{new Random().Next(1000, 9999)}";
         }
 
+        //Logical: Each account is allowed to use one voucher code only once
+        private bool IsVoucherUsed(Guid voucherId)
+        {
+            var accountId = _authService.GetUserId();
+            var customer = _context.Customers.FirstOrDefault(c => c.AccountId == accountId);
+            if (customer == null)
+            {
+                return true;
+            }
+            var isUsedVoucher = _context.Orders.FirstOrDefault(o => o.CustomerId == customer.Id && o.VoucherId == voucherId);
+            return isUsedVoucher != null;
+        }
+
+        private int CaculateDiscountValue(Voucher voucher, int totalAmount)
+        {
+            int result = 0;
+            if(voucher.IsDiscountPercent)
+            {
+                var discountValue = (int)(totalAmount * (voucher.DiscountValue / 100));
+
+                // MaxDiscountValue = 0 meaning max discount value doesn't exist
+                if (voucher.MaxDiscountValue > 0)
+                {
+                    result = (discountValue > voucher.MaxDiscountValue) ? voucher.MaxDiscountValue : discountValue;
+                }
+                else
+                {
+                    result = discountValue;
+                }
+            }
+            else
+            {
+                result = (int)voucher.DiscountValue;
+            }
+            return result;
+        }
     }
 }
