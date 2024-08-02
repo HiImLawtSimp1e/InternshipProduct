@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.Entities;
+using Service.DTOs.RequestDTOs.VoucherDTO;
 using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Service.Profiles
     {
         public VoucherProfile() 
         {
+            //Map DTO to Entity
+            CreateMap<AddVoucherDTO, Voucher>();
+            CreateMap<UpdateVoucherDTO, Voucher>();
             //Map Entity to DTO
             CreateMap<Voucher, CustomerVoucherResponseDTO>();
         }
