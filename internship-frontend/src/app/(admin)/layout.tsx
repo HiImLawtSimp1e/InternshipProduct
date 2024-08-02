@@ -24,9 +24,6 @@ const RootLayout: React.FC<RootLayoutProps> = ({
             <Sidebar />
           </div>
           <div className="basis-4/5 bg-gray-800 m-5 rounded-md">
-            <div className="m-4">
-              <Navbar />
-            </div>
             <div className="mx-6 my-8 min-h-[100vh]">{children}</div>
             <div className="mx-6 my-8">
               <Footer />

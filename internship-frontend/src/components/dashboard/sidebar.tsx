@@ -14,6 +14,7 @@ import {
   MdOutlinePostAdd,
   MdDvr,
   MdArticle,
+  MdAirplaneTicket
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
@@ -73,6 +74,11 @@ const Sidebar = () => {
           title: "Posts",
           path: "/dashboard/posts",
           icon: <MdOutlinePostAdd />,
+        },
+        {
+          title: "Vouchers",
+          path: "/dashboard/vouchers",
+          icon: <MdAirplaneTicket />,
         },
       ],
     },
