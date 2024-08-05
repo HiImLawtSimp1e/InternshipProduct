@@ -9,6 +9,7 @@ namespace Service.DTOs.RequestDTOs.AccountDTO
 {
     public class UpdateInfoAccountDTO
     {
+        [Required(ErrorMessage = "FullName is required"), MinLength(6, ErrorMessage = "FullName need to at least 6 characters"), StringLength(50, ErrorMessage = "FullName can't longer than 50 characters")]
         public string FullName { get; set; } = string.Empty;
         [Required(ErrorMessage = "Email is required"), EmailAddress(ErrorMessage = "Email is not valid")]
         public string Email { get; set; } = string.Empty;

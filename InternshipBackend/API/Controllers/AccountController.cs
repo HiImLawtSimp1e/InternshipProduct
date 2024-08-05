@@ -1,15 +1,18 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.AccountDTO;
 using Service.Models;
 using Service.Services.AccountService;
+using System.Data;
 using System.Security.Claims;
 
 namespace API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AccountController : ControllerBase
     {
         private readonly IAccountService _service;

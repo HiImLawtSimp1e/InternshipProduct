@@ -41,7 +41,8 @@ namespace Service.Services.AccountService
             {
                 var accounts = await _context.Accounts
                    .Where(a => !a.Deleted)
-                   .OrderByDescending(a => a.ModifiedAt)
+                   .OrderByDescending(a => a.Role.RoleName == "Admin")
+                   .ThenByDescending(a => a.ModifiedAt)
                    .Skip((page - 1) * (int)pageResults)
                    .Take((int)pageResults)
                    .Include(a => a.Role)
@@ -271,6 +272,7 @@ namespace Service.Services.AccountService
         {
             var account = await _context.Accounts
                                       .Where(a => !a.Deleted)
+                                      .Include(a => a.Role)
                                       .FirstOrDefaultAsync(a => a.Id == accountId);
             if(account == null)
             {
@@ -280,6 +282,16 @@ namespace Service.Services.AccountService
                     Message = "Cannot find account"
                 };
             }
+
+            if(account.Role.RoleName == "Admin")
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Cannot delete admin account"
+                };
+            }
+
             account.Deleted = true;
             await _context.SaveChangesAsync();
             return new ServiceResponse<bool>
