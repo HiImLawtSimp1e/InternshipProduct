@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import {
   MdDashboard,
@@ -6,18 +8,17 @@ import {
   MdWork,
   MdAnalytics,
   MdPeople,
-  MdOutlineSettings,
-  MdHelpCenter,
   MdLogout,
   MdStorage,
   MdCategory,
   MdOutlinePostAdd,
   MdDvr,
   MdArticle,
-  MdAirplaneTicket
+  MdAirplaneTicket,
 } from "react-icons/md";
 import MenuLink from "./menu-link";
 import { ReactNode } from "react";
+import { setLogoutPublic } from "@/services/auth-service/auth-service";
 
 interface MenuCategory {
   title: string;
@@ -31,6 +32,13 @@ interface MenuItem {
 }
 
 const Sidebar = () => {
+  const handleLogout = () => {
+    setLogoutPublic();
+    if (typeof window !== "undefined") {
+      window.location.reload();
+    }
+  };
+
   const menuItems: MenuCategory[] = [
     {
       title: "Pages",
@@ -102,21 +110,6 @@ const Sidebar = () => {
         },
       ],
     },
-    {
-      title: "User",
-      list: [
-        {
-          title: "Settings",
-          path: "/dashboard/settings",
-          icon: <MdOutlineSettings />,
-        },
-        {
-          title: "Help",
-          path: "/dashboard/help",
-          icon: <MdHelpCenter />,
-        },
-      ],
-    },
   ];
   return (
     <div className="sticky top-10">
@@ -145,12 +138,19 @@ const Sidebar = () => {
           </li>
         ))}
       </ul>
-      <form className="mx-2 pb-2">
-        <button className="p-5 w-full flex items-center gap-2 my-1 rounded-lg hover:bg-gray-700">
+      <span className="px-5 text-gray-500 font-bold text-xs my-2 block">
+        User
+      </span>
+      <div className="mx-2">
+        <button
+          onClick={handleLogout}
+          type="submit"
+          className="p-5 w-full flex items-center gap-2 my-1 rounded-lg hover:bg-gray-700"
+        >
           <MdLogout />
           Logout
         </button>
-      </form>
+      </div>
     </div>
   );
 };

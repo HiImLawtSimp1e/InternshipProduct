@@ -2,7 +2,6 @@
 
 import { customerLoginAction } from "@/action/accountAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { decodeSearchParam } from "@/lib/decode/decode";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
@@ -11,6 +10,7 @@ import Link from "next/link";
 import Image from "next/image";
 import GoogleSvg from "../ui/svg/google-svg";
 import GithubSvg from "../ui/svg/github-svg";
+import { decodeSearchParam } from "@/lib/decode/decodeSearchParam";
 
 interface IProps {
   redirectUrl: string | null;
