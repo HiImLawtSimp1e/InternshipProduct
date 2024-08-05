@@ -1,6 +1,10 @@
 import OrderList from "@/components/dashboard/order/order-list";
+import { cookies as nextCookies } from "next/headers";
 
 const Orders = async ({ params }: { params: { page?: number } }) => {
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const { page } = params;
   let url = "";
   if (page == null || page <= 0) {
@@ -10,6 +14,9 @@ const Orders = async ({ params }: { params: { page?: number } }) => {
   }
   const res = await fetch(url, {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // header Authorization
+    },
     cache: "no-store",
   });
 

@@ -29,6 +29,7 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
             <th className="px-4 py-2">Invoice Code</th>
             <th className="px-4 py-2">State</th>
             <th className="px-4 py-2">Order Date</th>
+            <th className="px-4 py-2">Discount</th>
             <th className="px-4 py-2">Total Amount</th>
             <th className="px-4 py-2"></th>
           </tr>
@@ -48,7 +49,10 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
                 />
               </td>
               <td className="px-4 py-2">{formatDate(order.createdAt)}</td>
-              <td className="px-4 py-2">{formatPrice(order.totalPrice)}</td>
+              <td className="px-4 py-2">{formatPrice(order.discountValue)}</td>
+              <td className="px-4 py-2">
+                {formatPrice(order.totalPrice - order.discountValue)}
+              </td>
               <td className="px-4 py-2">
                 <Link href={`/order-history/${order.id}`}>
                   <button className="m-1 px-5 py-2 bg-lime-600 text-white rounded">
