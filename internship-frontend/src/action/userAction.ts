@@ -5,6 +5,7 @@ import {
   validateUpdateUser,
 } from "@/lib/validation/validateUser";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 interface AddUserFormData {
   accountName: string;
@@ -59,11 +60,18 @@ export const createUser = async (
     roleId,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch("http://localhost:5000/api/Account/admin", {
       method: "POST",
       body: JSON.stringify(userData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -117,11 +125,18 @@ export const updateUser = async (prevState: FormState, formData: FormData) => {
     isActive,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(`http://localhost:5000/api/Account/admin/${id}`, {
       method: "PUT",
       body: JSON.stringify(userData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -159,9 +174,16 @@ export const updateUser = async (prevState: FormState, formData: FormData) => {
 export const deleteUser = async (prevState: FormState, formData: FormData) => {
   const id = formData.get("id") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(`http://localhost:5000/api/Account/admin/${id}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const responseData: ApiResponse<string> = await res.json();

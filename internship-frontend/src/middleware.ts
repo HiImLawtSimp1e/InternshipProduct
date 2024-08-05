@@ -13,12 +13,19 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/login/admin", request.url));
     }
 
-    if (isAccess !== "Employee" && isAccess !== "Admin") {
+    if (request.nextUrl.pathname.startsWith("/dashboard/users")) {
+      if (isAccess !== "Admin") {
+        return NextResponse.rewrite(
+          new URL("/dashboard/forbidden", request.url)
+        );
+      }
+    } else if (isAccess !== "Employee" && isAccess !== "Admin") {
       return NextResponse.redirect(new URL("/login/admin", request.url));
     }
 
     return NextResponse.next();
   }
+
   if (
     request.nextUrl.pathname.startsWith("/order-history") ||
     request.nextUrl.pathname.startsWith("/cart") ||

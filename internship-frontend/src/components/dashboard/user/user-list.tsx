@@ -47,7 +47,7 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
 
   useEffect(() => {
     if (formState.errors.length > 0 && !toastDisplayed) {
-      toast.error("Deleted user failed!");
+      toast.error(formState.errors[0]);
       setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
     }
     if (formState.success) {
@@ -128,7 +128,14 @@ const UserList = ({ users, pages, currentPage }: IProps) => {
                   </Link>
                   <form onSubmit={handleSubmit}>
                     <input type="hidden" name="id" value={user.id} />
-                    <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
+                    <button
+                      className={`m-1 px-5 py-2 bg-red-500 text-white rounded ${
+                        user.role.roleName === "Admin"
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
+                      disabled={user.role.roleName === "Admin"}
+                    >
                       Delete
                     </button>
                   </form>

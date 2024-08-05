@@ -1,6 +1,10 @@
 import UserList from "@/components/dashboard/user/user-list";
+import { cookies as nextCookies } from "next/headers";
 
 const Users = async ({ params }: { params: { page?: number } }) => {
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const { page } = params;
   let url = "";
 
@@ -12,6 +16,9 @@ const Users = async ({ params }: { params: { page?: number } }) => {
 
   const res = await fetch(url, {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // header Authorization
+    },
   });
 
   const responseData: ApiResponse<PagingParams<IUser[]>> = await res.json();
