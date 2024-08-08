@@ -105,17 +105,20 @@ const UpdateUserForm = ({ user }: IProps) => {
         onChange={handleChange}
         required
       />
-      <SelectField
-        label="Is Active"
-        id="isActive"
-        name="isActive"
-        value={formData.isActive.toString()}
-        onChange={handleChange}
-        options={[
-          { label: "Yes", value: "true" },
-          { label: "No", value: "false" },
-        ]}
-      />
+      <div className={`${formData.role.roleName === "Admin" ? "hidden" : ""}`}>
+        <SelectField
+          label="Is Active"
+          id="isActive"
+          name="isActive"
+          value={formData.isActive.toString()}
+          onChange={handleChange}
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" },
+          ]}
+        />
+      </div>
+
       {formState.errors.length > 0 && (
         <ul>
           {formState.errors.map((error, index) => (
