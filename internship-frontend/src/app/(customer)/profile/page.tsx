@@ -10,7 +10,7 @@ const Profile = async () => {
     headers: {
       Authorization: `Bearer ${token}`, // Thêm header Authorization
     },
-    next: { tags: ["shoppingCart"] },
+    next: { tags: ["addressList"] },
   });
 
   const responseData: ApiResponse<PagingParams<IAddress[]>> = await res.json();

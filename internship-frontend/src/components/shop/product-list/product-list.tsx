@@ -17,7 +17,7 @@ const ShopProductList = ({
   pageSize,
 }: IProps) => {
   return (
-    <div>
+    <div className="">
       <div className="mt-12 flex flex-wrap gap-4">
         {products.map((product: IProduct) => (
           <div

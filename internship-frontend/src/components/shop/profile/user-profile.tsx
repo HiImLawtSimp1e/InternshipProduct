@@ -118,12 +118,16 @@ const UserProfile = ({ addresses, pages, currentPage, pageSize }: IProps) => {
                 </div>
               </dl>
             </div>
-            <div className="flex items-center justify-end">
+            <div className="mx-2 flex items-center justify-end">
               <form onSubmit={handleSubmit}>
                 <input type="hidden" name="id" value={address.id} />
                 <button
-                  type="submit"
-                  className="mx-4 p-2 mb-5 bg-red-600 text-white rounded"
+                  className={`m-1 px-5 py-2 bg-red-500 text-white rounded ${
+                    address.isMain
+                      ? "opacity-50 cursor-not-allowed"
+                      : "cursor-pointer"
+                  }`}
+                  disabled={address.isMain}
                 >
                   Delete
                 </button>
