@@ -25,7 +25,6 @@ export const customerLoginAction = async (
   //get value from formData
   const accountName = formData.get("accountName") as string;
   const password = formData.get("password") as string;
-  const loginData: LoginFormData = { accountName, password };
 
   //client validation
   const [errors, isValid] = validateLogin(accountName, password);
@@ -34,6 +33,8 @@ export const customerLoginAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  const loginData: LoginFormData = { accountName, password };
 
   //fetch api [POST] /Auth/login
   const res = await fetch("http://localhost:5000/api/Auth/login", {
@@ -63,7 +64,6 @@ export const adminLoginAction = async (
   //get value from formData
   const accountName = formData.get("accountName") as string;
   const password = formData.get("password") as string;
-  const loginData: LoginFormData = { accountName, password };
 
   //client validation
   const [errors, isValid] = validateLogin(accountName, password);
@@ -72,6 +72,8 @@ export const adminLoginAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  const loginData: LoginFormData = { accountName, password };
 
   //fetch api [POST] /Auth/admin/login
   const res = await fetch("http://localhost:5000/api/Auth/admin/login", {
@@ -107,16 +109,6 @@ export const registerAction = async (
   const phone = formData.get("phone") as string;
   const address = formData.get("address") as string;
 
-  const registerData: RegisterFormData = {
-    accountName,
-    password,
-    confirmPassword,
-    fullName,
-    email,
-    phone,
-    address,
-  };
-
   //client validation
   const [errors, isValid] = validateRegister(
     accountName,
@@ -132,6 +124,16 @@ export const registerAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  const registerData: RegisterFormData = {
+    accountName,
+    password,
+    confirmPassword,
+    fullName,
+    email,
+    phone,
+    address,
+  };
 
   //fetch api [POST] /Auth/register
   const res = await fetch("http://localhost:5000/api/Auth/register", {
