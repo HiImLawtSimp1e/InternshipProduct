@@ -227,6 +227,10 @@ namespace Service.Services.OrderService
                 };
             }
 
+            var address = await _context.Addresses
+                                      .Where(a => a.IsMain)
+                                      .FirstOrDefaultAsync(a => a.CustomerId == customer.Id);
+
             var cartItem = (await _cartService.GetCartItems()).Data;
             if(cartItem == null || cartItem.Count() == 0)
             {
@@ -269,10 +273,10 @@ namespace Service.Services.OrderService
                 InvoiceCode = GenerateInvoiceCode(),
                 TotalPrice = totalAmount,
                 OrderItems = orderItems,
-                FullName = customer.FullName,
-                Email = customer.Email,
-                Address = customer.Address,
-                Phone = customer.Phone,
+                FullName = address.FullName,
+                Email = address.Email,
+                Address = address.Address,
+                Phone = address.Phone,
             };
 
             if(voucherId != null)

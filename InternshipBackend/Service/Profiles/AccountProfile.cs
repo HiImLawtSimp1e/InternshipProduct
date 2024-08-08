@@ -30,8 +30,8 @@ namespace Service.Profiles
                 .ForMember(dest => dest.IsActive, opt => opt.Ignore())
                 .ForMember(dest => dest.Role, opt => opt.Ignore());
 
-            // Mapping Customer Entity to DTO
-            CreateMap<Customer, AccountResponseDTO>()
+            // Mapping CustomerAddress Entity to DTO
+            CreateMap<CustomerAddress, AccountResponseDTO>()
                 .ForMember(dest => dest.Id, opt => opt.Ignore())
                 .ForMember(dest => dest.AccountName, opt => opt.Ignore())
                 .ForMember(dest => dest.IsActive, opt => opt.Ignore())

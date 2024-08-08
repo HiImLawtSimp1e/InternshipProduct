@@ -91,7 +91,20 @@ namespace Service.Services.AccountService
                 var customer = await _context.Customers
                                            .FirstOrDefaultAsync(c => c.AccountId == accountId);
 
-                _mapper.Map(customer, result); // Mapping Customer Entity => result(DTO)
+                if(customer == null)
+                {
+                    return new ServiceResponse<AccountResponseDTO>
+                    {
+                        Success = false,
+                        Message = "Cannot find customer"
+                    };
+                }
+
+                var customerAddress = await _context.Addresses
+                                                   .Where(a => a.IsMain)
+                                                   .FirstOrDefaultAsync(a => a.CustomerId == customer.Id);
+
+                _mapper.Map(customerAddress, result); // Mapping CustomerAddress Entity => result(DTO)
             }
             if (account.Role.RoleName == "Admin" || account.Role.RoleName == "Employee")
             {
@@ -145,14 +158,19 @@ namespace Service.Services.AccountService
 
                 if(role.RoleName == "Customer")
                 {
-                    // set customer's information
-                    var customer = new Customer
+                    var address = new CustomerAddress
                     {
                         FullName = newAccount.FullName,
                         Email = newAccount.Email,
                         Phone = newAccount.Phone,
                         Address = newAccount.Address,
                     };
+                    // set customer's information
+                    var customer = new Customer
+                    {
+                        Addresses = new List<CustomerAddress>()
+                    };
+                    customer.Addresses.Add(address);
 
                     var customerAccount = new Account
                     {
@@ -227,18 +245,46 @@ namespace Service.Services.AccountService
 
                 if (dbAccount.Role.RoleName == "Customer")
                 {
-                   var dbCustomer = await _context.Customers
-                                                 .FirstOrDefaultAsync(e => e.AccountId == accountId);
+                    var dbCustomer = await _context.Customers
+                                                 .FirstOrDefaultAsync(c => c.AccountId == accountId);
+                    if (dbCustomer == null)
+                    {
+                        return new ServiceResponse<bool>
+                        {
+                            Success = false,
+                            Message = "Not found customer"
+                        };
+                    }
+                    var dbAddress = await _context.Addresses
+                                                 .Where(a => a.IsMain)
+                                                 .FirstOrDefaultAsync(a => a.CustomerId == dbCustomer.Id);
+                    if (dbAddress == null)
+                    {
+                        return new ServiceResponse<bool>
+                        {
+                            Success = false,
+                            Message = "Not found customer address"
+                        };
+                    }
+
                     // set employee's information
-                    dbCustomer.FullName = updateInfoAccount.FullName;
-                    dbCustomer.Email = updateInfoAccount.Email;
-                    dbCustomer.Phone = updateInfoAccount.Phone;
-                    dbCustomer.Address = updateInfoAccount.Address;
+                    dbAddress.FullName = updateInfoAccount.FullName;
+                    dbAddress.Email = updateInfoAccount.Email;
+                    dbAddress.Phone = updateInfoAccount.Phone;
+                    dbAddress.Address = updateInfoAccount.Address;
 
                     dbAccount.IsActive = updateInfoAccount.IsActive;
                 }
                 else if (dbAccount.Role.RoleName == "Admin" || dbAccount.Role.RoleName == "Employee")
                 {
+                    if(dbAccount.Role.RoleName == "Admin" && !updateInfoAccount.IsActive)
+                    {
+                        return new ServiceResponse<bool>
+                        {
+                            Success = false,
+                            Message = "Cannot unactive admin account"
+                        };
+                    }
                     var dbEmployee = await _context.Employees
                                                   .FirstOrDefaultAsync(e => e.AccountId == accountId);
                     // set employee's information

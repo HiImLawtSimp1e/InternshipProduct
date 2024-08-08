@@ -89,6 +89,14 @@ namespace Service.Services.AuthService
                     Message = "Wrong password"
                 };
             }
+            else if (!account.IsActive)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Your account is locked"
+                };
+            }
             else if (account.Role.RoleName != "Customer")
             {
                 return new ServiceResponse<string>
@@ -128,6 +136,14 @@ namespace Service.Services.AuthService
                 {
                     Success = false,
                     Message = "Wrong password"
+                };
+            }
+            else if (!account.IsActive)
+            {
+                return new ServiceResponse<string>
+                {
+                    Success = false,
+                    Message = "Your account is locked"
                 };
             }
             else if (account.Role.RoleName != "Admin" && account.Role.RoleName != "Employee")
@@ -173,14 +189,20 @@ namespace Service.Services.AuthService
                     };
                 }
 
-                // set customer's information
-                var customer = new Customer
+                var address = new CustomerAddress
                 {
                     FullName = registerDTO.FullName,
                     Email = registerDTO.Email,
                     Phone = registerDTO.Phone,
                     Address = registerDTO.Address,
                 };
+
+                // set customer's information
+                var customer = new Customer
+                {
+                    Addresses = new List<CustomerAddress>()
+                };
+                customer.Addresses.Add(address);
 
                 var account = new Account
                 {

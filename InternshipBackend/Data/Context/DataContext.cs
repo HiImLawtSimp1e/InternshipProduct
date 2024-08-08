@@ -60,6 +60,7 @@ namespace Data.Context
         public DbSet<Information> Information { get; set; }
         public DbSet<Account> Accounts { get; set; } 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<CustomerAddress> Addresses { get; set; }
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<ProductImage> ProductImages { get; set; }

@@ -37,7 +37,7 @@ namespace Data.Initialization
             modelBuilder.Entity<Account>().HasData(
                 new Account
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("3aec8f0b-3a6a-4b5d-8a3a-348ae529001a"),
                     AccountName = "admin@example.com",
                     PasswordHash = passwordHash1,
                     PasswordSalt = passwordSalt1,
@@ -53,24 +53,49 @@ namespace Data.Initialization
                 }, 
                 new Account
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("3141069d-f4f3-475c-8efc-99e1b4c3e627"),
                     AccountName = "employee@example.com",
                     PasswordHash = passwordHash3,
                     PasswordSalt = passwordSalt3,
                     RoleId = new Guid("5b3a05b0-c011-4593-abd1-cb2e486f8e43")
                 }
               );
+            modelBuilder.Entity<Employee>().HasData(
+                new Employee
+                {
+                    AccountId = new Guid("3141069d-f4f3-475c-8efc-99e1b4c3e627"),
+                    FullName = "John Admin",
+                    Email = "johnadmin@example.com",
+                    Phone = "1234567891",
+                    Address = "123 Admin St, Washington DC"
+                }, 
+                new Employee
+                {
+                    AccountId = new Guid("3aec8f0b-3a6a-4b5d-8a3a-348ae529001a"),
+                    FullName = "John Employee",
+                    Email = "johnemployee@example.com",
+                    Phone = "1234567892",
+                    Address = "123 Employee St, Washington DC"
+                }
+                );
             modelBuilder.Entity<Customer>().HasData(
                 new Customer
                 {
-                    Id = Guid.NewGuid(),
+                    Id = new Guid("5a479a1f-66f4-4eeb-a35b-06795d562365"),
                     AccountId = new Guid("2b25a754-a50e-4468-942c-d65c0bc2c86f"),
-                    FullName = "John Doe",
-                    Email = "johndoe@example.com",
-                    Phone = "123-456-7890",
-                    Address = "123 Main St"
                 }
               );
+            modelBuilder.Entity<CustomerAddress>().HasData(
+             new CustomerAddress
+             {
+                 Id = Guid.NewGuid(),
+                 CustomerId = new Guid("5a479a1f-66f4-4eeb-a35b-06795d562365"),
+                 FullName = "John Doe",
+                 Email = "johndoe@example.com",
+                 Phone = "1234567890",
+                 Address = "123 Main St"
+             }
+           );
         }
         public static void SeedingData(ModelBuilder modelBuilder)
         {
