@@ -13,10 +13,21 @@ const Carts = async () => {
     next: { tags: ["shoppingCart"] },
   });
 
-  const responseData: ApiResponse<ICartItem[]> = await res.json();
-  const { data, success, message } = responseData;
-  // console.log(responseData);
-  return <ShoppingCart cartItems={data} />;
+  const cartItems: ApiResponse<ICartItem[]> = await res.json();
+  // console.log(response.data);
+
+  const addressRes = await fetch("http://localhost:5000/api/Address/main", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // Thêm header Authorization
+    },
+    next: { tags: ["mainAddress"] },
+  });
+
+  const address: ApiResponse<IAddress> = await addressRes.json();
+  // console.log(response.data);
+
+  return <ShoppingCart cartItems={cartItems.data} address={address.data} />;
 };
 
 const ShoppingCartPage = () => {

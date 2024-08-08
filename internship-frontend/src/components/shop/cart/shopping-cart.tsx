@@ -10,12 +10,14 @@ import { toast } from "react-toastify";
 import { useCartStore } from "@/lib/store/useCartStore";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
 import ShoppingVoucher from "./shopping-voucher";
+import ShoppingCartAddress from "./shoping-cart-address";
 
 interface IProps {
   cartItems: ICartItem[];
+  address: IAddress;
 }
 
-const ShoppingCart = ({ cartItems }: IProps) => {
+const ShoppingCart = ({ cartItems, address }: IProps) => {
   const { clearCart } = useCartStore();
   const { voucher } = useVoucherStore();
 
@@ -74,18 +76,19 @@ const ShoppingCart = ({ cartItems }: IProps) => {
   }, [formState, toastDisplayed]);
 
   return (
-    <div className="h-screen bg-gray-100 pt-20">
+    <div className="h-[150vh] bg-gray-100 pt-20">
       {cartItems?.length >= 1 && (
         <>
           <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
-          <div className="mx-auto max-w-7xl justify-center px-6 md:flex md:space-x-6 xl:px-0">
-            <div className="rounded-lg md:w-2/3">
+          <div className="mx-auto max-w-7xl justify-center px-6 lg:flex lg:space-x-6 xl:px-0">
+            <div className="rounded-lg lg:w-2/3">
               {cartItems?.map((item: ICartItem) => (
                 <ShoppingCartItem key={item.productTypeId} cartItem={item} />
               ))}
             </div>
             {/* Sub total */}
-            <div className="flex flex-col gap-4 md:mt-0 md:w-1/3">
+            <div className="flex flex-col gap-4 lg:mt-0 lg:w-1/3">
+              <ShoppingCartAddress address={address} />
               <div className="h-full rounded-lg border bg-white p-6 shadow-md ">
                 <div className="mb-2 flex justify-between">
                   <p className="text-gray-700">Subtotal:</p>
