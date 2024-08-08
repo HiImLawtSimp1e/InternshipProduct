@@ -27,13 +27,6 @@ export const customerLoginAction = async (
   const password = formData.get("password") as string;
   const loginData: LoginFormData = { accountName, password };
 
-  //fetch api [POST] /Auth/login
-  const res = await fetch("http://localhost:5000/api/Auth/login", {
-    method: "POST",
-    body: JSON.stringify(loginData),
-    headers: { "Content-Type": "application/json" },
-  });
-
   //client validation
   const [errors, isValid] = validateLogin(accountName, password);
 
@@ -41,6 +34,13 @@ export const customerLoginAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  //fetch api [POST] /Auth/login
+  const res = await fetch("http://localhost:5000/api/Auth/login", {
+    method: "POST",
+    body: JSON.stringify(loginData),
+    headers: { "Content-Type": "application/json" },
+  });
 
   const responseData: ApiResponse<string> = await res.json();
   // console.log(responseData);
@@ -65,12 +65,6 @@ export const adminLoginAction = async (
   const password = formData.get("password") as string;
   const loginData: LoginFormData = { accountName, password };
 
-  //fetch api [POST] /Auth/admin/login
-  const res = await fetch("http://localhost:5000/api/Auth/admin/login", {
-    method: "POST",
-    body: JSON.stringify(loginData),
-    headers: { "Content-Type": "application/json" },
-  });
   //client validation
   const [errors, isValid] = validateLogin(accountName, password);
 
@@ -78,6 +72,13 @@ export const adminLoginAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  //fetch api [POST] /Auth/admin/login
+  const res = await fetch("http://localhost:5000/api/Auth/admin/login", {
+    method: "POST",
+    body: JSON.stringify(loginData),
+    headers: { "Content-Type": "application/json" },
+  });
 
   const responseData: ApiResponse<string> = await res.json();
   // console.log(responseData);
@@ -116,13 +117,6 @@ export const registerAction = async (
     address,
   };
 
-  //fetch api [POST] /Auth/register
-  const res = await fetch("http://localhost:5000/api/Auth/register", {
-    method: "POST",
-    body: JSON.stringify(registerData),
-    headers: { "Content-Type": "application/json" },
-  });
-
   //client validation
   const [errors, isValid] = validateRegister(
     accountName,
@@ -138,6 +132,13 @@ export const registerAction = async (
     //console.log(errors);
     return { errors };
   }
+
+  //fetch api [POST] /Auth/register
+  const res = await fetch("http://localhost:5000/api/Auth/register", {
+    method: "POST",
+    body: JSON.stringify(registerData),
+    headers: { "Content-Type": "application/json" },
+  });
 
   const responseData: ApiResponse<string> = await res.json();
   // console.log(responseData);
