@@ -4,7 +4,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import _ from "lodash";
 import { useSearchStore } from "@/lib/store/useSearchStore";
-import Link from "next/link";
 
 const SearchBar = () => {
   const { suggestions, getSuggestions, clearSuggestions } = useSearchStore();

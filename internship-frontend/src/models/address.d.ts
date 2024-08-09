@@ -4,5 +4,5 @@ interface IAddress {
   email: string;
   phone: string;
   address: string;
-  isMain: boolean;
+  isMain?: boolean;
 }

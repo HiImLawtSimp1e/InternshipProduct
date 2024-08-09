@@ -26,6 +26,6 @@ interface IOrderItem {
   productTypeName: string;
   price: number;
   originalPrice: number;
-  imageUrl: string;
+  imageUrl?: string;
   quantity: number;
 }
