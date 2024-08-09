@@ -105,7 +105,7 @@ namespace Service.Services.ProductAttributeService
         public async Task<ServiceResponse<PagingParams<List<ProductAttribute>>>> GetProductAttributes(int page)
         {
             var pageResults = 10f;
-            var pageCount = Math.Ceiling(_context.ProductAttributes.Where(p => !p.Deleted).Count() / pageResults);
+            var pageCount = Math.Ceiling(_context.ProductAttributes.Count() / pageResults);
             try
             {
 

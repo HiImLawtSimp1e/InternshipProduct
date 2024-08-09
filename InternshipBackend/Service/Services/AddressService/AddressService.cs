@@ -44,7 +44,7 @@ namespace Service.Services.AddressService
             }
 
             var pageResults = 8f;
-            var pageCount = Math.Ceiling(_context.Orders.Count() / pageResults);
+            var pageCount = Math.Ceiling(_context.Addresses.Where(a => a.CustomerId == customer.Id).Count() / pageResults);
 
             var addresses = await _context.Addresses
                                       .Where(a => a.CustomerId == customer.Id)

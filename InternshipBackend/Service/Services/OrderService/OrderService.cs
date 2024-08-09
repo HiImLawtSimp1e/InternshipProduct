@@ -188,7 +188,7 @@ namespace Service.Services.OrderService
             }
 
             var pageResults = 10f;
-            var pageCount = Math.Ceiling(_context.Orders.Count() / pageResults);
+            var pageCount = Math.Ceiling(_context.Orders.Where(o => o.CustomerId == customer.Id).Count() / pageResults);
 
             var orders = await _context.Orders
                                    .Where(o => o.CustomerId == customer.Id)

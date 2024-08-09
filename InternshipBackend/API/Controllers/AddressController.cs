@@ -21,7 +21,7 @@ namespace API.Controllers
             _service = service;
         }
         [HttpGet()]
-        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerAddress>>>>> GetAddresses(int page)
+        public async Task<ActionResult<ServiceResponse<PagingParams<List<CustomerAddress>>>>> GetAddresses([FromQuery] int page)
         {
             if (page == null || page <= 0)
             {

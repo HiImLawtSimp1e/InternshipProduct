@@ -120,7 +120,7 @@ namespace Service.Services.ProductTypeService
         public async Task<ServiceResponse<PagingParams<List<ProductType>>>> GetProductTypes(int page)
         {
             var pageResults = 10f;
-            var pageCount = Math.Ceiling(_context.ProductTypes.Where(p => !p.Deleted).Count() / pageResults);
+            var pageCount = Math.Ceiling(_context.ProductTypes.Count() / pageResults);
             try
             {
 
