@@ -9,6 +9,7 @@ using Service.DTOs.ResponseDTOs.OrerDetailDTO;
 using Service.Models;
 using Service.Services.AuthService;
 using Service.Services.CartService;
+using Service.Services.OrderCommonService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,13 +22,15 @@ namespace Service.Services.OrderService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IOrderCommonService _orderCommonService;
         private readonly ICartService _cartService;
         private readonly IAuthService _authService;
 
-        public OrderService(DataContext context,IMapper mapper, ICartService cartService, IAuthService authService)
+        public OrderService(DataContext context, IMapper mapper, IOrderCommonService orderCommonService, ICartService cartService, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _orderCommonService = orderCommonService;
             _cartService = cartService;
             _authService = authService;
         }
@@ -245,6 +248,8 @@ namespace Service.Services.OrderService
 
             cartItem.ForEach(ci => totalAmount += ci.Price * ci.Quantity);
 
+            var invoiceCode = _orderCommonService.GenerateInvoiceCode();
+
             var orderItems = new List<OrderItem>();
 
             cartItem.ForEach(ci =>
@@ -270,7 +275,7 @@ namespace Service.Services.OrderService
             var order = new Order
             {
                 CustomerId = customer.Id,
-                InvoiceCode = GenerateInvoiceCode(),
+                InvoiceCode = invoiceCode,
                 TotalPrice = totalAmount,
                 OrderItems = orderItems,
                 FullName = address.FullName,
@@ -292,7 +297,7 @@ namespace Service.Services.OrderService
 
                     if (voucher.MinOrderCondition <= 0 || totalAmount > voucher.MinOrderCondition)
                     {
-                        var discountValue = CaculateDiscountValue(voucher, totalAmount);
+                        var discountValue = _orderCommonService.CalculateDiscountValue(voucher, totalAmount);
                         order.DiscountValue = discountValue;
                         order.VoucherId = voucher.Id;
                         voucher.Quantity -= 1;
@@ -313,6 +318,21 @@ namespace Service.Services.OrderService
 
         public async Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode)
         {
+            var accountId = _authService.GetUserId();
+
+            var customer = await _context.Customers
+                                         .Include(c => c.Cart)
+                                         .FirstOrDefaultAsync(c => c.AccountId == accountId);
+
+            if (customer == null)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "You need to log in"
+                };
+            }
+
             var totalAmount = await _cartService.GetCartTotalAmountAsync();
             if (totalAmount == 0)
             {
@@ -335,7 +355,7 @@ namespace Service.Services.OrderService
                     Message = "Discount code is incorrect or has expired"
                 };
             }
-            else if(IsVoucherUsed(voucher.Id)){
+            else if(_orderCommonService.IsVoucherUsed(voucher.Id, customer.Id)){
                 return new ServiceResponse<CustomerVoucherResponseDTO>
                 {
                     Success = false,
@@ -362,49 +382,6 @@ namespace Service.Services.OrderService
                 };
             }
 
-        }
-
-        //Generate random invoice code
-        private string GenerateInvoiceCode()
-        {
-            return $"INV-{DateTime.Now:yyyyMMddHHmmssfff}-{new Random().Next(1000, 9999)}";
-        }
-
-        //Logical: Each account is allowed to use one voucher code only once
-        private bool IsVoucherUsed(Guid voucherId)
-        {
-            var accountId = _authService.GetUserId();
-            var customer = _context.Customers.FirstOrDefault(c => c.AccountId == accountId);
-            if (customer == null)
-            {
-                return true;
-            }
-            var isUsedVoucher = _context.Orders.FirstOrDefault(o => o.CustomerId == customer.Id && o.VoucherId == voucherId);
-            return isUsedVoucher != null;
-        }
-
-        private int CaculateDiscountValue(Voucher voucher, int totalAmount)
-        {
-            int result = 0;
-            if(voucher.IsDiscountPercent)
-            {
-                var discountValue = (int)(totalAmount * (voucher.DiscountValue / 100));
-
-                // MaxDiscountValue = 0 meaning max discount value doesn't exist
-                if (voucher.MaxDiscountValue > 0)
-                {
-                    result = (discountValue > voucher.MaxDiscountValue) ? voucher.MaxDiscountValue : discountValue;
-                }
-                else
-                {
-                    result = discountValue;
-                }
-            }
-            else
-            {
-                result = (int)voucher.DiscountValue;
-            }
-            return result;
         }
     }
 }

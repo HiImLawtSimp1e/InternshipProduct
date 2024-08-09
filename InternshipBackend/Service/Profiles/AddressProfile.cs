@@ -13,6 +13,7 @@ namespace Service.Profiles
     {
         public AddressProfile() 
         {
+            //Address Manager
             CreateMap<CreateAddressDTO, CustomerAddress>();
             CreateMap<UpdateAddressDTO, CustomerAddress>();
         }

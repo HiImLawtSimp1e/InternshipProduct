@@ -23,6 +23,7 @@ namespace Service.Services.VoucherService
             _context = context;
             _mapper = mapper;
         }
+
         public async Task<ServiceResponse<PagingParams<List<Voucher>>>> GetVouchers(int page, double pageResults)
         {
             var pageCount = Math.Ceiling(_context.Vouchers.Count() / pageResults); 
