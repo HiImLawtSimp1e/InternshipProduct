@@ -20,11 +20,14 @@ const CounterSalesOrderItem = ({ item }: IProps) => {
     productTypeId: string,
     quantity: number
   ) => {
+    if (quantity < 1) {
+      quantity = 1;
+    }
     changeQuantity(productId, productTypeId, quantity);
   };
 
   return (
-    <div className="justify-between rounded-lg bg-gray-600 p-6 shadow-md sm:flex sm:justify-start">
+    <div className="justify-between rounded-lg bg-gray-500 p-6 shadow-md sm:flex sm:justify-start">
       <div className="w-full sm:w-40 relative">
         <Image
           src={item?.imageUrl || "/noavatar.png"}

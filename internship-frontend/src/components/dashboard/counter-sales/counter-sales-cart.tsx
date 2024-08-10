@@ -4,43 +4,57 @@ import { useCounterSaleStore } from "@/lib/store/useCounterSaleStore";
 import CounterSalesOrderItem from "./counter-sales-order-item";
 import { formatPrice } from "@/lib/format/format";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
+import { Suspense, useEffect, useState } from "react";
+import Loading from "@/components/ui/loading";
 
 const CounterSaleCart = () => {
   const { orderItems } = useCounterSaleStore();
   const { voucher } = useVoucherStore();
 
-  let discount: number = 0;
   const totalAmount = orderItems.reduce(
     (accumulator, currentValue) =>
       accumulator + currentValue.price * currentValue.quantity,
     0
   );
 
-  if (voucher != null) {
-    if (totalAmount > voucher.minOrderCondition) {
-      if (voucher.isDiscountPercent) {
-        const estimateValue = totalAmount * (voucher.discountValue / 100);
-        discount =
-          estimateValue > voucher.maxDiscountValue
-            ? voucher.maxDiscountValue
-            : estimateValue;
-      } else {
-        discount = voucher.discountValue;
-      }
-    }
+  let discount: number = 0;
+  if (voucher && totalAmount > voucher.minOrderCondition) {
+    discount = voucher.isDiscountPercent
+      ? Math.min(
+          totalAmount * (voucher.discountValue / 100),
+          voucher.maxDiscountValue
+        )
+      : voucher.discountValue;
   }
 
-  const handleSubmit = (orderItems: IOrderItem[]) => {};
+  const handleSubmit = (orderItems: IOrderItem[]) => {
+    // Handle submit logic
+  };
+
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
-    <div className="h-[150vh] pt-20">
-      {orderItems?.length >= 1 && (
-        <>
-          <div className="flex flex-col gap-1">
-            {orderItems?.map((item: IOrderItem, index: number) => (
-              <CounterSalesOrderItem key={index} item={item} />
-            ))}
-            <div className="mt-6 h-full rounded-lg border p-6 shadow-md text-gray-100">
+    <div className="h-[150vh]">
+      <div className="flex flex-col gap-4">
+        {orderItems.length > 0 ? (
+          <>
+            <div className="p-5 flex flex-col gap-1 rounded-lg bg-gray-600">
+              {isClient ? (
+                orderItems.map((item: IOrderItem, index: number) => (
+                  <Suspense key={index} fallback={<Loading />}>
+                    <CounterSalesOrderItem item={item} />
+                  </Suspense>
+                ))
+              ) : (
+                <Loading />
+              )}
+            </div>
+
+            <div className="h-full p-6 shadow-md text-gray-100 rounded-lg bg-gray-600">
               <div className="mb-2 flex justify-between">
                 <p>Subtotal:</p>
                 <p>{formatPrice(totalAmount)}</p>
@@ -74,16 +88,14 @@ const CounterSaleCart = () => {
                   Check out
                 </button>
               </form>
-              {/* <CounterSaleVoucher /> */}
             </div>
-          </div>
-        </>
-      )}
-      {orderItems?.length == 0 && (
-        <h1 className="mb-10 text-center text-gray-600 text-2xl font-bold opacity-80">
-          Empty Cart
-        </h1>
-      )}
+          </>
+        ) : (
+          <h1 className="mb-10 text-center text-gray-600 text-2xl font-bold opacity-80">
+            Empty Cart
+          </h1>
+        )}
+      </div>
     </div>
   );
 };

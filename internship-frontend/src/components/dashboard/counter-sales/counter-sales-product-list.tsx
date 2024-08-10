@@ -6,9 +6,11 @@ import _ from "lodash";
 import { ChangeEvent, useCallback, useRef } from "react";
 import { MdSearch } from "react-icons/md";
 import Image from "next/image";
+import { useSearchProductStore } from "@/lib/store/useSearchProductStore";
 
 const CounterSalesProductList = () => {
-  const { products, getProducts, addOrderItem } = useCounterSaleStore();
+  const { products, getProducts } = useSearchProductStore();
+  const { addOrderItem } = useCounterSaleStore();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -27,7 +29,7 @@ const CounterSalesProductList = () => {
     addOrderItem(orderItem);
   };
   return (
-    <div className="bg-gray-800 p-5 rounded-lg">
+    <div className="p-5 rounded-lg bg-gray-500">
       <div className="mb-2 p-2 flex items-center gap-2 bg-gray-700 rounded-lg w-max">
         <MdSearch />
         <input
@@ -41,7 +43,7 @@ const CounterSalesProductList = () => {
       </div>
       {products.length > 0 && (
         <table className="w-full text-left text-gray-400">
-          <thead className="bg-gray-700 text-gray-400 uppercase">
+          <thead className="bg-gray-600 text-gray-400 uppercase">
             <tr>
               <th className="px-4 py-2">Title</th>
               <th className="px-4 py-2">Variant</th>
