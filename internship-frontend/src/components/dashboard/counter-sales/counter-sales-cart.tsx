@@ -6,10 +6,24 @@ import { formatPrice } from "@/lib/format/format";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
 import { Suspense, useEffect, useState } from "react";
 import Loading from "@/components/ui/loading";
+import { useSearchAddressStore } from "@/lib/store/useSearchAddressStore";
+import { getAuthPublic } from "@/services/auth-service/auth-service";
+import { toast } from "react-toastify";
+import { validateAddress } from "@/lib/validation/validateProfile";
+
+interface IOrderFormData {
+  fullName: string;
+  email: string;
+  phone: string;
+  address: string;
+  orderItems: IOrderItem[];
+}
 
 const CounterSaleCart = () => {
   const { orderItems } = useCounterSaleStore();
+  const { address } = useSearchAddressStore();
   const { voucher } = useVoucherStore();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const totalAmount = orderItems.reduce(
     (accumulator, currentValue) =>
@@ -27,8 +41,100 @@ const CounterSaleCart = () => {
       : voucher.discountValue;
   }
 
-  const handleSubmit = (orderItems: IOrderItem[]) => {
-    // Handle submit logic
+  // Hàm tạo đơn hàng
+  const createOrder = async (): Promise<FormState | undefined> => {
+    const authToken = getAuthPublic();
+    if (!authToken) {
+      return { errors: ["You need to log in"] };
+    }
+
+    setIsLoading(true);
+
+    if (address === null) {
+      setIsLoading(false);
+      return { errors: ["Customer information is required"] };
+    }
+
+    //client validation
+    const [errors, isValid] = validateAddress(
+      address.fullName,
+      address.email,
+      address.phone,
+      address.address
+    );
+
+    if (!isValid) {
+      //console.log(errors);
+      return { errors };
+    }
+
+    try {
+      const orderData: IOrderFormData = {
+        fullName: address.fullName,
+        email: address.email,
+        phone: address.phone,
+        address: address.address,
+        orderItems: orderItems,
+      };
+
+      const res = await fetch(
+        `http://localhost:5000/api/OrderCounter/place-order`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${authToken}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+      //console.log(res);
+
+      const responseData: ApiResponse<boolean> = await res.json();
+
+      //console.log(responseData);
+
+      const { success, message } = responseData;
+
+      if (success) {
+        // If the response is success and success is true
+        sessionStorage.removeItem("orderItems");
+        sessionStorage.removeItem("orderAddress");
+        setIsLoading(false);
+        return { success: true, errors: [] };
+      } else {
+        setIsLoading(false);
+        return { errors: [message] };
+      }
+    } catch (err) {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    if (address === null) {
+      toast.error("Customer information is required");
+      return;
+    }
+
+    try {
+      const result = await createOrder();
+
+      if (result?.success) {
+        toast.success("Create new order successfully");
+        if (typeof window !== "undefined") {
+          window.location.reload(); // Reload the page to clear the form or update the UI
+        }
+      } else {
+        // Nếu không thành công, hiện thông báo lỗi
+        const errorMessage = result?.errors?.[0] || "Failed to create order";
+        toast.error(errorMessage);
+      }
+    } catch (error) {
+      toast.error("An unexpected error occurred while creating the order.");
+    }
   };
 
   const [isClient, setIsClient] = useState(false);
@@ -75,17 +181,12 @@ const CounterSaleCart = () => {
                   <p className="text-sm text-gray-300">including VAT</p>
                 </div>
               </div>
-              <form
-                onSubmit={(event: React.FormEvent<HTMLFormElement>) => {
-                  event.preventDefault();
-                  handleSubmit(orderItems);
-                }}
-              >
+              <form onSubmit={handleSubmit}>
                 <button
                   type="submit"
                   className="mt-6 w-full rounded-md bg-blue-500 text-2xl py-4 font-medium text-blue-50 md:text-lg md:py-2 hover:bg-blue-600"
                 >
-                  Check out
+                  {isLoading ? "Loading..." : "Create Order"}
                 </button>
               </form>
             </div>
