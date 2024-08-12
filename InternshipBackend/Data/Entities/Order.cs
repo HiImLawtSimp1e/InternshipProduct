@@ -11,7 +11,6 @@ namespace Data.Entities
     public class Order : BaseEntities
     {
         public Guid Id { get; set; }
-        public Guid CustomerId { get; set; }
         public string InvoiceCode { get; set; } = string.Empty;
         public int TotalPrice { get; set; } = 0;
         public OrderState State { get; set; } = OrderState.Pending;
@@ -20,6 +19,7 @@ namespace Data.Entities
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int DiscountValue { get; set; } = 0;
+        public Guid? CustomerId { get; set; }
         public Guid? VoucherId { get; set; }
         public List<OrderItem>? OrderItems { get; set; }
     }

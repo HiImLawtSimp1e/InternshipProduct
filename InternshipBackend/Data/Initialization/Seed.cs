@@ -16,6 +16,7 @@ namespace Data.Initialization
             CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash1, out byte[] passwordSalt1);
             CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash2, out byte[] passwordSalt2);
             CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash3, out byte[] passwordSalt3);
+            CryptographyHelper.CreatePasswordHash("123456", out byte[] passwordHash4, out byte[] passwordSalt4);
 
             modelBuilder.Entity<Role>().HasData(
                 new Role
@@ -50,7 +51,15 @@ namespace Data.Initialization
                     PasswordHash = passwordHash2,
                     PasswordSalt = passwordSalt2,
                     RoleId = new Guid("9ebee0d5-323a-4052-af12-827a9e856639")
-                }, 
+                },
+                new Account
+                {
+                    Id = new Guid("7ec12f93-0f19-45f9-a17e-70e549866b91"),
+                    AccountName = "customer2@example.com",
+                    PasswordHash = passwordHash4,
+                    PasswordSalt = passwordSalt4,
+                    RoleId = new Guid("9ebee0d5-323a-4052-af12-827a9e856639")
+                },
                 new Account
                 {
                     Id = new Guid("3141069d-f4f3-475c-8efc-99e1b4c3e627"),
@@ -83,6 +92,11 @@ namespace Data.Initialization
                 {
                     Id = new Guid("5a479a1f-66f4-4eeb-a35b-06795d562365"),
                     AccountId = new Guid("2b25a754-a50e-4468-942c-d65c0bc2c86f"),
+                }, 
+                new Customer
+                {
+                    Id = new Guid("0fef15f5-3a3c-4067-8409-e74d2042b9bf"),
+                    AccountId = new Guid("7ec12f93-0f19-45f9-a17e-70e549866b91"),
                 }
               );
             modelBuilder.Entity<CustomerAddress>().HasData(
@@ -93,7 +107,38 @@ namespace Data.Initialization
                  FullName = "John Doe",
                  Email = "johndoe@example.com",
                  Phone = "1234567890",
-                 Address = "123 Main St"
+                 Address = "123 Main St",
+                 IsMain = true
+             }, 
+             new CustomerAddress
+             {
+                 Id = Guid.NewGuid(),
+                 CustomerId = new Guid("5a479a1f-66f4-4eeb-a35b-06795d562365"),
+                 FullName = "Jane Smith",
+                 Email = "janesmith@example.com",
+                 Phone = "0987654321",
+                 Address = "456 Elm St",
+                 IsMain = false
+             }, 
+             new CustomerAddress
+             {
+                 Id = Guid.NewGuid(),
+                 CustomerId = new Guid("0fef15f5-3a3c-4067-8409-e74d2042b9bf"),
+                 FullName = "Alice Johnson",
+                 Email = "alicejohnson@example.com",
+                 Phone = "1122334455",
+                 Address = "789 Oak St",
+                 IsMain = true
+             }, 
+             new CustomerAddress
+             {
+                 Id = Guid.NewGuid(),
+                 CustomerId = new Guid("0fef15f5-3a3c-4067-8409-e74d2042b9bf"),
+                 FullName = "Bob Brown",
+                 Email = "bobbrown@example.com",
+                 Phone = "6677889900",
+                 Address = "101 Maple St",
+                 IsMain = false
              }
            );
         }
