@@ -34,6 +34,7 @@ namespace Service.Services.OrderService
             _cartService = cartService;
             _authService = authService;
         }
+        #region GetOrdersInformationService
 
         public async Task<ServiceResponse<PagingParams<List<Order>>>> GetAdminOrders(int page)
         {
@@ -120,6 +121,7 @@ namespace Service.Services.OrderService
                 Phone = order.Phone,
                 InvoiceCode = order.InvoiceCode,
                 OrderCreatedAt = order.CreatedAt,
+                State = order.State,
                 DiscountValue = order.DiscountValue
             };
 
@@ -128,6 +130,9 @@ namespace Service.Services.OrderService
                 Data = orderCustomerInfo
             };
         }
+        #endregion GetOrdersInformation
+
+        #region AdminManagerOrderService
 
         public async Task<ServiceResponse<bool>> UpdateOrderState(Guid orderId, OrderState state)
         {
@@ -174,7 +179,9 @@ namespace Service.Services.OrderService
                 Data = (int)order.State
             };
         }
+        #endregion AdminManagerOrderService
 
+        #region Customers'OrderService
         public async Task<ServiceResponse<PagingParams<List<Order>>>> GetCustomerOrders(int page)
         {
             var accountId = _authService.GetUserId();
@@ -383,5 +390,39 @@ namespace Service.Services.OrderService
             }
 
         }
+
+        public async Task<ServiceResponse<bool>> CancelOrder(Guid orderId)
+        {
+            var order = await _context.Orders
+                                   .Where(o => o.State != OrderState.Cancelled)   
+                                   .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if(order == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Not found"
+                };
+            }
+
+            if(order.State == OrderState.Delivered)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Can not cancel this order"
+                };
+            }
+
+            order.State = OrderState.Cancelled;
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Message = "Canceled order successfully"
+            };
+        }
+        #endregion Customers'OrderService
     }
 }

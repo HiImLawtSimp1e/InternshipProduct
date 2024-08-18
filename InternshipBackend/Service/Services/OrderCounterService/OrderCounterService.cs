@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.Context;
 using Data.Entities;
+using Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.OrderCounterDTO;
 using Service.DTOs.ResponseDTOs.OrderCounterDTO;
@@ -56,6 +57,7 @@ namespace Service.Services.OrderCounterService
                 Address = newOrderCounter.Address,
                 OrderItems = orderItems,
                 TotalPrice = totalAmount,
+                State = OrderState.Delivered
             };
 
             if (voucherId != null)

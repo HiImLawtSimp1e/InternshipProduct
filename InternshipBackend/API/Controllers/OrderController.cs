@@ -22,6 +22,7 @@ namespace API.Controllers
         {
             _service = service;
         }
+        #region Customer'sOrderAPI
         [Authorize(Roles = "Customer")]
         [HttpGet()]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Order>>>>> GetCustomerOrders([FromQuery] int page)
@@ -59,6 +60,19 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Customer")]
+        [HttpPut("cancel-order/{voucherId}")]
+        public async Task<ActionResult<ServiceResponse<bool>>> CancelVoucher(Guid voucherId)
+        {
+            var response = await _service.CancelOrder(voucherId);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
+        }
+        #endregion Customer'sOrderAPI
+
         [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Order>>>>> GetAdminOrders([FromQuery] int page)
