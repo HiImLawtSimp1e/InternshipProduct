@@ -2,20 +2,13 @@ import Pagination from "@/components/ui/pagination";
 import { formatDate, formatPrice } from "@/lib/format/format";
 import Link from "next/link";
 import TagFiled from "@/components/ui/tag";
-import { mapOrderState } from "@/lib/enums/OrderState";
+import { mapCssTagField, mapOrderState } from "@/lib/enums/OrderState";
 
 interface IProps {
   orders: IOrder[];
   pages: number;
   currentPage: number;
 }
-const cssTagField: string[] = [
-  "bg-yellow-300",
-  "bg-blue-500",
-  "bg-green-500",
-  "bg-green-900",
-  "bg-red-700",
-];
 
 const OrderList = ({ orders, pages, currentPage }: IProps) => {
   const pageSize = 10;
@@ -42,7 +35,7 @@ const OrderList = ({ orders, pages, currentPage }: IProps) => {
               <td className="px-4 py-2">{order.invoiceCode}</td>
               <td className="px-4 py-2">
                 <TagFiled
-                  cssClass={cssTagField[order.state]}
+                  cssClass={mapCssTagField(order.state)}
                   context={mapOrderState(order.state)}
                 />
               </td>

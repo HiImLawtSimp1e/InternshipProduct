@@ -6,19 +6,34 @@ export enum OrderState {
   Cancelled = 4,
 }
 
+const orderStateMapping: Record<number, string> = {
+  [OrderState.Pending]: "Pending",
+  [OrderState.Processing]: "Processing",
+  [OrderState.Shipped]: "Shipped",
+  [OrderState.Delivered]: "Delivered",
+  [OrderState.Cancelled]: "Cancelled",
+};
+
+const cssTagFieldMapping: Record<number, string> = {
+  [OrderState.Pending]: "tag-pending",
+  [OrderState.Processing]: "tag-processing",
+  [OrderState.Shipped]: "tag-shipped",
+  [OrderState.Delivered]: "tag-delivered",
+  [OrderState.Cancelled]: "tag-cancelled",
+};
+
 export const mapOrderState = (state: number): string => {
-  switch (state) {
-    case OrderState.Pending:
-      return "Pending";
-    case OrderState.Processing:
-      return "Processing";
-    case OrderState.Shipped:
-      return "Shipped";
-    case OrderState.Delivered:
-      return "Delivered";
-    case OrderState.Cancelled:
-      return "Cancelled";
-    default:
-      throw new Error(`Unknown state: ${state}`);
+  const result = orderStateMapping[state];
+  if (!result) {
+    throw new Error(`Unknown state: ${state}`);
   }
+  return result;
+};
+
+export const mapCssTagField = (state: number): string => {
+  const result = cssTagFieldMapping[state];
+  if (!result) {
+    throw new Error(`Unknown state: ${state}`);
+  }
+  return result;
 };

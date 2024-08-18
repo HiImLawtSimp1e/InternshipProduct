@@ -19,14 +19,6 @@ const OrderHistoryDetail = ({ orderItems, orderDetail }: IProps) => {
       accumulator + currentValue.price * currentValue.quantity,
     0
   );
-  const cssTagField: string[] = [
-    "bg-yellow-300",
-    "bg-blue-500",
-    "bg-green-500",
-    "bg-green-900",
-    "bg-red-700",
-  ];
-
   const router = useRouter();
 
   const initialState: FormState = { errors: [] };

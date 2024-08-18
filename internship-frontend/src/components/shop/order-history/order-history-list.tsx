@@ -2,20 +2,13 @@ import Pagination from "@/components/ui/pagination";
 import { formatDate, formatPrice } from "@/lib/format/format";
 import Link from "next/link";
 import TagFiled from "@/components/ui/tag";
-import { mapOrderState } from "@/lib/enums/OrderState";
+import { mapCssTagField, mapOrderState } from "@/lib/enums/OrderState";
 
 interface IProps {
   orders: IOrder[];
   pages: number;
   currentPage: number;
 }
-const cssTagField: string[] = [
-  "bg-yellow-300",
-  "bg-blue-500",
-  "bg-green-500",
-  "bg-green-900",
-  "bg-red-700",
-];
 
 const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
   const pageSize = 10;
@@ -36,15 +29,12 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
         </thead>
         <tbody>
           {orders?.map((order: IOrder, index) => (
-            <tr
-              key={order.id}
-              className="border-b bg-gray-100 hover:bg-blue-200"
-            >
+            <tr key={order.id} className="border-b hover:bg-blue-200">
               <td className="px-4 py-2">{startIndex + index + 1}</td>
               <td className="px-4 py-2">{order.invoiceCode}</td>
-              <td className="px-4 py-2">
+              <td className="px-4 py-2 text-white">
                 <TagFiled
-                  cssClass={`${cssTagField[order.state]} text-white`}
+                  cssClass={mapCssTagField(order.state)}
                   context={mapOrderState(order.state)}
                 />
               </td>

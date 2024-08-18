@@ -23,3 +23,19 @@
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
 }
+
+.tag-pending {
+  @apply bg-gray-400;
+}
+.tag-processing {
+  @apply bg-yellow-900;
+}
+.tag-shipped {
+  @apply bg-green-900;
+}
+.tag-delivered {
+  @apply bg-blue-900;
+}
+.tag-cancelled {
+  @apply bg-red-900;
+}
