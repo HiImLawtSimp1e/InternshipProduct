@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies as nextCookies } from "next/headers";
 
 export const placeOrder = async (
@@ -43,6 +43,45 @@ export const placeOrder = async (
   }
 
   revalidateTag("shoppingCart");
+
+  return { success: true, errors: [] };
+};
+
+export const cancelOrder = async (
+  prevState: FormState,
+  formData: FormData
+): Promise<FormState | undefined> => {
+  //declare errors
+  const errors: string[] = [];
+
+  const orderId = formData.get("orderId") as string;
+
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
+  const res = await fetch(
+    `http://localhost:5000/api/Order/cancel-order/${orderId}`,
+    {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const responseData: ApiResponse<boolean> = await res.json();
+  //console.log(responseData);
+  const { success, message } = responseData;
+
+  //catch error
+  if (!success) {
+    revalidatePath("/order-history");
+    errors.push(message);
+  }
+  if (errors.length > 0) {
+    return { errors };
+  }
 
   return { success: true, errors: [] };
 };

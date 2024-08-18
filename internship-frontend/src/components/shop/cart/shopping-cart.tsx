@@ -89,6 +89,7 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
             {/* Sub total */}
             <div className="flex flex-col gap-4 lg:mt-0 lg:w-1/3">
               <ShoppingCartAddress address={address} />
+              <ShoppingVoucher />
               <div className="h-full rounded-lg border bg-white p-6 shadow-md ">
                 <div className="mb-2 flex justify-between">
                   <p className="text-gray-700">Subtotal:</p>
@@ -123,7 +124,6 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
                   </button>
                 </form>
               </div>
-              <ShoppingVoucher />
             </div>
           </div>
         </>

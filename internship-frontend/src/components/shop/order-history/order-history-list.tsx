@@ -44,7 +44,7 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
               <td className="px-4 py-2">{order.invoiceCode}</td>
               <td className="px-4 py-2">
                 <TagFiled
-                  cssClass={cssTagField[order.state]}
+                  cssClass={`${cssTagField[order.state]} text-white`}
                   context={mapOrderState(order.state)}
                 />
               </td>

@@ -61,7 +61,7 @@ const HomeShopProductList = ({ products }: IProps) => {
           <div className="mx-1 flex justify-center">
             <Link href={"/product/" + product.slug}>
               <button className="rounded-2xl ring-1 text-teal-600 py-3 px-6 text-lg font-semibold hover:bg-teal-600 hover:text-white lg:py-2 lg:px-4 lg:text-xs">
-                Add to Cart
+                View Detail
               </button>
             </Link>
           </div>
