@@ -12,6 +12,15 @@ const OrderDetail = ({ orderDetail, orderItems }: IProps) => {
     0
   );
 
+  const isWalkinCustomer = (orderDetail: IOrderDetail) => {
+    return (
+      orderDetail.fullName === "" &&
+      orderDetail.email === "" &&
+      orderDetail.address === "" &&
+      orderDetail.phone === ""
+    );
+  };
+
   return (
     <>
       <div className="shadow-lg rounded-lg overflow-hidden">
@@ -24,15 +33,21 @@ const OrderDetail = ({ orderDetail, orderItems }: IProps) => {
           </div>
         </div>
         <div className="px-6 py-4 border-t border-gray-200">
-          <div className="text-2xl mb-2 font-bold text-white uppercase">
-            Bill to
-          </div>
-          <address className="my-6 text-lg flex flex-col gap-2 text-gray-400">
-            <p>Customer: {orderDetail.fullName}</p>
-            <p>Email: {orderDetail.email}</p>
-            <p>Address: {orderDetail.address}</p>
-            <p>Phone: {orderDetail.phone}</p>
-          </address>
+          {!isWalkinCustomer(orderDetail) ? (
+            <>
+              <div className="text-2xl mb-2 font-bold text-white uppercase">
+                Bill to
+              </div>
+              <address className="my-6 text-lg flex flex-col gap-2 text-gray-400">
+                <p>Customer: {orderDetail.fullName}</p>
+                <p>Email: {orderDetail.email}</p>
+                <p>Address: {orderDetail.address}</p>
+                <p>Phone: {orderDetail.phone}</p>
+              </address>
+            </>
+          ) : (
+            <p>Walk-in Customer</p>
+          )}
         </div>
       </div>
       <div>

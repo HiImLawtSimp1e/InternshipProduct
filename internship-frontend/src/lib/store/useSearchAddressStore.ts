@@ -10,6 +10,14 @@ const getFromSessionStorage = <T>(key: string, defaultValue: T): T => {
   return defaultValue;
 };
 
+const emptyAddress: IAddress = {
+  id: "",
+  fullName: "",
+  email: "",
+  phone: "",
+  address: "",
+};
+
 type SearchAddressState = {
   address: IAddress | null;
   addressList: IAddress[];
@@ -22,7 +30,7 @@ type SearchAddressState = {
 
 const initialAddress = getFromSessionStorage<IAddress | null>(
   "orderAddress",
-  null
+  emptyAddress
 );
 
 const updateSessionStorage = (address: IAddress | null) => {

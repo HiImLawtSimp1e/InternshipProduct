@@ -9,7 +9,6 @@ import Loading from "@/components/ui/loading";
 import { useSearchAddressStore } from "@/lib/store/useSearchAddressStore";
 import { getAuthPublic } from "@/services/auth-service/auth-service";
 import { toast } from "react-toastify";
-import { validateAddress } from "@/lib/validation/validateProfile";
 
 interface IOrderFormData {
   fullName: string;
@@ -53,19 +52,6 @@ const CounterSaleCart = () => {
     if (address === null) {
       setIsLoading(false);
       return { errors: ["Customer information is required"] };
-    }
-
-    //client validation
-    const [errors, isValid] = validateAddress(
-      address.fullName,
-      address.email,
-      address.phone,
-      address.address
-    );
-
-    if (!isValid) {
-      //console.log(errors);
-      return { errors };
     }
 
     try {
