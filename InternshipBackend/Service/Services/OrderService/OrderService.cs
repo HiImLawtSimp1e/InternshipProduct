@@ -154,8 +154,15 @@ namespace Service.Services.OrderService
                     Message = "Not found order"
                 };
             }
+
+            var username = _authService.GetUserName();
+
             dbOrder.State = state;
+            dbOrder.ModifiedAt = DateTime.Now;
+            dbOrder.ModifiedBy = username;
+
             await _context.SaveChangesAsync();
+
             return new ServiceResponse<bool>
             {
                 Data = true,
@@ -289,6 +296,7 @@ namespace Service.Services.OrderService
                 Email = address.Email,
                 Address = address.Address,
                 Phone = address.Phone,
+                CreatedBy = "Customer"
             };
 
             if(voucherId != null)
@@ -416,6 +424,9 @@ namespace Service.Services.OrderService
             }
 
             order.State = OrderState.Cancelled;
+            order.ModifiedAt = DateTime.Now;
+            order.ModifiedBy = "Customer";
+
             await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool>

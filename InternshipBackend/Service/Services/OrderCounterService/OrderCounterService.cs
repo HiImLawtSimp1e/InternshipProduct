@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.OrderCounterDTO;
 using Service.DTOs.ResponseDTOs.OrderCounterDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using Service.Services.OrderCommonService;
 using System;
 using System.Collections.Generic;
@@ -19,16 +20,20 @@ namespace Service.Services.OrderCounterService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
         private readonly IOrderCommonService _orderCommonService;
 
-        public OrderCounterService(DataContext context,IMapper mapper, IOrderCommonService orderCommonService)
+        public OrderCounterService(DataContext context,IMapper mapper,IAuthService authService, IOrderCommonService orderCommonService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
             _orderCommonService = orderCommonService;
         }
         public async Task<ServiceResponse<bool>> PlaceOrderCounter(Guid? voucherId, PlaceOrderCounterDTO newOrderCounter)
         {
+            var username = _authService.GetUserName();
+            
             var orderCounterItems = newOrderCounter.OrderItems;
 
             if (orderCounterItems == null || orderCounterItems.Count() == 0)
@@ -57,7 +62,8 @@ namespace Service.Services.OrderCounterService
                 Address = newOrderCounter.Address,
                 OrderItems = orderItems,
                 TotalPrice = totalAmount,
-                State = OrderState.Delivered
+                State = OrderState.Delivered,
+                CreatedBy = username
             };
 
             if (voucherId != null)
