@@ -6,6 +6,8 @@ interface IOrder {
   discountValue: number;
   createdAt: string;
   modifiedAt: string;
+  createdBy: string;
+  modifiedBy: string;
 }
 
 interface IOrderDetail {

@@ -25,6 +25,8 @@ const OrderList = ({ orders, pages, currentPage }: IProps) => {
             <th className="px-4 py-2">Total Amount</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
+            <th className="px-4 py-2">Created By</th>
+            <th className="px-4 py-2">Modified By</th>
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -41,10 +43,12 @@ const OrderList = ({ orders, pages, currentPage }: IProps) => {
               </td>
               <td className="px-4 py-2">{formatPrice(order.discountValue)}</td>
               <td className="px-4 py-2">
-                {formatPrice(order.totalPrice - order.discountValue)}
+                {formatPrice(order.totalPrice - order.discountValue + 30000)}
               </td>
               <td className="px-4 py-2">{formatDate(order.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(order.modifiedAt)}</td>
+              <td className="px-4 py-2">{order.createdBy}</td>
+              <td className="px-4 py-2">{order.modifiedBy}</td>
               <td className="px-4 py-2">
                 <Link href={`/dashboard/orders/${order.id}`}>
                   <button className="m-1 px-5 py-2 bg-teal-500 text-white rounded">

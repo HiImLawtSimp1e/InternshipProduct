@@ -41,7 +41,7 @@ const OrderHistoryList = ({ orders, pages, currentPage }: IProps) => {
               <td className="px-4 py-2">{formatDate(order.createdAt)}</td>
               <td className="px-4 py-2">{formatPrice(order.discountValue)}</td>
               <td className="px-4 py-2">
-                {formatPrice(order.totalPrice - order.discountValue)}
+                {formatPrice(order.totalPrice - order.discountValue + 30000)}
               </td>
               <td className="px-4 py-2">
                 <Link href={`/order-history/${order.id}`}>
