@@ -11,4 +11,6 @@ interface IPost {
   isActive: boolean;
   createdAt: string;
   modifiedAt: string;
+  createdBy: string;
+  modifiedBy: string;
 }

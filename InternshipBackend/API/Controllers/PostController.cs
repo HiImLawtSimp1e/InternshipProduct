@@ -20,6 +20,7 @@ namespace API.Controllers
         {
             _service = service;
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Post>>>>> GetAdminPosts([FromQuery] int page)
         {
@@ -34,6 +35,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<Post>>> GetAdminPost(Guid id)
         {
@@ -68,6 +70,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreatePost(AddPostDTO newPost) 
         {
@@ -78,6 +81,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdatePost(Guid id,UpdatePostDTO updatePost)
         {
@@ -88,6 +92,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> SoftDeletePost(Guid id)
         {

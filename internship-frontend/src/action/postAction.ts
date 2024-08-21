@@ -4,6 +4,7 @@ import { uploadImage } from "@/lib/cloudinary/cloudinary";
 import { validatePost } from "@/lib/validation/validatePost";
 import { revalidatePath, revalidateTag } from "next/cache";
 import slugify from "slugify";
+import { cookies as nextCookies } from "next/headers";
 
 interface PostFormData {
   title: string;
@@ -65,11 +66,18 @@ export const addPost = async (
     seoKeyworks,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch("http://localhost:5000/api/Post/admin", {
       method: "POST",
       body: JSON.stringify(postData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -151,11 +159,18 @@ export const updatePost = async (
     isActive,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
       method: "PUT",
       body: JSON.stringify(postData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -204,9 +219,16 @@ export const deletePost = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as number | null;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(`http://localhost:5000/api/Post/admin/${id}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const responseData: ApiResponse<string> = await res.json();

@@ -6,6 +6,7 @@ using Service.DTOs.RequestDTOs.PostDTO;
 using Service.DTOs.ResponseDTOs.CustomerPostDTO;
 using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,19 +19,26 @@ namespace Service.Services.PostService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public PostService(DataContext context, IMapper mapper)
+        public PostService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> CreatePost(AddPostDTO newPost)
         {
+            var username = _authService.GetUserName();
+
             var post = _mapper.Map<Post>(newPost);
+            post.CreatedBy = username;
+
             try
             {
                 _context.Posts.Add(post);
                 await _context.SaveChangesAsync();
+
                 return new ServiceResponse<bool>
                 {
                     Data = true,
@@ -157,9 +165,14 @@ namespace Service.Services.PostService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 post.Deleted = true;
+                post.ModifiedAt = DateTime.Now;
+                post.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
@@ -185,10 +198,15 @@ namespace Service.Services.PostService
                     Message = "Post not found"
                 };
             }
+
+            var username = _authService.GetUserName();
+
             try
             {
                 _mapper.Map(updatePost, dbPost);
                 dbPost.ModifiedAt = DateTime.Now;
+                dbPost.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
