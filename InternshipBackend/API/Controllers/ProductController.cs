@@ -40,6 +40,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Product>>>>> GetAdminProducts([FromQuery] int page, [FromQuery] double pageResults)
         {
@@ -58,6 +59,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<Product>>> GetAdminProduct(Guid id)
         {
@@ -96,6 +98,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateProduct(AddProductDTO newProduct)
         {
@@ -106,6 +109,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateProduct(Guid id, UpdateProductDTO product)
         {
@@ -116,6 +120,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{productId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteProduct(Guid productId)
         {

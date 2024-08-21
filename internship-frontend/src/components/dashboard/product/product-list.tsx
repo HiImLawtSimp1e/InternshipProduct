@@ -81,6 +81,8 @@ const ProductList = ({ products, pages, currentPage }: IProps) => {
             <th className="px-4 py-2">Status</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
+            <th className="px-4 py-2">Created By</th>
+            <th className="px-4 py-2">Modified By</th>
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -114,6 +116,8 @@ const ProductList = ({ products, pages, currentPage }: IProps) => {
               </td>
               <td className="px-4 py-2">{formatDate(product.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(product.modifiedAt)}</td>
+              <td className="px-4 py-2">{product.createdBy}</td>
+              <td className="px-4 py-2">{product.modifiedBy}</td>
               <td className="px-4 py-2">
                 <div className="flex gap-2">
                   <Link href={`/dashboard/products/${product.id}`}>

@@ -6,6 +6,7 @@ using Service.DTOs.RequestDTOs.ProductDTO;
 using Service.DTOs.ResponseDTOs;
 using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,17 +19,22 @@ namespace Service.Services.ProductService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public ProductService(DataContext context, IMapper mapper)
+        public ProductService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> CreateProduct(AddProductDTO newProduct)
         {
+            var username = _authService.GetUserName();
+
             try
             {
                 var product = _mapper.Map<Product>(newProduct);
+                product.CreatedBy = username;
 
                 // Add product image
                 var productImage = new ProductImage
@@ -77,11 +83,14 @@ namespace Service.Services.ProductService
                     Message = "Product not found"
                 };
             }
-           
+
+            var username = _authService.GetUserName();
+
             try
             {
                 _mapper.Map(updateProduct, dbProduct);
                 dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 
@@ -109,9 +118,14 @@ namespace Service.Services.ProductService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 product.Deleted = true;
+                product.ModifiedAt = DateTime.Now;
+                product.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>

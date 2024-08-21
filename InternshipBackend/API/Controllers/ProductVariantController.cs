@@ -1,9 +1,11 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductVariantDTO;
 using Service.Models;
 using Service.Services.ProductVariantService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -27,6 +29,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin/{productId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> AddVariant(Guid productId,AddProductVariantDTO newVariant)
         {
@@ -37,6 +40,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{productId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateVariant(Guid productId, UpdateProductVariantDTO updateVariant)
         {
@@ -47,6 +51,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{productId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteVariant(Guid productId, [FromQuery] Guid productTypeId)
         {

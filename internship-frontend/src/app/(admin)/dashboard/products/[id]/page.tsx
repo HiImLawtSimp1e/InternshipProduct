@@ -1,10 +1,18 @@
 import ProductDetail from "@/components/dashboard/product/product-detail";
+import { cookies as nextCookies } from "next/headers";
 
 const Product = async ({ id }: { id: number }) => {
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const productDetailRes = await fetch(
     `http://localhost:5000/api/Product/admin/${id}`,
     {
       method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`, // header Authorization
+      },
       next: { tags: ["productDetailAdmin"] },
     }
   );

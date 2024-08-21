@@ -2,6 +2,7 @@
 
 import { uploadImage } from "@/lib/cloudinary/cloudinary";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 interface ProductImageFormData {
   imageUrl?: string;
@@ -36,11 +37,18 @@ export const AddProductImage = async (
     productId,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch("http://localhost:5000/api/ProductImage/admin", {
       method: "POST",
       body: JSON.stringify(productImageData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -94,13 +102,20 @@ export const updateProductImage = async (
     productId,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductImage/admin/${id}`,
       {
         method: "PUT",
         body: JSON.stringify(productImageData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -145,11 +160,18 @@ export const deleteProductImage = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(
     `http://localhost:5000/api/ProductImage/admin/${id}`,
     {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 

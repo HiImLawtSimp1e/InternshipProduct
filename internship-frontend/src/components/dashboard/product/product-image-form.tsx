@@ -114,7 +114,14 @@ const ProductImageForm = ({ productId, images }: IProps) => {
 
                   <form onSubmit={handleSubmit}>
                     <input type="hidden" name="id" value={image.id} />
-                    <button className="m-1 px-5 py-2 bg-red-500 text-white rounded">
+                    <button
+                      className={`m-1 px-5 py-2 bg-red-500 text-white rounded  ${
+                        image.isMain
+                          ? "opacity-50 cursor-not-allowed"
+                          : "cursor-pointer"
+                      }`}
+                      disabled={image.isMain}
+                    >
                       Delete
                     </button>
                   </form>

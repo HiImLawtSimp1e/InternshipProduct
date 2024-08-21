@@ -4,6 +4,7 @@ using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.ProductVariantDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace Service.Services.ProductVariantService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public ProductVariantService(DataContext context, IMapper mapper)
+        public ProductVariantService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> AddVariant(Guid productId, AddProductVariantDTO newVariant)
         {
@@ -61,13 +64,18 @@ namespace Service.Services.ProductVariantService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             //if variant has deleted, restore variant
-            if(existingVariant != null && existingVariant.Deleted)
+            if (existingVariant != null && existingVariant.Deleted)
             {
                 existingVariant.Deleted = false;
                 existingVariant.IsActive = true;
                 existingVariant.Price = newVariant.Price;
                 existingVariant.OriginalPrice = newVariant.OriginalPrice;
+
+                dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<bool>
@@ -86,6 +94,7 @@ namespace Service.Services.ProductVariantService
 
                 _context.ProductVariants.Add(variant);
                 dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 
@@ -137,20 +146,28 @@ namespace Service.Services.ProductVariantService
         public async Task<ServiceResponse<bool>> SoftDeleteVariant(Guid productTypeId, Guid productId)
         {
             var variant = await _context.ProductVariants
-                                        .Where(v => !v.Deleted && v.ProductId == productId)
-                                        .FirstOrDefaultAsync(v => v.ProductTypeId == productTypeId);
-            if (variant == null)
+                                          .Where(v => !v.Deleted && v.ProductTypeId == productTypeId)
+                                          .FirstOrDefaultAsync(v => v.ProductId == productId);
+            var dbProduct = await _context.Products
+                                          .Where(v => !v.Deleted)
+                                          .FirstOrDefaultAsync(p => p.Id == productId);
+            if (variant == null || dbProduct == null)
             {
                 return new ServiceResponse<bool>
                 {
                     Success = false,
-                    Message = "Variant not found"
+                    Message = "Product Variant not found"
                 };
             }
+
+            var username = _authService.GetUserName();
 
             try
             {
                 variant.Deleted = true;
+                dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
@@ -180,10 +197,14 @@ namespace Service.Services.ProductVariantService
                     Message = "Product Variant not found"
                 };
             }
+
+            var username = _authService.GetUserName();
+
             try
             {
                 _mapper.Map(updateVariant, dbVariant);    
-                dbProduct.ModifiedAt = DateTime.UtcNow;
+                dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 

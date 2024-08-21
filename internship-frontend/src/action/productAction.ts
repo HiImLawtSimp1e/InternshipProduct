@@ -6,6 +6,7 @@ import {
   validateUpdateProduct,
 } from "@/lib/validation/validateProduct";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 import slugify from "slugify";
 
 // Define the updated ProductFormData interface
@@ -83,11 +84,18 @@ export const addProduct = async (
     originalPrice,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch("http://localhost:5000/api/Product/admin", {
       method: "POST",
       body: JSON.stringify(productData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -171,11 +179,18 @@ export const updateProduct = async (
     isActive,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
       method: "PUT",
       body: JSON.stringify(productData),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -228,9 +243,16 @@ export const deleteProduct = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as number | null;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(`http://localhost:5000/api/Product/admin/${id}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const responseData: ApiResponse<string> = await res.json();

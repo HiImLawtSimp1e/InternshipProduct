@@ -1,9 +1,11 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductValueDTO;
 using Service.Models;
 using Service.Services.ProductValueService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -18,7 +20,7 @@ namespace API.Controllers
             _service = service;
         }
         [HttpGet("{productId}")]
-        public async Task<ActionResult<ServiceResponse<ProductValue>>> Get(Guid productId, [FromQuery] Guid productAttributeId)
+        public async Task<ActionResult<ServiceResponse<ProductValue>>> GetAttributeValue(Guid productId, [FromQuery] Guid productAttributeId)
         {
             var response = await _service.GetAttributeValue(productId, productAttributeId);
             if (!response.Success)
@@ -27,8 +29,9 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin/{productId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> AddVariant(Guid productId, AddProductValueDTO newValue)
+        public async Task<ActionResult<ServiceResponse<bool>>> AddAttributeValue(Guid productId, AddProductValueDTO newValue)
         {
             var response = await _service.AddAttributeValue(productId, newValue);
             if (!response.Success)
@@ -37,8 +40,9 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{productId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateVariant(Guid productId, UpdateProductValueDTO updateValue)
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateAttributeValue(Guid productId, UpdateProductValueDTO updateValue)
         {
             var response = await _service.UpdateAttributeValue(productId, updateValue);
             if (!response.Success)
@@ -47,8 +51,9 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{productId}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteVariant(Guid productId, [FromQuery] Guid productAttributeId)
+        public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteAttributeValue(Guid productId, [FromQuery] Guid productAttributeId)
         {
             var response = await _service.SoftDeleteAttributeValue(productId, productAttributeId);
             if (!response.Success)

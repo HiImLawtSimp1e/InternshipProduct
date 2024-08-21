@@ -4,6 +4,7 @@ using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.ProductValueDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,13 @@ namespace Service.Services.ProductValueService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public ProductValueService(DataContext context, IMapper mapper)
+        public ProductValueService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> AddAttributeValue(Guid productId, AddProductValueDTO newAttributeValue)
         {
@@ -61,12 +64,17 @@ namespace Service.Services.ProductValueService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             //if attribute value has deleted, restore attribute value
             if (existingAttributeValue != null && existingAttributeValue.Deleted)
             {
                 existingAttributeValue.Deleted = false;
                 existingAttributeValue.IsActive = true;
                 existingAttributeValue.Value = newAttributeValue.Value;
+
+                dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
                 return new ServiceResponse<bool>
@@ -85,6 +93,7 @@ namespace Service.Services.ProductValueService
 
                 _context.ProductValues.Add(attributeValue);
                 dbProduct.ModifiedAt = DateTime.Now;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 
@@ -135,9 +144,12 @@ namespace Service.Services.ProductValueService
         public async Task<ServiceResponse<bool>> SoftDeleteAttributeValue(Guid productId, Guid productAttributeId)
         {
             var attributeValue = await _context.ProductValues
-                                       .Where(pav => !pav.Deleted && pav.ProductId == productId)
-                                       .FirstOrDefaultAsync(pav => pav.ProductAttributeId == productAttributeId);
-            if (attributeValue == null)
+                                        .Where(pav => !pav.Deleted && pav.ProductAttributeId == productAttributeId)
+                                        .FirstOrDefaultAsync(pav => pav.ProductId == productId);
+            var dbProduct = await _context.Products
+                                          .Where(p => !p.Deleted)
+                                          .FirstOrDefaultAsync(p => p.Id == productId);
+            if (attributeValue == null || dbProduct == null)
             {
                 return new ServiceResponse<bool>
                 {
@@ -146,9 +158,14 @@ namespace Service.Services.ProductValueService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 attributeValue.Deleted = true;
+                dbProduct.ModifiedAt = DateTime.UtcNow;
+                dbProduct.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
@@ -178,10 +195,14 @@ namespace Service.Services.ProductValueService
                     Message = "Attribute value not found"
                 };
             }
+
+            var username = _authService.GetUserName();
+
             try
             {
                 _mapper.Map(updateAttributeValue, dbAttributeValue);
                 dbProduct.ModifiedAt = DateTime.UtcNow;
+                dbProduct.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 

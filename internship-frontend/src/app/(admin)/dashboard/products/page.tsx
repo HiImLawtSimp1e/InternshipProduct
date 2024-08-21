@@ -1,6 +1,11 @@
 import ProductList from "@/components/dashboard/product/product-list";
+import { cookies as nextCookies } from "next/headers";
 
 const Products = async ({ params }: { params: { page?: number } }) => {
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const { page } = params;
   let url = "";
   if (page == null || page <= 0) {
@@ -10,6 +15,9 @@ const Products = async ({ params }: { params: { page?: number } }) => {
   }
   const res = await fetch(url, {
     method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // header Authorization
+    },
     next: { tags: ["productListAdmin"] },
   });
 

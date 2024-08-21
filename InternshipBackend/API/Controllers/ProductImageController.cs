@@ -1,9 +1,11 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductImageDTO;
 using Service.Models;
 using Service.Services.ProductImageService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -27,6 +29,7 @@ namespace API.Controllers
             }
             return Ok(res);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateProductImage(AddProductImageDTO newImage)
         {
@@ -37,6 +40,7 @@ namespace API.Controllers
             }
             return Ok(res);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateProductImage(Guid id, UpdateProductImageDTO updateImage)
         {
@@ -47,6 +51,7 @@ namespace API.Controllers
             }
             return Ok(res);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProductImage(Guid id)
         {

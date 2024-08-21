@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 // Define the ProductAttributeValueFormData interface
 interface ProductAttributeValueFormData {
@@ -25,13 +26,20 @@ export const addAttributeValue = async (
     value,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductValue/admin/${productId}`,
       {
         method: "POST",
         body: JSON.stringify(attributeValueData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -97,13 +105,20 @@ export const updateAttributeValue = async (
     isActive,
   };
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductValue/admin/${productId}`,
       {
         method: "PUT",
         body: JSON.stringify(attributeValueData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -158,11 +173,18 @@ export const deleteAttributeValue = async (
   const productId = formData.get("productId") as string;
   const productAttributeId = formData.get("productAttributeId") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(
     `http://localhost:5000/api/ProductValue/admin/${productId}?productAttributeId=${productAttributeId}`,
     {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 

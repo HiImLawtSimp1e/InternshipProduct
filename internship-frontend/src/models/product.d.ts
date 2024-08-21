@@ -10,6 +10,8 @@ interface IProduct {
   isActive: boolean;
   createdAt: string;
   modifiedAt: string;
+  createdBy: string;
+  modifiedBy: string;
   categoryId: string;
   productVariants: IProductVariant[];
   productImages?: IProductImage[];

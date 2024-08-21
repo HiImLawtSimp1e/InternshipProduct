@@ -3,6 +3,7 @@
 // Import the necessary modules and interfaces
 import { validateVariant } from "@/lib/validation/validateVariant";
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 // Define the VariantFormData interface
 interface VariantFormData {
@@ -47,13 +48,20 @@ export const addVariant = async (
 
   //console.log(variantData);
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductVariant/admin/${productId}`,
       {
         method: "POST",
         body: JSON.stringify(variantData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -141,13 +149,20 @@ export const updateVariant = async (
 
   console.log(variantData);
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductVariant/admin/${productId}`,
       {
         method: "PUT",
         body: JSON.stringify(variantData),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -202,11 +217,18 @@ export const deleteVariant = async (
   const productId = formData.get("productId") as string;
   const productTypeId = formData.get("productTypeId") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(
     `http://localhost:5000/api/ProductVariant/admin/${productId}?productTypeId=${productTypeId}`,
     {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 
