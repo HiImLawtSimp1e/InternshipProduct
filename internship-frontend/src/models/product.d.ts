@@ -31,6 +31,8 @@ interface IProductType {
   name: string;
   createdAt: string;
   modifiedAt: string;
+  createdBy: string;
+  modifiedBy: string;
 }
 
 interface IProductImage {

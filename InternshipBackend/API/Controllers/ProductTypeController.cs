@@ -44,6 +44,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> AddProductType(AddProductTypeDTO productType)
         {
@@ -54,6 +55,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateProductType(Guid id, UpdateProductTypeDTO productType)
         {
@@ -64,6 +66,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> DeleteProductType(Guid id)
         {

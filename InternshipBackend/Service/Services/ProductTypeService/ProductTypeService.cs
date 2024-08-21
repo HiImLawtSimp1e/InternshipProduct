@@ -3,6 +3,7 @@ using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.ProductTypeDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,16 +15,21 @@ namespace Service.Services.ProductTypeService
     public class ProductTypeService : IProductTypeService
     {
         private readonly DataContext _context;
+        private readonly IAuthService _authService;
 
-        public ProductTypeService(DataContext context)
+        public ProductTypeService(DataContext context, IAuthService authService)
         {
             _context = context;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> CreateProductType(AddProductTypeDTO newProductType)
         {
+            var username = _authService.GetUserName();
+
             var productType = new ProductType
             {
                 Name = newProductType.Name,
+                CreatedBy = username
             };
             try
             {
@@ -56,10 +62,14 @@ namespace Service.Services.ProductTypeService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 dbProductType.Name = productType.Name;
                 dbProductType.ModifiedAt = DateTime.Now;
+                dbProductType.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
