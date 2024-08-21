@@ -1,9 +1,11 @@
 ﻿using Data.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.ProductAttributeDTO;
 using Service.Models;
 using Service.Services.ProductAttributeService;
+using System.Data;
 
 namespace API.Controllers
 {
@@ -41,6 +43,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> AddProductAttribute(AddProductAttributeDTO productAttribute)
         {
@@ -51,8 +54,9 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> UpdateProductType(Guid id, UpdateProductAttributeDTO productAttribute)
+        public async Task<ActionResult<ServiceResponse<bool>>> UpdateProductAttribute(Guid id, UpdateProductAttributeDTO productAttribute)
         {
             var response = await _service.UpdateProductAttribute(id, productAttribute);
             if (!response.Success)
@@ -61,8 +65,9 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{id}")]
-        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProductType(Guid id)
+        public async Task<ActionResult<ServiceResponse<bool>>> DeleteProductAttribute(Guid id)
         {
             var response = await _service.DeleteProductAttribute(id);
             if (!response.Success)
@@ -72,7 +77,7 @@ namespace API.Controllers
             return Ok(response);
         }
         [HttpGet("select/{productId}")]
-        public async Task<ActionResult<ServiceResponse<List<ProductAttribute>>>> GetSelectProductTypes(Guid productId)
+        public async Task<ActionResult<ServiceResponse<List<ProductAttribute>>>> GetSelectProductAttributes(Guid productId)
         {
             var response = await _service.GetProductAttributeSelect(productId);
             if (!response.Success)

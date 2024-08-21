@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 
 // Define the addAttribute function
 export const addAttribute = async (
@@ -10,13 +11,20 @@ export const addAttribute = async (
   // Extract the necessary fields from formData
   const name = formData.get("name") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductAttribute/admin`,
       {
         method: "POST",
         body: JSON.stringify({ name }),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -71,13 +79,20 @@ export const updateAttribute = async (
   const id = formData.get("id") as string;
   const name = formData.get("name") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(
       `http://localhost:5000/api/ProductAttribute/admin/${id}`,
       {
         method: "PUT",
         body: JSON.stringify({ id, name }),
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       }
     );
 
@@ -130,11 +145,18 @@ export const deleteAttribute = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(
     `http://localhost:5000/api/ProductAttribute/admin/${id}`,
     {
       method: "DELETE",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     }
   );
 

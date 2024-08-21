@@ -76,6 +76,8 @@ const ProductAttributeList = ({
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
+            <th className="px-4 py-2">Created By</th>
+            <th className="px-4 py-2">Modified By</th>
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -86,6 +88,8 @@ const ProductAttributeList = ({
               <td className="px-4 py-2">{attribute.name}</td>
               <td className="px-4 py-2">{formatDate(attribute.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(attribute.modifiedAt)}</td>
+              <td className="px-4 py-2">{attribute.createdBy}</td>
+              <td className="px-4 py-2">{attribute.modifiedBy}</td>
               <td className="px-4 py-2">
                 <div className="flex gap-2">
                   <Link href={`/dashboard/product-attributes/${attribute.id}`}>

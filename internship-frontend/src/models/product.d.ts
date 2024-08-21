@@ -46,6 +46,8 @@ interface IProductAttribute {
   name: string;
   createdAt: string;
   modifiedAt: string;
+  createdBy: string;
+  modifiedBy: string;
 }
 
 interface IProductValue {

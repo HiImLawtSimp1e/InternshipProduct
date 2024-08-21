@@ -4,6 +4,7 @@ using Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.ProductAttributeDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,15 +17,21 @@ namespace Service.Services.ProductAttributeService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public ProductAttributeService(DataContext context, IMapper mapper)
+        public ProductAttributeService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> CreateProductAttribute(AddProductAttributeDTO newProductAttribute)
         {
+            var username = _authService.GetUserName();
+
             var attribute = _mapper.Map<ProductAttribute>(newProductAttribute);
+            attribute.CreatedBy = username;
+
             try
             {
                 _context.ProductAttributes.Add(attribute);
@@ -52,7 +59,12 @@ namespace Service.Services.ProductAttributeService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             _mapper.Map(updateProductAttribute, dbAttribute);
+            dbAttribute.ModifiedAt = DateTime.Now;
+            dbAttribute.ModifiedBy = username;
+
             await _context.SaveChangesAsync();
             return new ServiceResponse<bool>
             {
