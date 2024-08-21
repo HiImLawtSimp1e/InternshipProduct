@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies as nextCookies } from "next/headers";
 import slugify from "slugify";
 
 // Define the addCategory function
@@ -12,11 +13,18 @@ export const addCategory = async (
   const title = formData.get("title") as string;
   const slug = slugify(title, { lower: true });
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(`http://localhost:5000/api/Category/admin`, {
       method: "POST",
       body: JSON.stringify({ title, slug }),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -70,11 +78,18 @@ export const updateCategory = async (
   const isActive = formData.get("isActive") === "true";
   const slug = slugify(title, { lower: true });
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   try {
     const res = await fetch(`http://localhost:5000/api/Category/admin/${id}`, {
       method: "PUT",
       body: JSON.stringify({ title, slug, isActive }),
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -124,9 +139,16 @@ export const deleteCategory = async (
 ): Promise<FormState | undefined> => {
   const id = formData.get("id") as string;
 
+  //get access token form cookie
+  const cookieStore = nextCookies();
+  const token = cookieStore.get("authToken")?.value || "";
+
   const res = await fetch(`http://localhost:5000/api/Category/admin/${id}`, {
     method: "DELETE",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   const responseData: ApiResponse<string> = await res.json();

@@ -31,6 +31,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin")]
         public async Task<ActionResult<ServiceResponse<PagingParams<List<Category>>>>> GetAdminCategories([FromQuery] int page)
         {
@@ -45,6 +46,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpGet("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<Category>>> GetAdminCategory(Guid id)
         {
@@ -65,6 +67,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPost("admin")]
         public async Task<ActionResult<ServiceResponse<bool>>> CreateCategory(AddCategoryDTO category)
         {
@@ -75,7 +78,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-
+        [Authorize(Roles = "Admin,Employee")]
         [HttpPut("admin/{id}")]
         public async Task<ActionResult<ServiceResponse<bool>>> UpdateCategory(Guid id,UpdateCategoryDTO category)
         {
@@ -86,7 +89,7 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-
+        [Authorize(Roles = "Admin,Employee")]
         [HttpDelete("admin/{categoryId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> SoftDeleteCategories(Guid categoryId)
         {

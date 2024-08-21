@@ -6,6 +6,7 @@ using Service.DTOs.RequestDTOs.CategoryDTO;
 using Service.DTOs.ResponseDTOs.CustomerCategoryDTO;
 using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -19,19 +20,26 @@ namespace Service.Services.CategoryService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public CategoryService(DataContext context, IMapper mapper)
+        public CategoryService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
         public async Task<ServiceResponse<bool>> CreateCategory(AddCategoryDTO newCategory)
         {
+            var username = _authService.GetUserName();
+
             try
             {
                 var category = _mapper.Map<Category>(newCategory);
+                category.CreatedBy = username;
+
                 _context.Categories.Add(category);
                 await _context.SaveChangesAsync();
+
                 return new ServiceResponse<bool>
                 {
                     Message = "Category Created"
@@ -125,9 +133,14 @@ namespace Service.Services.CategoryService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 category.Deleted = true;
+                category.ModifiedAt = DateTime.Now;
+                category.ModifiedBy = username;
+
                 await _context.SaveChangesAsync();
 
                 return new ServiceResponse<bool>
@@ -153,10 +166,13 @@ namespace Service.Services.CategoryService
                 };
             }
 
+            var username = _authService.GetUserName();
+
             try
             {
                 _mapper.Map(updateCategory, dbCategory);
                 dbCategory.ModifiedAt = DateTime.Now;
+                dbCategory.ModifiedBy = username;
 
                 await _context.SaveChangesAsync();
 
