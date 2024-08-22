@@ -1,8 +1,9 @@
 "use client";
 
 import { updateOrderState } from "@/action/orderAction";
+import InputField from "@/components/ui/input";
 import { useCustomActionState } from "@/lib/custom/customHook";
-import { OrderState } from "@/lib/enums/OrderState";
+import { mapOrderState, OrderState } from "@/lib/enums/OrderState";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -51,39 +52,52 @@ const UpdateOrderDetail = ({ orderId, orderState }: IProps) => {
   }, [formState, toastDisplayed]);
   return (
     <div className="mt-12">
-      <form onSubmit={handleSubmit} className="px-4 w-full">
-        <input type="hidden" value={orderId} name="id" />
-        <label
-          htmlFor="state"
-          className="block mb-2 text-sm font-medium text-white"
-        >
-          Order State
-        </label>
-        <select
-          name="state"
-          id="state"
-          value={formData}
-          onChange={handleChange}
-          className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
-        >
-          {Object.keys(OrderState)
-            .filter((key) => isNaN(Number(key)))
-            .map((key) => (
-              <option
-                key={OrderState[key as keyof typeof OrderState]}
-                value={OrderState[key as keyof typeof OrderState]}
-              >
-                {key}
-              </option>
-            ))}
-        </select>
-        <button
-          type="submit"
-          className="float-right mt-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
-        >
-          Update
-        </button>
-      </form>
+      {mapOrderState(Number(orderState)) !== "Cancelled" ? (
+        <form onSubmit={handleSubmit} className="px-4 w-full">
+          <input type="hidden" value={orderId} name="id" />
+          <label
+            htmlFor="state"
+            className="block mb-2 text-sm font-medium text-white"
+          >
+            Order State
+          </label>
+          <select
+            name="state"
+            id="state"
+            value={formData}
+            onChange={handleChange}
+            className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+          >
+            {Object.keys(OrderState)
+              .filter((key) => isNaN(Number(key)))
+              .map((key) => (
+                <option
+                  key={OrderState[key as keyof typeof OrderState]}
+                  value={OrderState[key as keyof typeof OrderState]}
+                >
+                  {key}
+                </option>
+              ))}
+          </select>
+          <button
+            type="submit"
+            className="float-right mt-4 text-white bg-blue-700 hover:bg-blue-800 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          >
+            Update
+          </button>
+        </form>
+      ) : (
+        <>
+          <label className="block mb-2 text-sm font-medium text-white">
+            Order State
+          </label>
+          <input
+            value={mapOrderState(Number(orderState))}
+            className="text-sm rounded-lg w-full p-2.5 bg-gray-600 placeholder-gray-400 text-white"
+            readOnly
+          />
+        </>
+      )}
     </div>
   );
 };

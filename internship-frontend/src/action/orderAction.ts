@@ -149,26 +149,6 @@ export const updateOrderState = async (
       }
     );
 
-    if (!res.ok) {
-      // If the response is not OK, parse the error response
-      const errorResponse = await res.json();
-      const { errors } = errorResponse;
-
-      // Create an array to hold error messages
-      let errorMessages: string[] = [];
-
-      // Check if there are specific validation errors and add them to the error messages
-      if (errors) {
-        for (const key in errors) {
-          if (errors.hasOwnProperty(key)) {
-            errorMessages = errorMessages.concat(errors[key]);
-          }
-        }
-      }
-      // Return the updated state with errors
-      return { errors: errorMessages };
-    }
-
     const responseData: ApiResponse<string> = await res.json();
     // console.log(responseData);
     const { success, message } = responseData;

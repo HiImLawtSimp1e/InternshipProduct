@@ -1,8 +1,12 @@
+"use client";
+
 import Pagination from "@/components/ui/pagination";
 import { formatDate, formatPrice } from "@/lib/format/format";
 import Link from "next/link";
 import TagFiled from "@/components/ui/tag";
 import { mapCssTagField, mapOrderState } from "@/lib/enums/OrderState";
+import Search from "@/components/ui/search";
+import { MdRefresh } from "react-icons/md";
 
 interface IProps {
   orders: IOrder[];
@@ -13,8 +17,25 @@ interface IProps {
 const OrderList = ({ orders, pages, currentPage }: IProps) => {
   const pageSize = 10;
   const startIndex = (currentPage - 1) * pageSize;
+
+  const handleReload = () => {
+    if (window !== undefined) {
+      window.location.reload();
+    }
+  };
+
   return (
     <div>
+      <div className="flex items-center justify-between mb-5">
+        <Search placeholder="Search Order..." />
+        <button
+          onClick={() => handleReload()}
+          className="p-2 px-4 flex items-center justify-center mb-5 bg-blue-600 text-white rounded"
+        >
+          <MdRefresh />
+          Reload
+        </button>
+      </div>
       <table className="w-full text-left text-gray-400">
         <thead className="bg-gray-700 text-gray-400 uppercase">
           <tr>
