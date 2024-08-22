@@ -10,6 +10,7 @@ export const validateVoucher = (
   isDiscountPercent: boolean
 ): [string[], boolean] => {
   const errors: string[] = [];
+  const maxIntValue = 2147483647;
 
   if (!code || code.trim().length === 0) {
     errors.push("The discount code is required.");
@@ -34,15 +35,21 @@ export const validateVoucher = (
   } else {
     if (discountValue !== null && discountValue < 10000) {
       errors.push("Discount value at least is 10000.");
+    } else if (discountValue !== null && discountValue > maxIntValue) {
+      errors.push(`Discount value cannot exceed ${maxIntValue}.`);
     }
   }
 
   if (minOrderCondition !== null && minOrderCondition < 0) {
     errors.push("Min order condition must be a non-negative integer.");
+  } else if (minOrderCondition !== null && minOrderCondition > maxIntValue) {
+    errors.push(`Min order condition cannot exceed ${maxIntValue}.`);
   }
 
   if (maxDiscountValue !== null && maxDiscountValue < 0) {
     errors.push("Max discount value must be a non-negative integer.");
+  } else if (maxDiscountValue !== null && maxDiscountValue > maxIntValue) {
+    errors.push(`Max discount value cannot exceed ${maxIntValue}.`);
   }
 
   if (quantity !== null && quantity < 0) {

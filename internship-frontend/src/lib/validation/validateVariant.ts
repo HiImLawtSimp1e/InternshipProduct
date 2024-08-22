@@ -5,6 +5,7 @@ export const validateVariant = (
   quantity?: number | null
 ): [string[], boolean] => {
   const errors: string[] = [];
+  const maxIntValue = 2147483647;
 
   // Validate product type ID
   if (!productTypeId) {
@@ -16,6 +17,8 @@ export const validateVariant = (
     errors.push("Price is required.");
   } else if (price < 1000) {
     errors.push("Price must be an integer and greater than or equal to 1000.");
+  } else if (price > maxIntValue) {
+    errors.push(`Price cannot exceed ${maxIntValue}.`);
   }
 
   // Validate original price
@@ -35,6 +38,8 @@ export const validateVariant = (
       errors.push(
         "Original price must be an integer and greater than or equal to 1000."
       );
+    } else if (originalPrice > maxIntValue) {
+      errors.push(`Original price cannot exceed ${maxIntValue}.`);
     }
   }
 

@@ -8,6 +8,7 @@ export const validateAddProduct = (
   originalPrice: number | null
 ): [string[], boolean] => {
   const errors: string[] = [];
+  const maxIntValue = 2147483647;
 
   if (!title || title.trim().length === 0) {
     errors.push("Product title is required.");
@@ -38,6 +39,8 @@ export const validateAddProduct = (
     errors.push("Price is required.");
   } else if (price < 1000) {
     errors.push("Price must be an integer and greater than or equal to 1000.");
+  } else if (price > maxIntValue) {
+    errors.push(`Price cannot exceed ${maxIntValue}.`);
   }
 
   // Validate original price
@@ -69,6 +72,8 @@ export const validateAddProduct = (
   ) {
     if (originalPrice !== 0 && originalPrice < price) {
       errors.push("Original price must be greater than or equal to the price.");
+    } else if (originalPrice > maxIntValue) {
+      errors.push(`Original price cannot exceed ${maxIntValue}.`);
     }
   }
 
