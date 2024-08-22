@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.VoucherDTO;
 using Service.DTOs.ResponseDTOs.CustomerProductDTO;
 using Service.Models;
+using Service.Services.AuthService;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,11 +18,13 @@ namespace Service.Services.VoucherService
     {
         private readonly DataContext _context;
         private readonly IMapper _mapper;
+        private readonly IAuthService _authService;
 
-        public VoucherService(DataContext context, IMapper mapper)
+        public VoucherService(DataContext context, IMapper mapper, IAuthService authService)
         {
             _context = context;
             _mapper = mapper;
+            _authService = authService;
         }
 
         public async Task<ServiceResponse<PagingParams<List<Voucher>>>> GetVouchers(int page, double pageResults)
@@ -82,7 +85,10 @@ namespace Service.Services.VoucherService
                 newVoucher.DiscountValue = 0;
             }
 
+            var username = _authService.GetUserName();
+
             var voucher = _mapper.Map<Voucher>(newVoucher);
+            voucher.CreatedBy = username;
 
             _context.Vouchers.Add(voucher);
             await _context.SaveChangesAsync();
@@ -111,7 +117,11 @@ namespace Service.Services.VoucherService
                 updateVoucher.MaxDiscountValue = 0;
             }
 
+            var username = _authService.GetUserName();
+
             _mapper.Map(updateVoucher, dbVoucher);
+            dbVoucher.ModifiedAt = DateTime.Now;
+            dbVoucher.ModifiedBy = username;
 
             await _context.SaveChangesAsync();
             return new ServiceResponse<bool>

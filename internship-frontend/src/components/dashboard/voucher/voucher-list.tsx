@@ -78,6 +78,8 @@ const VoucherList = ({ vouchers, pages, currentPage }: IProps) => {
             <th className="px-4 py-2">End Date</th>
             <th className="px-4 py-2">Created At</th>
             <th className="px-4 py-2">Modified At</th>
+            <th className="px-4 py-2">Created By</th>
+            <th className="px-4 py-2">Modified By</th>
             <th className="px-4 py-2">Action</th>
           </tr>
         </thead>
@@ -104,6 +106,8 @@ const VoucherList = ({ vouchers, pages, currentPage }: IProps) => {
               <td className="px-4 py-2">{formatDate(voucher.endDate)}</td>
               <td className="px-4 py-2">{formatDate(voucher.createdAt)}</td>
               <td className="px-4 py-2">{formatDate(voucher.modifiedAt)}</td>
+              <td className="px-4 py-2">{voucher.createdBy}</td>
+              <td className="px-4 py-2">{voucher.modifiedBy}</td>
               <td className="px-4 py-2">
                 <div className="flex gap-2">
                   <Link href={`/dashboard/vouchers/${voucher.id}`}>
