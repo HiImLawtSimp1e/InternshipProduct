@@ -45,6 +45,14 @@ namespace Service.Services.OrderCounterService
                 };
             }
 
+            orderCounterItems.ForEach(oi =>
+            {
+                var variant = _context.ProductVariants
+                                    .FirstOrDefault(v => v.ProductId == oi.ProductId && v.ProductTypeId == oi.ProductTypeId);
+
+                variant.Quantity -= oi.Quantity;
+            });
+
             int totalAmount = 0;
 
             orderCounterItems.ForEach(oci => totalAmount += oci.Price * oci.Quantity);

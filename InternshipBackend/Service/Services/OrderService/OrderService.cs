@@ -155,6 +155,20 @@ namespace Service.Services.OrderService
                 };
             }
 
+            if (dbOrder.State == OrderState.Cancelled)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Can not update canceled order"
+                };
+            }
+
+            if(state == OrderState.Cancelled)
+            {
+                await TurnBackVariantQuantity(orderId);
+            }
+
             var username = _authService.GetUserName();
 
             dbOrder.State = state;
@@ -229,6 +243,7 @@ namespace Service.Services.OrderService
 
         public async Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId)
         {
+            var username = _authService.GetUserName();
             var accountId = _authService.GetUserId();
 
             var customer = await _context.Customers
@@ -283,6 +298,7 @@ namespace Service.Services.OrderService
                     ProductTypeName = variant.ProductType.Name,
                     ProductTitle = product.Title,
                 };
+                variant.Quantity -= ci.Quantity;
                 orderItems.Add(item);
             });
 
@@ -296,7 +312,7 @@ namespace Service.Services.OrderService
                 Email = address.Email,
                 Address = address.Address,
                 Phone = address.Phone,
-                CreatedBy = "Customer"
+                CreatedBy = username
             };
 
             if(voucherId != null)
@@ -419,13 +435,17 @@ namespace Service.Services.OrderService
                 return new ServiceResponse<bool>
                 {
                     Success = false,
-                    Message = "Can not cancel this order"
+                    Message = "Can not cancel delivered order"
                 };
             }
 
+            var username = _authService.GetUserName();
+
             order.State = OrderState.Cancelled;
             order.ModifiedAt = DateTime.Now;
-            order.ModifiedBy = "Customer";
+            order.ModifiedBy = username;
+
+            await TurnBackVariantQuantity(orderId);
 
             await _context.SaveChangesAsync();
 
@@ -435,5 +455,28 @@ namespace Service.Services.OrderService
             };
         }
         #endregion Customers'OrderService
+
+        private async Task<bool> TurnBackVariantQuantity(Guid orderId)
+        {
+            var orderItems = await _context.OrderItems
+                                      .Where(o => o.OrderId == orderId)
+                                      .ToListAsync();
+
+            if(orderItems == null || orderItems.Count() == 0)
+            {
+                return false;
+            }
+
+            orderItems.ForEach(oi =>
+            {
+                var variant = _context.ProductVariants
+                                   .FirstOrDefault(v => v.ProductId == oi.ProductId && v.ProductTypeId == oi.ProductTypeId);
+
+                // Turn back variant quantity
+                variant.Quantity += oi.Quantity;
+            });
+
+            return true;
+        }
     }
 }

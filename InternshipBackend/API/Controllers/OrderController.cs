@@ -60,7 +60,6 @@ namespace API.Controllers
             }
             return Ok(response);
         }
-        [Authorize(Roles = "Customer")]
         [HttpPut("cancel-order/{voucherId}")]
         public async Task<ActionResult<ServiceResponse<bool>>> CancelVoucher(Guid voucherId)
         {
