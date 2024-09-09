@@ -11,6 +11,7 @@ import { useCartStore } from "@/lib/store/useCartStore";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
 import ShoppingVoucher from "./shopping-voucher";
 import ShoppingCartAddress from "./shoping-cart-address";
+import VnPayment from "@/lib/vnPayment/vnpay";
 
 interface IProps {
   cartItems: ICartItem[];
@@ -115,6 +116,7 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
                     <p className="text-sm text-gray-700">including VAT</p>
                   </div>
                 </div>
+                <VnPayment />
                 <form onSubmit={handleSubmit}>
                   <button
                     type="submit"
