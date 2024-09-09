@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Data.Initialization;
+using Data.Transation;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -42,6 +43,8 @@ namespace Data.Context
                       .HasConversion<int>()
                       .IsRequired();
             });
+            builder.Entity<VnpayTransactions>()
+             .HasKey(v => v.TransactionId);
 
             Seed.SeedingAccount(builder);
             Seed.SeedingBase(builder);
@@ -73,5 +76,6 @@ namespace Data.Context
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
         public DbSet<PaymentMethod> PaymentMethods { get; set; }
+        public DbSet<VnpayTransactions> VnpayTransactions { get; set; }
     }
 }

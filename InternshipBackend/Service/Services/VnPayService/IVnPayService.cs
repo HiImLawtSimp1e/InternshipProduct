@@ -11,7 +11,8 @@ namespace Service.Services.VnPayService
 {
     public interface IVnPayService
     {
-        public Task<string> CreatePaymentUrl(HttpContext context, Guid? voucherId);
+        public Task<string> CreatePaymentUrl(HttpContext context, Guid? voucherId, string transactionId);
         public Task<ServiceResponse<VnPaymentResponseModel>> PaymentExecute(IQueryCollection collections);
+        public Task<ServiceResponse<bool>> CreateVnpayOrder(Guid userId, Guid? voucherId);
     }
 }

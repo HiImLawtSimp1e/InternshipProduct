@@ -280,14 +280,6 @@ namespace Service.Services.OrderService
                     Message = "Discount code is incorrect or has expired"
                 };
             }
-            else if (_orderCommonService.IsVoucherUsed(voucher.Id, customer.Id))
-            {
-                return new ServiceResponse<CustomerVoucherResponseDTO>
-                {
-                    Success = false,
-                    Message = "Discount code has been used"
-                };
-            }
             else
             {
                 // MinOrderCondition = 0 meaning max min order condition doesn't exist
@@ -383,13 +375,11 @@ namespace Service.Services.OrderService
 
         public async Task<ServiceResponse<bool>> CreateOrder(Guid? voucherId, Customer customer, string pmOrder)
         {
-            var username = _authService.GetUserName();
-
             var address = await _context.Addresses
                                       .Where(a => a.IsMain)
                                       .FirstOrDefaultAsync(a => a.CustomerId == customer.Id);
 
-            var cartItem = (await _cartService.GetCartItems()).Data;
+            var cartItem = (await _cartService.GetCartItemsByAccountId(customer.AccountId)).Data;
             if (cartItem == null || cartItem.Count() == 0)
             {
                 return new ServiceResponse<bool>
@@ -448,7 +438,7 @@ namespace Service.Services.OrderService
                 Email = address.Email,
                 Address = address.Address,
                 Phone = address.Phone,
-                CreatedBy = username,
+                CreatedBy = "Customer",
                 PaymentMethod = paymentMethod,
             };
 

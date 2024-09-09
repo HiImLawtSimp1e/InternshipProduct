@@ -22,6 +22,7 @@ using Service.Services.ProductTypeService;
 using Service.Services.ProductValueService;
 using Service.Services.ProductVariantService;
 using Service.Services.VnPayService;
+using Service.Services.VnPayService.VnPayTransactionService;
 using Service.Services.VoucherService;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -51,6 +52,7 @@ builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+builder.Services.AddScoped<IVnPayTransactionService, VnPayTransactionService>();
 
 //Enable CORS
 builder.Services.AddCors(options =>
@@ -60,6 +62,19 @@ builder.Services.AddCors(options =>
                           .AllowAnyHeader()
                           .AllowAnyMethod());
 });
+
+//Register Session Storage
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(15);
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
+//Register Memory Cache
+builder.Services.AddMemoryCache();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -127,6 +142,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors("AllowSpecificOrigin");
+
+app.UseSession(); //using Session
 
 app.UseRouting();
 

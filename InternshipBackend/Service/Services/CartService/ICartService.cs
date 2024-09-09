@@ -13,6 +13,7 @@ namespace Service.Services.CartService
     public interface ICartService
     {
         Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItems();
+        Task<ServiceResponse<List<CustomerCartItemsDTO>>> GetCartItemsByAccountId(Guid? accountId);
         Task<ServiceResponse<bool>> StoreCartItems(List<StoreCartItemDTO> items);
         Task<ServiceResponse<bool>> AddToCart(StoreCartItemDTO newItem);
         Task<ServiceResponse<bool>> UpdateQuantity(StoreCartItemDTO updateItem);

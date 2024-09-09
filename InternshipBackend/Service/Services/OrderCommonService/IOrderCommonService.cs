@@ -12,5 +12,6 @@ namespace Service.Services.OrderCommonService
         string GenerateInvoiceCode();
         bool IsVoucherUsed(Guid voucherId, Guid customerId);
         int CalculateDiscountValue(Voucher voucher, int totalAmount);
+        Task<int> CalculateDiscountValueWithId(Guid? voucherId, int totalAmount);
     }
 }
