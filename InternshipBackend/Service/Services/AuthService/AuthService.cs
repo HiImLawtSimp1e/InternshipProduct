@@ -39,6 +39,13 @@ namespace Service.Services.AuthService
 
         public string GetUserName() => _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.Name);
 
+        public async Task<Customer> GetCustomerById(Guid userId)
+        {
+            var customer = await _context.Customers
+                                        .Include(c => c.Cart)
+                                        .FirstOrDefaultAsync(c => c.AccountId == userId);
+            return customer;
+        }
 
         public async Task<ServiceResponse<bool>> ChangePassword(Guid accountId, string newPassword)
         {

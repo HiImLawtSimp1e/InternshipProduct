@@ -44,6 +44,7 @@ namespace Data.Context
             });
 
             Seed.SeedingAccount(builder);
+            Seed.SeedingBase(builder);
             Seed.SeedingData(builder);
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -71,5 +72,6 @@ namespace Data.Context
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Voucher> Vouchers { get; set; }
+        public DbSet<PaymentMethod> PaymentMethods { get; set; }
     }
 }

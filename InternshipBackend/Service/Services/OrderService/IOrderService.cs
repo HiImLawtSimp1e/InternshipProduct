@@ -14,10 +14,11 @@ namespace Service.Services.OrderService
     public interface IOrderService
     {
         #region Customer'sOrderService
-        public Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId);
+        public Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId, string? pmOrder);
         public Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode);
         public Task<ServiceResponse<bool>> CancelOrder(Guid orderId);
         public Task<ServiceResponse<PagingParams<List<Order>>>> GetCustomerOrders(int page);
+        public Task<ServiceResponse<bool>> CreateOrder(Guid? voucherId, Customer customer, string pmOrder);
         #endregion Customer'sOrderService
 
         #region GetOrdersInformation

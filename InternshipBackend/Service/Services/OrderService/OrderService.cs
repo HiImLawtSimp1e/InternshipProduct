@@ -41,7 +41,7 @@ namespace Service.Services.OrderService
             var pageResults = 10f;
             var pageCount = Math.Ceiling(_context.Orders.Count() / pageResults);
 
-            var orders =  await _context.Orders
+            var orders = await _context.Orders
                                    .OrderByDescending(p => p.ModifiedAt)
                                    .Skip((page - 1) * (int)pageResults)
                                    .Take((int)pageResults)
@@ -62,7 +62,7 @@ namespace Service.Services.OrderService
 
         public async Task<ServiceResponse<List<OrderItemDTO>>> GetOrderItems(Guid orderId)
         {
-            var items = await _context.OrderItems 
+            var items = await _context.OrderItems
                                     .Where(oi => oi.OrderId == orderId)
                                     .ToListAsync();
 
@@ -103,7 +103,7 @@ namespace Service.Services.OrderService
         public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderDetailInfo(Guid orderId)
         {
             var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
-            if(order == null)
+            if (order == null)
             {
                 return new ServiceResponse<OrderDetailCustomerDTO>
                 {
@@ -164,7 +164,7 @@ namespace Service.Services.OrderService
                 };
             }
 
-            if(state == OrderState.Cancelled)
+            if (state == OrderState.Cancelled)
             {
                 await TurnBackVariantQuantity(orderId);
             }
@@ -241,14 +241,121 @@ namespace Service.Services.OrderService
             };
         }
 
-        public async Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId)
+        public async Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode)
         {
-            var username = _authService.GetUserName();
             var accountId = _authService.GetUserId();
 
             var customer = await _context.Customers
                                          .Include(c => c.Cart)
                                          .FirstOrDefaultAsync(c => c.AccountId == accountId);
+
+            if (customer == null)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "You need to log in"
+                };
+            }
+
+            var totalAmount = await _cartService.GetCartTotalAmountAsync();
+            if (totalAmount == 0)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Empty Cart"
+                };
+            }
+
+            //Check if the voucher is active, not expired, and has remaining quantity or not.
+            var voucher = await _context.Vouchers
+                                           .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
+                                           .FirstOrDefaultAsync(v => v.Code == discountCode);
+            if (voucher == null)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Discount code is incorrect or has expired"
+                };
+            }
+            else if (_orderCommonService.IsVoucherUsed(voucher.Id, customer.Id))
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Discount code has been used"
+                };
+            }
+            else
+            {
+                // MinOrderCondition = 0 meaning max min order condition doesn't exist
+                if (voucher.MinOrderCondition > 0 && totalAmount < voucher.MinOrderCondition)
+                {
+                    return new ServiceResponse<CustomerVoucherResponseDTO>
+                    {
+                        Success = false,
+                        Message = string.Format("The voucher is only applicable for orders with a value greater than {0}", voucher.MinOrderCondition)
+                    };
+                }
+
+                var result = _mapper.Map<CustomerVoucherResponseDTO>(voucher);
+
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Data = result
+                };
+            }
+
+        }
+
+        public async Task<ServiceResponse<bool>> CancelOrder(Guid orderId)
+        {
+            var order = await _context.Orders
+                                   .Where(o => o.State != OrderState.Cancelled)
+                                   .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Not found"
+                };
+            }
+
+            if (order.State == OrderState.Delivered)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Can not cancel delivered order"
+                };
+            }
+
+            var username = _authService.GetUserName();
+
+            order.State = OrderState.Cancelled;
+            order.ModifiedAt = DateTime.Now;
+            order.ModifiedBy = username;
+
+            await TurnBackVariantQuantity(orderId);
+
+            await _context.SaveChangesAsync();
+
+            return new ServiceResponse<bool>
+            {
+                Message = "Canceled order successfully"
+            };
+        }
+
+        public async Task<ServiceResponse<bool>> PlaceOrder(Guid? voucherId, string? pmOrder)
+        {
+            var userId = _authService.GetUserId();
+            var customer = await _context.Customers
+                                         .Include(c => c.Cart)
+                                         .FirstOrDefaultAsync(c => c.AccountId == userId);
 
             if (customer == null)
             {
@@ -259,17 +366,46 @@ namespace Service.Services.OrderService
                 };
             }
 
+            var createOrder = await CreateOrder(voucherId, customer, pmOrder);
+
+            if (!createOrder.Success)
+            {
+                return createOrder;
+            }
+
+            return new ServiceResponse<bool>
+            {
+                Data = true,
+                Message = "Place order successfully!"
+            };
+        }
+        #endregion Customers'OrderService
+
+        public async Task<ServiceResponse<bool>> CreateOrder(Guid? voucherId, Customer customer, string pmOrder)
+        {
+            var username = _authService.GetUserName();
+
             var address = await _context.Addresses
                                       .Where(a => a.IsMain)
                                       .FirstOrDefaultAsync(a => a.CustomerId == customer.Id);
 
             var cartItem = (await _cartService.GetCartItems()).Data;
-            if(cartItem == null || cartItem.Count() == 0)
+            if (cartItem == null || cartItem.Count() == 0)
             {
                 return new ServiceResponse<bool>
                 {
                     Success = false,
                     Message = "Empty cart"
+                };
+            }
+
+            var paymentMethod = await _context.PaymentMethods.FirstOrDefaultAsync(pm => pm.Name == pmOrder);
+            if (paymentMethod == null)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Payment method is empty"
                 };
             }
 
@@ -312,16 +448,18 @@ namespace Service.Services.OrderService
                 Email = address.Email,
                 Address = address.Address,
                 Phone = address.Phone,
-                CreatedBy = username
+                CreatedBy = username,
+                PaymentMethod = paymentMethod,
             };
 
-            if(voucherId != null)
+
+            if (voucherId != null)
             {
                 //Check if the voucher is active, not expired, and has remaining quantity or not.
                 var voucher = await _context.Vouchers
                                          .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
                                          .FirstOrDefaultAsync(v => v.Id == voucherId);
-                if(voucher != null)
+                if (voucher != null)
                 {
                     // MinOrderCondition = 0 meaning max min order condition doesn't exist => pass
                     // Order's total amount > voucher's min order condition => pass
@@ -340,121 +478,12 @@ namespace Service.Services.OrderService
             _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.CartId == customer.Cart.Id));
 
             await _context.SaveChangesAsync();
-            return new ServiceResponse<bool>
-            {
-                Data = true,
-                Message = "Place order successfully!"
-            };
-        }
-
-        public async Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode)
-        {
-            var accountId = _authService.GetUserId();
-
-            var customer = await _context.Customers
-                                         .Include(c => c.Cart)
-                                         .FirstOrDefaultAsync(c => c.AccountId == accountId);
-
-            if (customer == null)
-            {
-                return new ServiceResponse<CustomerVoucherResponseDTO>
-                {
-                    Success = false,
-                    Message = "You need to log in"
-                };
-            }
-
-            var totalAmount = await _cartService.GetCartTotalAmountAsync();
-            if (totalAmount == 0)
-            {
-                return new ServiceResponse<CustomerVoucherResponseDTO>
-                {
-                    Success = false,
-                    Message = "Empty Cart"
-                };
-            }
-
-            //Check if the voucher is active, not expired, and has remaining quantity or not.
-            var voucher = await _context.Vouchers
-                                           .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
-                                           .FirstOrDefaultAsync(v => v.Code == discountCode);
-            if (voucher == null)
-            {
-                return new ServiceResponse<CustomerVoucherResponseDTO>
-                {
-                    Success = false,
-                    Message = "Discount code is incorrect or has expired"
-                };
-            }
-            else if(_orderCommonService.IsVoucherUsed(voucher.Id, customer.Id)){
-                return new ServiceResponse<CustomerVoucherResponseDTO>
-                {
-                    Success = false,
-                    Message = "Discount code has been used"
-                };
-            }
-            else
-            {
-                // MinOrderCondition = 0 meaning max min order condition doesn't exist
-                if (voucher.MinOrderCondition > 0 && totalAmount < voucher.MinOrderCondition)
-                {
-                    return new ServiceResponse<CustomerVoucherResponseDTO>
-                    {
-                        Success = false,
-                        Message = string.Format("The voucher is only applicable for orders with a value greater than {0}", voucher.MinOrderCondition)
-                    };
-                }
-                
-                var result = _mapper.Map<CustomerVoucherResponseDTO>(voucher);
-
-                return new ServiceResponse<CustomerVoucherResponseDTO> 
-                { 
-                    Data = result
-                };
-            }
-
-        }
-
-        public async Task<ServiceResponse<bool>> CancelOrder(Guid orderId)
-        {
-            var order = await _context.Orders
-                                   .Where(o => o.State != OrderState.Cancelled)   
-                                   .FirstOrDefaultAsync(o => o.Id == orderId);
-
-            if(order == null)
-            {
-                return new ServiceResponse<bool>
-                {
-                    Success = false,
-                    Message = "Not found"
-                };
-            }
-
-            if(order.State == OrderState.Delivered)
-            {
-                return new ServiceResponse<bool>
-                {
-                    Success = false,
-                    Message = "Can not cancel delivered order"
-                };
-            }
-
-            var username = _authService.GetUserName();
-
-            order.State = OrderState.Cancelled;
-            order.ModifiedAt = DateTime.Now;
-            order.ModifiedBy = username;
-
-            await TurnBackVariantQuantity(orderId);
-
-            await _context.SaveChangesAsync();
 
             return new ServiceResponse<bool>
             {
-                Message = "Canceled order successfully"
+                Data = true
             };
         }
-        #endregion Customers'OrderService
 
         private async Task<bool> TurnBackVariantQuantity(Guid orderId)
         {
@@ -462,7 +491,7 @@ namespace Service.Services.OrderService
                                       .Where(o => o.OrderId == orderId)
                                       .ToListAsync();
 
-            if(orderItems == null || orderItems.Count() == 0)
+            if (orderItems == null || orderItems.Count() == 0)
             {
                 return false;
             }

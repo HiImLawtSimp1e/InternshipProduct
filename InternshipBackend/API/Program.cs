@@ -21,6 +21,7 @@ using Service.Services.ProductService;
 using Service.Services.ProductTypeService;
 using Service.Services.ProductValueService;
 using Service.Services.ProductVariantService;
+using Service.Services.VnPayService;
 using Service.Services.VoucherService;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
@@ -49,6 +50,7 @@ builder.Services.AddScoped<IOrderCommonService, OrderCommonService>();
 builder.Services.AddScoped<IVoucherService, VoucherService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAddressService, AddressService>();
+builder.Services.AddScoped<IVnPayService, VnPayService>();
 
 //Enable CORS
 builder.Services.AddCors(options =>

@@ -19,5 +19,6 @@ namespace Service.Services.AuthService
         Task<ServiceResponse<string>> VerifyToken(string token);
         Guid GetUserId();
         string GetUserName();
+        public Task<Customer> GetCustomerById(Guid userId);
     }
 }

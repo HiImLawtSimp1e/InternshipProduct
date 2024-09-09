@@ -40,9 +40,9 @@ namespace API.Controllers
         }
         [Authorize(Roles = "Customer")]
         [HttpPost("place-order")]
-        public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder([FromQuery] Guid? voucherId)
+        public async Task<ActionResult<ServiceResponse<bool>>> PlaceOrder([FromQuery] Guid? voucherId, [FromQuery] string? pmOrder = "Cash Payment")
         {
-            var response = await _service.PlaceOrder(voucherId);
+            var response = await _service.PlaceOrder(voucherId, pmOrder);
             if (!response.Success)
             {
                 return BadRequest(response);

@@ -21,6 +21,8 @@ namespace Data.Entities
         public int DiscountValue { get; set; } = 0;
         public Guid? CustomerId { get; set; }
         public Guid? VoucherId { get; set; }
+        public PaymentMethod? PaymentMethod { get; set; }
+        public Guid PaymentMethodId { get; set; }
         public List<OrderItem>? OrderItems { get; set; }
     }
 }

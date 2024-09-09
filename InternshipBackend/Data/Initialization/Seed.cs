@@ -142,6 +142,28 @@ namespace Data.Initialization
              }
            );
         }
+
+        public static void SeedingBase(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<PaymentMethod>().HasData(
+                new PaymentMethod
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Cash Payment"
+                },
+                new PaymentMethod
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Bank Transfer"
+                },
+                new PaymentMethod
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "E-Wallet (VNPay)"
+                }
+                );
+        }
+
         public static void SeedingData(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ProductType>().HasData(
