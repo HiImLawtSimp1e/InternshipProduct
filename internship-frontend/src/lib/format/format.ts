@@ -9,5 +9,5 @@ export const formatProductType = (productType: string) => {
 };
 
 export const formatDate = (dateString: string) => {
-  return format(new Date(dateString), "dd/MM/yyyy");
+  return format(new Date(dateString), "dd/MM/yyyy HH:mm:ss");
 };

@@ -65,6 +65,14 @@ const UpdatePostForm = ({ post }: IProps) => {
       }
     }
 
+    // check if TextAreaField
+    if (e.target instanceof HTMLTextAreaElement) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        [name]: value,
+      }));
+    }
+
     // check if SelectField
     if (e.target instanceof HTMLSelectElement) {
       setFormData((prevFormData) => ({
