@@ -164,6 +164,7 @@ namespace Service.Services.AccountService
                         Email = newAccount.Email,
                         Phone = newAccount.Phone,
                         Address = newAccount.Address,
+                        IsMain = true
                     };
                     // set customer's information
                     var customer = new Customer

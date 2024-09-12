@@ -202,6 +202,7 @@ namespace Service.Services.AuthService
                     Email = registerDTO.Email,
                     Phone = registerDTO.Phone,
                     Address = registerDTO.Address,
+                    IsMain = true
                 };
 
                 // set customer's information
