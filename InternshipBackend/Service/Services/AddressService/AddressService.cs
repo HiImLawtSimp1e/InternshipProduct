@@ -222,6 +222,31 @@ namespace Service.Services.AddressService
                 }
             }
 
+            //Check if unactive main address
+            if (updateAddress.IsMain == false && dbAddress.IsMain == true)
+            {
+                //Find other address 
+                var somethingElseAddress = await _context.Addresses
+                                             .Where(a => a.Id != addressId)
+                                             .FirstOrDefaultAsync(a => a.CustomerId == customer.Id);
+
+                //If unactive address is default, deny action
+                if (somethingElseAddress == null)
+                {
+                    return new ServiceResponse<bool>
+                    {
+                        Success = false,
+                        Message = "Can't unactive default address"
+                    };
+                }
+                //If has other address, set a random address => main address
+                else
+                {
+                    somethingElseAddress.IsMain = true;
+                }
+
+            }
+
             _mapper.Map(updateAddress, dbAddress);
             await _context.SaveChangesAsync();
 
