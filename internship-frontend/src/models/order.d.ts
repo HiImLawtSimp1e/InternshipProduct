@@ -17,6 +17,7 @@ interface IOrderDetail {
   phone: string;
   address: string;
   invoiceCode: string;
+  paymentMethodName: string;
   discountValue: number;
   state: number;
   orderCreatedAt: string;

@@ -9,6 +9,7 @@ import Loading from "@/components/ui/loading";
 import { useSearchAddressStore } from "@/lib/store/useSearchAddressStore";
 import { getAuthPublic } from "@/services/auth-service/auth-service";
 import { toast } from "react-toastify";
+import PaymentMethodSelect from "./payment-method-select";
 
 interface IOrderFormData {
   fullName: string;
@@ -16,12 +17,15 @@ interface IOrderFormData {
   phone: string;
   address: string;
   orderItems: IOrderItem[];
+  paymentMethodId: string;
 }
 
 const CounterSaleCart = () => {
   const { orderItems } = useCounterSaleStore();
   const { address } = useSearchAddressStore();
   const { voucher } = useVoucherStore();
+  const [paymentMethodId, setPaymentMethodId] = useState<string>("");
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const totalAmount = orderItems.reduce(
@@ -54,6 +58,11 @@ const CounterSaleCart = () => {
       return { errors: ["Customer information is required"] };
     }
 
+    if (paymentMethodId === null || paymentMethodId === "") {
+      setIsLoading(false);
+      return { errors: ["Payment method is required"] };
+    }
+
     try {
       const orderData: IOrderFormData = {
         fullName: address.fullName,
@@ -61,6 +70,7 @@ const CounterSaleCart = () => {
         phone: address.phone,
         address: address.address,
         orderItems: orderItems,
+        paymentMethodId: paymentMethodId,
       };
 
       const res = await fetch(
@@ -132,6 +142,10 @@ const CounterSaleCart = () => {
   return (
     <div className="h-[150vh]">
       <div className="flex flex-col gap-4">
+        <PaymentMethodSelect
+          value={paymentMethodId}
+          onChange={(id) => setPaymentMethodId(id)}
+        />
         {orderItems.length > 0 ? (
           <>
             <div className="p-5 flex flex-col gap-1 rounded-lg bg-gray-600">

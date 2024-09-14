@@ -40,6 +40,10 @@ const UpdateOrderDetail = ({ orderId, orderState }: IProps) => {
     setFormData(value);
   };
 
+  const isUpdate =
+    mapOrderState(Number(orderState)) !== "Cancelled" &&
+    mapOrderState(Number(orderState)) !== "Delivered";
+
   useEffect(() => {
     if (formState.errors.length > 0 && !toastDisplayed) {
       toast.error(formState.errors[0]);
@@ -52,7 +56,7 @@ const UpdateOrderDetail = ({ orderId, orderState }: IProps) => {
   }, [formState, toastDisplayed]);
   return (
     <div className="mt-12">
-      {mapOrderState(Number(orderState)) !== "Cancelled" ? (
+      {isUpdate ? (
         <form onSubmit={handleSubmit} className="px-4 w-full">
           <input type="hidden" value={orderId} name="id" />
           <label
