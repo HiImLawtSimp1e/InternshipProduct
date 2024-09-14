@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.OrderCounterDTO;
+using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using Service.DTOs.ResponseDTOs.OrderCounterDTO;
 using Service.Models;
 using Service.Services.OrderCounterService;
@@ -60,6 +61,16 @@ namespace API.Controllers
                 return BadRequest(res);
             }
             return Ok(res);
+        }
+        [HttpPost("apply-voucher")]
+        public async Task<ActionResult<ServiceResponse<CustomerVoucherResponseDTO>>> ApplyVoucher(string discountCode, int totalAmount)
+        {
+            var response = await _service.ApplyVoucher(discountCode, totalAmount);
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+            return Ok(response);
         }
     }
 }

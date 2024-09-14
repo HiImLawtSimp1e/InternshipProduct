@@ -1,5 +1,6 @@
 ﻿using Data.Entities;
 using Service.DTOs.RequestDTOs.OrderCounterDTO;
+using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using Service.DTOs.ResponseDTOs.OrderCounterDTO;
 using Service.Models;
 using System;
@@ -16,5 +17,6 @@ namespace Service.Services.OrderCounterService
         Task<ServiceResponse<List<OrderCounterCustomerAddressDTO>>> SearchCustomerAddressCards(string searchText);
         Task<ServiceResponse<List<OrderItemResponseDTO>>> SearchProducts(string searchText);
         Task<ServiceResponse<List<PaymentMethod>>> GetPaymentMethodSelect();
+        Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode, int totalAmount);
     }
 }

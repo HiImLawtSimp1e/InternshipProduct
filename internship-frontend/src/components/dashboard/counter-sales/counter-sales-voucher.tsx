@@ -1,9 +1,9 @@
 "use client";
 
-import { applyVoucher } from "@/action/orderAction";
+import { applyVoucher } from "@/action/orderCounterAction";
 import { useCustomActionState } from "@/lib/custom/customHook";
 import { formatPrice } from "@/lib/format/format";
-import { useCartStore } from "@/lib/store/useCartStore";
+import { useCounterSaleStore } from "@/lib/store/useCounterSaleStore";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -38,7 +38,7 @@ const CounterSaleVoucher = () => {
 
   //for state manager
   const { voucher, setVoucher } = useVoucherStore();
-  const { totalAmount } = useCartStore();
+  const { totalAmount } = useCounterSaleStore();
 
   const voucherInfo = voucher ? generateVoucherInfo(voucher) : "";
 
@@ -54,6 +54,9 @@ const CounterSaleVoucher = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
+    if (totalAmount !== null && totalAmount > 0) {
+      formData.set("totalAmount", totalAmount.toString());
+    }
     formAction(formData);
     setToastDisplayed(false); // Reset toastDisplayed when submitting
   };
@@ -84,7 +87,7 @@ const CounterSaleVoucher = () => {
             />
             <button
               type="submit"
-              className="px-4 w-1/4 bg-red-500 text-white uppercase"
+              className="px-4 w-2/5 bg-red-500 text-white uppercase"
             >
               Submit
             </button>
@@ -95,8 +98,8 @@ const CounterSaleVoucher = () => {
         <div
           className={`py-1 px-3 text-lg leading-2 ${
             totalAmount > voucher.minOrderCondition
-              ? "text-green-600"
-              : "text-red-400"
+              ? "text-green-400"
+              : "text-red-600"
           } `}
         >
           {voucherInfo}

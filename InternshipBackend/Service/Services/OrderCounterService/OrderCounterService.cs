@@ -4,6 +4,7 @@ using Data.Entities;
 using Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using Service.DTOs.RequestDTOs.OrderCounterDTO;
+using Service.DTOs.ResponseDTOs.CustomerVoucherDTO;
 using Service.DTOs.ResponseDTOs.OrderCounterDTO;
 using Service.Models;
 using Service.Services.AuthService;
@@ -191,6 +192,41 @@ namespace Service.Services.OrderCounterService
             {
                 Data = paymentMethods
             };
+        }
+
+        public async Task<ServiceResponse<CustomerVoucherResponseDTO>> ApplyVoucher(string discountCode, int totalAmount)
+        {
+            //Check if the voucher is active, not expired, and has remaining quantity or not.
+            var voucher = await _context.Vouchers
+                                           .Where(v => v.IsActive == true && DateTime.Now > v.StartDate && DateTime.Now < v.EndDate && v.Quantity > 0)
+                                           .FirstOrDefaultAsync(v => v.Code == discountCode);
+            if (voucher == null)
+            {
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Success = false,
+                    Message = "Discount code is incorrect or has expired"
+                };
+            }
+            else
+            {
+                // MinOrderCondition = 0 meaning max min order condition doesn't exist
+                if (voucher.MinOrderCondition > 0 && totalAmount < voucher.MinOrderCondition)
+                {
+                    return new ServiceResponse<CustomerVoucherResponseDTO>
+                    {
+                        Success = false,
+                        Message = string.Format("The voucher is only applicable for orders with a value greater than {0}", voucher.MinOrderCondition)
+                    };
+                }
+
+                var result = _mapper.Map<CustomerVoucherResponseDTO>(voucher);
+
+                return new ServiceResponse<CustomerVoucherResponseDTO>
+                {
+                    Data = result
+                };
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ import { useSearchAddressStore } from "@/lib/store/useSearchAddressStore";
 import { getAuthPublic } from "@/services/auth-service/auth-service";
 import { toast } from "react-toastify";
 import PaymentMethodSelect from "./payment-method-select";
+import CounterSaleVoucher from "./counter-sales-voucher";
 
 interface IOrderFormData {
   fullName: string;
@@ -73,17 +74,21 @@ const CounterSaleCart = () => {
         paymentMethodId: paymentMethodId,
       };
 
-      const res = await fetch(
-        `http://localhost:5000/api/OrderCounter/place-order`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${authToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(orderData),
-        }
-      );
+      let url = "";
+      if (!voucher === null || voucher === undefined || voucher?.id === null) {
+        url = `http://localhost:5000/api/OrderCounter/place-order`;
+      } else {
+        url = `http://localhost:5000/api/OrderCounter/place-order?voucherId=${voucher?.id}`;
+      }
+
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      });
       //console.log(res);
 
       const responseData: ApiResponse<boolean> = await res.json();
@@ -149,6 +154,10 @@ const CounterSaleCart = () => {
         {orderItems.length > 0 ? (
           <>
             <div className="p-5 flex flex-col gap-1 rounded-lg bg-gray-600">
+              <div className="mb-5">
+                <CounterSaleVoucher />
+              </div>
+
               {isClient ? (
                 orderItems.map((item: IOrderItem, index: number) => (
                   <Suspense key={index} fallback={<Loading />}>

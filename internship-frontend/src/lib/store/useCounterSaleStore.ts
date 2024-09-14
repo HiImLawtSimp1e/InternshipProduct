@@ -12,6 +12,7 @@ const getFromSessionStorage = <T>(key: string, defaultValue: T): T => {
 type CounterSaleState = {
   orderItems: IOrderItem[];
   isLoading: boolean;
+  totalAmount: number;
   addOrderItem: (orderItem: IOrderItem) => void;
   changeQuantity: (
     productId: string,
@@ -20,6 +21,7 @@ type CounterSaleState = {
   ) => void;
   removeOrderItem: (productId: string, productTypeId: string) => void;
   updateSessionStorage: () => void;
+  calculateTotalAmount: () => void;
 };
 
 const initialOrderItems = getFromSessionStorage<IOrderItem[]>("orderItems", []);
@@ -28,14 +30,30 @@ const updateSessionStorage = (orderItems: IOrderItem[]) => {
   sessionStorage.setItem("orderItems", JSON.stringify(orderItems));
 };
 
+// Function to calculate the total amount
+const calculateTotal = (orderItems: IOrderItem[]): number => {
+  return orderItems.reduce(
+    (total, item) => total + item.price * item.quantity,
+    0
+  );
+};
+
 export const useCounterSaleStore = create<CounterSaleState>((set, get) => ({
   orderItems: initialOrderItems,
   isLoading: true,
+  totalAmount: calculateTotal(initialOrderItems), // Initialize totalAmount
 
   // Hàm cập nhật sessionStorage
   updateSessionStorage: () => {
     const state = get();
     updateSessionStorage(state.orderItems);
+  },
+
+  // Hàm tính toán lại totalAmount
+  calculateTotalAmount: () => {
+    const state = get();
+    const newTotal = calculateTotal(state.orderItems);
+    set({ totalAmount: newTotal });
   },
 
   // Hàm thêm OrderItem
@@ -62,8 +80,9 @@ export const useCounterSaleStore = create<CounterSaleState>((set, get) => ({
       }));
     }
 
-    // Cập nhật lại sessionStorage sau khi thêm sản phẩm
+    // Cập nhật lại sessionStorage và totalAmount sau khi thêm sản phẩm
     state.updateSessionStorage();
+    state.calculateTotalAmount();
   },
 
   // Hàm thay đổi số lượng sản phẩm
@@ -79,8 +98,9 @@ export const useCounterSaleStore = create<CounterSaleState>((set, get) => ({
           : item
       ),
     }));
-    // Cập nhật sessionStorage sau khi thay đổi số lượng
+    // Cập nhật sessionStorage và totalAmount sau khi thay đổi số lượng
     get().updateSessionStorage();
+    get().calculateTotalAmount();
   },
 
   // Hàm xoá OrderItem
@@ -93,7 +113,19 @@ export const useCounterSaleStore = create<CounterSaleState>((set, get) => ({
           )
       ),
     }));
-    // Cập nhật sessionStorage sau khi xóa sản phẩm
+    // Cập nhật sessionStorage và totalAmount sau khi xóa sản phẩm
     get().updateSessionStorage();
+    get().calculateTotalAmount();
   },
 }));
+
+interface IOrderItem {
+  productId: string;
+  productTypeId: string;
+  productTitle: string;
+  productTypeName: string;
+  price: number;
+  originalPrice: number;
+  imageUrl?: string;
+  quantity: number;
+}
