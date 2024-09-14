@@ -102,7 +102,9 @@ namespace Service.Services.OrderService
 
         public async Task<ServiceResponse<OrderDetailCustomerDTO>> GetOrderDetailInfo(Guid orderId)
         {
-            var order = await _context.Orders.FirstOrDefaultAsync(o => o.Id == orderId);
+            var order = await _context.Orders
+                                   .Include(o => o.PaymentMethod)
+                                   .FirstOrDefaultAsync(o => o.Id == orderId);
             if (order == null)
             {
                 return new ServiceResponse<OrderDetailCustomerDTO>
@@ -122,7 +124,8 @@ namespace Service.Services.OrderService
                 InvoiceCode = order.InvoiceCode,
                 OrderCreatedAt = order.CreatedAt,
                 State = order.State,
-                DiscountValue = order.DiscountValue
+                DiscountValue = order.DiscountValue,
+                PaymentMethodName = order.PaymentMethod.Name
             };
 
             return new ServiceResponse<OrderDetailCustomerDTO>
@@ -161,6 +164,15 @@ namespace Service.Services.OrderService
                 {
                     Success = false,
                     Message = "Can not update canceled order"
+                };
+            }
+
+            if (dbOrder.State == OrderState.Delivered)
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "Can not update delivered order"
                 };
             }
 

@@ -15,6 +15,6 @@ namespace Service.Services.OrderCounterService
         Task<ServiceResponse<bool>> PlaceOrderCounter(Guid? voucherId, PlaceOrderCounterDTO newOrderCounter);
         Task<ServiceResponse<List<OrderCounterCustomerAddressDTO>>> SearchCustomerAddressCards(string searchText);
         Task<ServiceResponse<List<OrderItemResponseDTO>>> SearchProducts(string searchText);
-
+        Task<ServiceResponse<List<PaymentMethod>>> GetPaymentMethodSelect();
     }
 }

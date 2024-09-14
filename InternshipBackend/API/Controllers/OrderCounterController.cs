@@ -51,5 +51,15 @@ namespace API.Controllers
             }
             return Ok(res);
         }
+        [HttpGet("select/payment-method")]
+        public async Task<ActionResult<ServiceResponse<List<PaymentMethod>>>> GetPaymentMethodSelect()
+        {
+            var res = await _service.GetPaymentMethodSelect();
+            if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+            return Ok(res);
+        }
     }
 }

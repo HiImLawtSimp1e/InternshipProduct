@@ -23,17 +23,18 @@ namespace Service.Services.OrderCounterService
         private readonly IAuthService _authService;
         private readonly IOrderCommonService _orderCommonService;
 
-        public OrderCounterService(DataContext context,IMapper mapper,IAuthService authService, IOrderCommonService orderCommonService)
+        public OrderCounterService(DataContext context, IMapper mapper, IAuthService authService, IOrderCommonService orderCommonService)
         {
             _context = context;
             _mapper = mapper;
             _authService = authService;
             _orderCommonService = orderCommonService;
         }
+
         public async Task<ServiceResponse<bool>> PlaceOrderCounter(Guid? voucherId, PlaceOrderCounterDTO newOrderCounter)
         {
             var username = _authService.GetUserName();
-            
+
             var orderCounterItems = newOrderCounter.OrderItems;
 
             if (orderCounterItems == null || orderCounterItems.Count() == 0)
@@ -71,7 +72,8 @@ namespace Service.Services.OrderCounterService
                 OrderItems = orderItems,
                 TotalPrice = totalAmount,
                 State = OrderState.Delivered,
-                CreatedBy = username
+                CreatedBy = username,
+                PaymentMethodId = newOrderCounter.PaymentMethodId
             };
 
             if (voucherId != null)
@@ -87,7 +89,7 @@ namespace Service.Services.OrderCounterService
 
                     if (voucher.MinOrderCondition <= 0 || totalAmount > voucher.MinOrderCondition)
                     {
-                        var discountValue =  _orderCommonService.CalculateDiscountValue(voucher, totalAmount);
+                        var discountValue = _orderCommonService.CalculateDiscountValue(voucher, totalAmount);
                         order.DiscountValue = discountValue;
                         order.VoucherId = voucher.Id;
                         voucher.Quantity -= 1;
@@ -164,6 +166,26 @@ namespace Service.Services.OrderCounterService
             return new ServiceResponse<List<OrderItemResponseDTO>>
             {
                 Data = orderItems
+            };
+        }
+
+        public async Task<ServiceResponse<List<PaymentMethod>>> GetPaymentMethodSelect()
+        {
+            var paymentMethods = await _context.PaymentMethods
+                                           .ToListAsync();
+
+            if (paymentMethods == null)
+            {
+                return new ServiceResponse<List<PaymentMethod>>
+                {
+                    Success = false,
+                    Message = "Missing payment method"
+                };
+            }
+
+            return new ServiceResponse<List<PaymentMethod>>
+            {
+                Data = paymentMethods
             };
         }
     }

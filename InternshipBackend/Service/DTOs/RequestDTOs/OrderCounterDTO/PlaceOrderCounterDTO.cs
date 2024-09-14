@@ -13,6 +13,7 @@ namespace Service.DTOs.RequestDTOs.OrderCounterDTO
         public string Email { get; set; } = string.Empty;
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
+        public Guid PaymentMethodId { get; set; } 
         public List<OrderCounterItemDTO> OrderItems { get; set; } = new List<OrderCounterItemDTO>();
     }
 }
