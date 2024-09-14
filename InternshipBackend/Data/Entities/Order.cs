@@ -19,6 +19,7 @@ namespace Data.Entities
         public string Phone { get; set; } = string.Empty;
         public string Address { get; set; } = string.Empty;
         public int DiscountValue { get; set; } = 0;
+        public int TotalAmount { get; set; } = 0;
         public Guid? CustomerId { get; set; }
         public Guid? VoucherId { get; set; }
         public PaymentMethod? PaymentMethod { get; set; }

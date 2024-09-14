@@ -454,6 +454,7 @@ namespace Service.Services.OrderService
                 PaymentMethod = paymentMethod,
             };
 
+            var discountValue = 0;
 
             if (voucherId != null)
             {
@@ -468,13 +469,15 @@ namespace Service.Services.OrderService
 
                     if (voucher.MinOrderCondition <= 0 || totalAmount > voucher.MinOrderCondition)
                     {
-                        var discountValue = _orderCommonService.CalculateDiscountValue(voucher, totalAmount);
+                        discountValue = _orderCommonService.CalculateDiscountValue(voucher, totalAmount);
                         order.DiscountValue = discountValue;
                         order.VoucherId = voucher.Id;
                         voucher.Quantity -= 1;
                     }
                 }
             }
+
+            order.TotalAmount = order.TotalPrice - discountValue;
 
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(_context.CartItems.Where(ci => ci.CartId == customer.Cart.Id));
