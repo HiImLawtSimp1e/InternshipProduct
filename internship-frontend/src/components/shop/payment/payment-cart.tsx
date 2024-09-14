@@ -1,18 +1,25 @@
 "use client";
 
 import { formatPrice } from "@/lib/format/format";
-import ShoppingCartItem from "./shopping-cart-item";
+import { useEffect, useState } from "react";
+import { placeOrder } from "@/action/orderAction";
+import { useRouter } from "next/navigation";
+import { useCustomActionState } from "@/lib/custom/customHook";
+import { toast } from "react-toastify";
+import { useCartStore } from "@/lib/store/useCartStore";
 import { useVoucherStore } from "@/lib/store/useVoucherStore";
-import ShoppingVoucher from "./shopping-voucher";
-import ShoppingCartAddress from "./shoping-cart-address";
-import Link from "next/link";
+import PaymentCartItem from "./payment-cart-item";
+import ShoppingVoucher from "../cart/shopping-voucher";
+import ShoppingCartAddress from "../cart/shoping-cart-address";
+import VnPayment from "@/lib/vnPayment/vnpay";
 
 interface IProps {
   cartItems: ICartItem[];
   address: IAddress;
 }
 
-const ShoppingCart = ({ cartItems, address }: IProps) => {
+const PaymentCart = ({ cartItems, address }: IProps) => {
+  const { clearCart } = useCartStore();
   const { voucher } = useVoucherStore();
 
   let discount: number = 0;
@@ -36,16 +43,46 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
     }
   }
 
+  // for action
+  const router = useRouter();
+
+  const initialState: FormState = { errors: [] };
+  const [formState, formAction] = useCustomActionState<FormState>(
+    placeOrder,
+    initialState
+  );
+
+  const [toastDisplayed, setToastDisplayed] = useState(false);
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    if (voucher != null) {
+      formData.set("voucherId", voucher.id);
+    }
+    formAction(formData);
+    setToastDisplayed(false); // Reset toastDisplayed when submitting
+  };
+
+  useEffect(() => {
+    if (formState.errors.length > 0 && !toastDisplayed) {
+      toast.error(formState.errors[0]);
+      setToastDisplayed(true); // Set toastDisplayed to true to prevent multiple toasts
+    }
+    if (formState.success) {
+      toast.success("Order placed successfully!");
+      clearCart();
+      router.push("/order-history");
+    }
+  }, [formState, toastDisplayed]);
+
   return (
     <div className="h-[150vh] bg-gray-100 pt-20">
       {cartItems?.length >= 1 && (
         <>
-          <h1 className="mb-10 text-center text-2xl font-bold">Cart Items</h1>
           <div className="mx-auto max-w-7xl justify-center px-6 lg:flex lg:space-x-6 xl:px-0">
             <div className="rounded-lg lg:w-2/3">
-              {cartItems?.map((item: ICartItem) => (
-                <ShoppingCartItem key={item.productTypeId} cartItem={item} />
-              ))}
+              <PaymentCartItem cartItems={cartItems} />
             </div>
             {/* Sub total */}
             <div className="flex flex-col gap-4 lg:mt-0 lg:w-1/3">
@@ -62,36 +99,39 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
                     <p className="text-gray-700">{formatPrice(discount)}</p>
                   </div>
                 )}
+                <div className="flex justify-between">
+                  <p className="text-gray-700">Shipping:</p>
+                  <p className="text-gray-700">{formatPrice(30000)}</p>
+                </div>
                 <hr className="my-8" />
                 <div className="flex justify-between">
-                  <p className="text-lg font-bold">Total:</p>
+                  <p className="text-lg font-bold">Total Amount:</p>
                   <div className="">
                     <p className="mb-1 text-2xl font-bold">
-                      {formatPrice(totalAmount - discount)}
+                      {formatPrice(totalAmount - discount + 30000)}
                     </p>
-                    <p className="text-sm text-gray-700">
-                      Shipping and taxes calculated at checkout.
-                    </p>
+                    <p className="text-sm text-gray-700">include VAT</p>
                   </div>
                 </div>
-                <Link href="/payment">
+                <VnPayment />
+                <form onSubmit={handleSubmit}>
                   <button
                     type="submit"
                     className="mt-6 w-full rounded-md bg-blue-500 text-2xl py-4 font-medium text-blue-50 md:text-lg md:py-2 hover:bg-blue-600"
                   >
-                    Check out
+                    {"Cash on Delivery(COD)"}
                   </button>
-                </Link>
+                </form>
               </div>
             </div>
           </div>
         </>
       )}
       {cartItems?.length == 0 && (
-        <h1 className="mb-10 text-center text-2xl font-bold">Empty Cart</h1>
+        <h1 className="mb-10 text-center text-2xl font-bold">Empty product</h1>
       )}
     </div>
   );
 };
 
-export default ShoppingCart;
+export default PaymentCart;
