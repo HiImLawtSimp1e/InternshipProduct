@@ -69,11 +69,11 @@ const ShoppingCart = ({ cartItems, address }: IProps) => {
                     <p className="mb-1 text-2xl font-bold">
                       {formatPrice(totalAmount - discount)}
                     </p>
-                    <p className="text-sm text-gray-700">
-                      Shipping and taxes calculated at checkout.
-                    </p>
                   </div>
                 </div>
+                <p className="text-sm text-gray-700 text-right">
+                  Shipping and taxes calculated at checkout.
+                </p>
                 <Link href="/payment">
                   <button
                     type="submit"
