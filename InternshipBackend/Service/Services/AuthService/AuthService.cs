@@ -47,19 +47,30 @@ namespace Service.Services.AuthService
             return customer;
         }
 
-        public async Task<ServiceResponse<bool>> ChangePassword(Guid accountId, string newPassword)
+        public async Task<ServiceResponse<bool>> ChangePassword(ChangePasswordDTO changePasswordDto)
         {
+            var accountId = GetUserId();
+
             var account = await _context.Accounts.FirstOrDefaultAsync(account => account.Id == accountId);
             if (account == null)
             {
                 return new ServiceResponse<bool>
                 {
                     Success = false,
-                    Message = "User not found"
+                    Message = "You need to log in"
                 };
             }
 
-            CreatePasswordHash(newPassword, out byte[] passwordHash, out byte[] passwordSalt);
+            if (!VerifyPasswordHash(changePasswordDto.OldPassword, account.PasswordHash, account.PasswordSalt))
+            {
+                return new ServiceResponse<bool>
+                {
+                    Success = false,
+                    Message = "The old password is incorrect"
+                };
+            }
+
+            CreatePasswordHash(changePasswordDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             account.PasswordHash = passwordHash;
             account.PasswordSalt = passwordSalt;

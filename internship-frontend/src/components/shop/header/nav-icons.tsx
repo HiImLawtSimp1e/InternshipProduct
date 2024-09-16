@@ -104,6 +104,12 @@ const NavIcons = () => {
               >
                 My Order
               </Link>
+              <Link
+                className="inline-block min-w-40 hover:opacity-60"
+                href="profile/change-password"
+              >
+                Change Password
+              </Link>
               <div
                 onClick={handleLogout}
                 className="inline-block min-w-40 hover:opacity-60 cursor-pointer"

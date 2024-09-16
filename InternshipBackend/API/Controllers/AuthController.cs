@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.DTOs.RequestDTOs.AccountDTO;
 using Service.Models;
@@ -41,6 +42,17 @@ namespace API.Controllers
         {
             var res = await _service.AdminLogin(req);
             if (!res.Success)
+            {
+                return BadRequest(res);
+            }
+            return Ok(res);
+        }
+        [Authorize]
+        [HttpPost("change-password")]
+        public async Task<ActionResult<ServiceResponse<bool>>> ChangePassword(ChangePasswordDTO req)
+        {
+            var res = await _service.ChangePassword(req);
+            if (res.Success)
             {
                 return BadRequest(res);
             }

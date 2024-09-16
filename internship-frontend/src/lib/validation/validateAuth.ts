@@ -72,3 +72,24 @@ export const validateRegister = (
 
   return [errors, errors.length === 0];
 };
+
+export const validatePassword = (
+  password: string,
+  confirmPassword: string
+): [string[], boolean] => {
+  const errors: string[] = [];
+
+  if (!password || password.trim().length === 0) {
+    errors.push("The new password cannot be empty");
+  } else if (password.length < 6 || password.length > 100) {
+    errors.push(
+      "The new password must not be longer than 100 characters and shorter than 6 characters"
+    );
+  }
+
+  if (password !== confirmPassword) {
+    errors.push("Password confirmation does not match");
+  }
+
+  return [errors, errors.length === 0];
+};
