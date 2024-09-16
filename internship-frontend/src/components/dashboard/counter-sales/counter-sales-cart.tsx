@@ -75,10 +75,17 @@ const CounterSaleCart = () => {
       };
 
       let url = "";
-      if (!voucher === null || voucher === undefined || voucher?.id === null) {
-        url = `http://localhost:5000/api/OrderCounter/place-order`;
-      } else {
+      if (
+        !voucher !== null &&
+        voucher !== undefined &&
+        voucher?.id !== null &&
+        voucher?.id !== undefined
+      ) {
+        //console.log(voucher);
+        //console.log(voucher?.id);
         url = `http://localhost:5000/api/OrderCounter/place-order?voucherId=${voucher?.id}`;
+      } else {
+        url = `http://localhost:5000/api/OrderCounter/place-order`;
       }
 
       const res = await fetch(url, {
@@ -89,7 +96,7 @@ const CounterSaleCart = () => {
         },
         body: JSON.stringify(orderData),
       });
-      //console.log(res);
+      console.log(res);
 
       const responseData: ApiResponse<boolean> = await res.json();
 
